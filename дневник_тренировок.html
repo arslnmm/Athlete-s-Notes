@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Дневник тренировок</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%8B%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjogItCU0L3QtdCy0L3QuNC6INGC0YDQtdC90LjRgNC+0LLQvtC6IiwgInNob3J0X25hbWUiOiAi0JTQvdC10LLQvdC40LoiLCAic3RhcnRfdXJsIjogIi4iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMGExYSIsICJ0aGVtZV9jb2xvciI6ICIjMGEwYTFhIiwgImljb25zIjogW3sic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCclM0UlM0N0ZXh0IHk9Jy45ZW0nIGZvbnQtc2l6ZT0nOTAnJTNFJUYwJTlGJThGJThCJUVGJUI4JThGJTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwgInNpemVzIjogImFueSIsICJ0eXBlIjogImltYWdlL3N2Zyt4bWwifV19">
+<style>
+/* ============================================================
+   Измените переменные ниже для кастомизации темы
+   ============================================================ */
+:root{
+  --bg: #0a0a1a;                    /* Основной фон — глубокий тёмно-синий */
+  --bg-card: rgba(255,255,255,0.04);/* Карточки — полупрозрачный светлый */
+  --bg-card-hover: rgba(255,255,255,0.07);
+  --accent: #00d4aa;                /* Акцентный цвет — бирюзовый */
+  --accent-soft: rgba(0,212,170,0.15);
+  --accent-glow: rgba(0,212,170,0.3);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.45);
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.15);
+  --danger: #ff4757;
+  --danger-soft: rgba(255,71,87,0.15);
+  --positive: #00d4aa;
+  --positive-soft: rgba(0,212,170,0.15);
+  --warning: #ffa502;
+  --gradient-aurora: linear-gradient(160deg, #1a0a2e 0%, #0d1f2d 50%, #0a2a1a 100%);
+  --gradient-card: linear-gradient(135deg, rgba(120,80,200,0.12), rgba(0,180,160,0.1));
+  --gradient-accent: linear-gradient(135deg, #00d4aa, #00b4d8);
+  --chart-1: #00d4aa;
+  --chart-2: #00b4d8;
+  --chart-3: #b48cf2;
+  --chart-4: #ffa502;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);
+  color:var(--text-primary);
+  min-height:100vh;
+  min-width:320px;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:var(--gradient-aurora);opacity:.55;pointer-events:none;
+}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;opacity:.5}
+
+#app{max-width:860px;margin:0 auto;padding:16px 14px 96px}
+
+/* ---------- Кнопки ---------- */
+button{font-family:inherit;cursor:pointer;transition:all .25s ease;border:none;background:none;color:inherit}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;padding:10px 18px;border-radius:10px;font-size:15px;font-weight:500;
+}
+.btn-primary{background:var(--gradient-accent);color:var(--bg)}
+.btn-primary:active{transform:scale(.97)}
+.btn-secondary{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.btn-danger{background:var(--danger-soft);color:var(--danger);border:1px solid var(--danger)}
+.btn-ghost{background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border)}
+.btn-block{width:100%}
+.icon-btn{
+  min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:10px;font-size:17px;color:var(--text-secondary);border:1px solid transparent;
+}
+.icon-btn:hover{background:var(--bg-card-hover);border-color:var(--border-hover)}
+
+/* ---------- Поля ввода ---------- */
+input,select,textarea{
+  font-family:inherit;font-size:15px;color:var(--text-primary);
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;min-height:44px;width:100%;
+  transition:all .25s ease;outline:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+input::placeholder,textarea::placeholder{color:var(--text-muted)}
+select option{background:#12122a;color:var(--text-primary)}
+label{display:block;font-size:13px;color:var(--text-muted);margin:0 0 6px 2px}
+.field{margin-bottom:14px}
+
+/* ---------- Карточки ---------- */
+.card{
+  background:var(--gradient-card);border:1px solid var(--border);
+  border-radius:12px;padding:16px;margin-bottom:14px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:all .25s ease;
+}
+.card:hover{border-color:var(--border-hover);transform:translateY(-2px)}
+
+/* ---------- Заголовки ---------- */
+.screen-title{font-size:20px;font-weight:500;color:var(--text-primary);margin:6px 0 16px}
+.muted{color:var(--text-muted);font-size:13px}
+.accent{color:var(--accent)}
+
+/* ---------- Навигация ---------- */
+#navTop{display:none}
+#navBottom{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  display:flex;justify-content:space-around;
+  background:var(--bg);border-top:1px solid var(--border);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+}
+.nav-tab{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  min-width:56px;min-height:44px;padding:6px 8px;border-radius:10px;
+  color:var(--text-muted);font-size:11px;transition:all .25s ease;
+}
+.nav-tab .nav-ico{font-size:20px;line-height:1}
+.nav-tab.active{background:var(--accent-soft);color:var(--accent)}
+@media (min-width:768px){
+  #navBottom{display:none}
+  #navTop{
+    display:flex;gap:6px;position:sticky;top:0;z-index:50;
+    background:var(--bg);border-bottom:1px solid var(--border);
+    padding:10px 14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  }
+  #navTop .nav-tab{flex-direction:row;font-size:14px;padding:10px 16px}
+  #app{padding-bottom:32px}
+}
+@media (max-width:359px){
+  .nav-tab{font-size:0;min-width:44px}
+  .nav-tab .nav-ico{font-size:18px}
+}
+
+/* ---------- Табы выбора типа тренировки ---------- */
+.seg{display:flex;gap:8px;margin-bottom:14px}
+.seg button{
+  flex:1;min-height:44px;border-radius:10px;font-size:15px;font-weight:500;
+  border:1px solid var(--border);color:var(--text-secondary);background:var(--bg-card);
+  transition:all .25s ease;
+}
+.seg button.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+
+/* ---------- Баннер периодизации ---------- */
+.week-banner{
+  border-radius:12px;padding:12px 16px;margin-bottom:14px;font-size:14px;
+  background:var(--accent-soft);border:1px solid var(--accent);color:var(--accent);
+}
+.week-banner.done{background:var(--gradient-card);border-color:var(--warning);color:var(--warning)}
+
+/* ---------- Таймер отдыха ---------- */
+#restTimerBar{
+  position:sticky;top:8px;z-index:40;display:flex;align-items:center;gap:14px;
+  background:var(--gradient-card);border:1px solid var(--border);border-radius:12px;
+  padding:8px 14px;margin-bottom:14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+#restTimerBar .timer-svg-wrap{position:relative;width:56px;height:56px;flex:none}
+#restTimerBar svg{transform:rotate(-90deg)}
+#restTimerBar .timer-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:500;color:var(--accent);
+}
+#restTimerBar .timer-info{flex:1;min-width:0}
+#restTimerBar .timer-label{font-size:13px;color:var(--text-muted)}
+body.timer-done #restTimerBar{animation:pulseBg 0.6s ease 4}
+@keyframes pulseBg{
+  0%,100%{background:var(--gradient-card)}
+  50%{background:var(--accent-soft)}
+}
+
+/* ---------- Карточка упражнения ---------- */
+.ex-card{background:var(--gradient-card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;transition:all .25s ease}
+.ex-head{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-bottom:10px}
+.ex-title-row{display:flex;align-items:flex-start;gap:8px}
+.ex-controls{display:flex;gap:4px;justify-content:flex-end;border-top:1px solid rgba(255,255,255,0.06);padding-top:8px}
+.ex-name{font-size:16px;font-weight:500;flex:1;min-width:0;overflow-wrap:break-word;line-height:1.35}
+.ex-cat{font-size:11px;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:2px 8px;white-space:nowrap;flex:none;margin-top:2px}
+.sets-scroll{overflow-x:auto;margin:0 -2px;padding:0 2px}
+.sets-table input{min-width:56px}
+.sets-table{width:100%;border-collapse:collapse;font-size:14px;color:var(--text-secondary)}
+.sets-table th{font-size:12px;color:var(--text-muted);font-weight:400;padding:6px 4px;text-align:left}
+.sets-table td{padding:4px 4px;border-top:1px solid rgba(255,255,255,0.06);vertical-align:middle}
+.sets-table input{min-height:40px;padding:6px 8px;font-size:14px}
+.sets-table .set-num{width:26px;color:var(--text-muted);font-size:13px}
+.add-set-btn{margin-top:10px;width:100%;min-height:40px;border-radius:10px;border:1px dashed var(--border-hover);color:var(--accent);font-size:14px;transition:all .25s ease}
+.add-set-btn:hover{background:var(--accent-soft)}
+
+/* ---------- Dropdown ---------- */
+.dropdown{position:relative}
+.dropdown-panel{
+  position:absolute;top:calc(100% + 6px);right:0;z-index:60;width:min(300px,86vw);
+  max-height:320px;overflow-y:auto;background:#12122a;border:1px solid var(--border);
+  border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.dropdown-item{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  padding:10px 14px;border-radius:8px;font-size:14px;color:var(--text-secondary);min-height:44px;
+}
+.dropdown-item:hover{background:rgba(0,212,170,0.08)}
+.dropdown-item.current{color:var(--accent)}
+.dropdown-divider{border:none;border-top:1px solid var(--border);margin:6px 4px}
+.dropdown-cat{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 14px 2px}
+
+/* ---------- Модальные окна ---------- */
+.modal-overlay{
+  position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.6);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .25s ease;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-card{
+  background:var(--gradient-card),#12122a;border:1px solid var(--border);
+  border-radius:16px;padding:24px;max-width:320px;width:100%;
+  transform:translateY(10px);transition:transform .25s ease;
+}
+.modal-overlay.open .modal-card{transform:translateY(0)}
+.modal-title{font-size:17px;font-weight:500;margin-bottom:10px}
+.modal-text{font-size:14px;color:var(--text-secondary);margin-bottom:20px;line-height:1.5}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* ---------- Toast ---------- */
+#toastWrap{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;z-index:120;display:flex;flex-direction:column;gap:8px;width:min(360px,92vw)}
+.toast{
+  background:#12122a;border:1px solid var(--border);border-left:3px solid var(--accent);
+  border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text-primary);
+  display:flex;align-items:center;gap:10px;
+  animation:toastIn .3s ease;
+}
+.toast.danger{border-left-color:var(--danger)}
+.toast.warning{border-left-color:var(--warning)}
+.toast .toast-actions{display:flex;gap:8px;margin-left:auto}
+.toast .toast-actions button{min-height:36px;padding:4px 12px;border-radius:8px;font-size:13px}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.toast.hide{opacity:0;transform:translateY(16px);transition:all .3s ease}
+
+/* ---------- Индикатор синхронизации ---------- */
+#syncBadge{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted)}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex:none}
+.sync-dot.ok{background:var(--positive);box-shadow:0 0 8px var(--accent-glow)}
+.sync-dot.pending{background:var(--warning);box-shadow:0 0 8px rgba(255,165,2,.4)}
+.sync-dot.off{background:var(--danger);box-shadow:0 0 8px rgba(255,71,87,.4)}
+
+/* ---------- История ---------- */
+.hist-card{background:var(--gradient-card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:all .25s ease}
+.hist-head{display:flex;align-items:center;gap:10px;padding:14px;min-height:44px;width:100%;text-align:left}
+.hist-head:hover{background:var(--bg-card-hover)}
+.hist-date{font-weight:500;font-size:15px}
+.hist-type{font-size:12px;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:2px 8px}
+.hist-meta{font-size:12px;color:var(--text-muted);margin-left:auto;text-align:right}
+.hist-body{display:none;padding:0 14px 14px;border-top:1px solid rgba(255,255,255,0.06)}
+.hist-card.open .hist-body{display:block}
+.hist-card.open .hist-chevron{transform:rotate(180deg)}
+.hist-chevron{transition:transform .25s ease;color:var(--text-muted)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.filters select,.filters input{width:auto;flex:1;min-width:120px}
+
+/* ---------- Таблицы замеров ---------- */
+.table-wrap{overflow-x:auto;margin:0 -4px;padding:0 4px}
+table.data{width:100%;border-collapse:collapse;font-size:14px;color:var(--text-secondary);min-width:560px}
+table.data th{font-size:12px;color:var(--text-muted);font-weight:400;padding:8px 6px;text-align:left;white-space:nowrap}
+table.data td{padding:8px 6px;border-top:1px solid rgba(255,255,255,0.06);white-space:nowrap}
+.cmp-pos{color:var(--positive)}
+.cmp-neg{color:var(--danger)}
+.cmp-neutral{color:var(--text-muted)}
+
+/* ---------- Закреплённые столбцы (sticky) ---------- */
+table.sticky-cols{border-collapse:separate;border-spacing:0}
+table.sticky-cols td,table.sticky-cols th{border-top:1px solid rgba(255,255,255,0.06)}
+table.sticky-cols thead th{border-top:none}
+.cmp-table th:first-child,.cmp-table td:first-child{
+  position:sticky;left:0;z-index:2;background:#151532;
+  min-width:118px;max-width:118px;white-space:normal;line-height:1.3;
+  box-shadow:2px 0 0 rgba(255,255,255,0.08);
+}
+.meas-table th:nth-child(1),.meas-table td:nth-child(1){
+  position:sticky;left:0;z-index:2;background:#151532;
+  min-width:96px;max-width:96px;box-shadow:1px 0 0 rgba(255,255,255,0.08);
+}
+.meas-table th:nth-child(2),.meas-table td:nth-child(2){
+  position:sticky;left:96px;z-index:2;background:#151532;
+  min-width:70px;box-shadow:2px 0 0 rgba(255,255,255,0.08);
+}
+.meas-table td[colspan]{position:static;background:transparent;box-shadow:none}
+
+/* ---------- Дашборд ---------- */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.stat-card{background:var(--gradient-card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.stat-value{font-size:28px;font-weight:500;color:var(--accent);line-height:1.2}
+.stat-label{font-size:12px;color:var(--text-muted);margin-top:4px}
+.chart-card{background:var(--gradient-card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.chart-title{font-size:14px;font-weight:500;margin-bottom:10px}
+.chart-card svg{width:100%;height:auto;display:block}
+.chart-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-muted);margin-top:8px}
+.chart-legend span{display:inline-flex;align-items:center;gap:5px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.chart-empty{font-size:13px;color:var(--text-muted);padding:24px 0;text-align:center}
+svg .chart-dot{filter:drop-shadow(0 0 4px var(--accent-glow));cursor:pointer}
+svg .chart-dot:hover{r:6}
+.chart-tooltip{
+  position:fixed;z-index:130;pointer-events:none;background:#12122a;border:1px solid var(--border);
+  border-radius:8px;padding:6px 10px;font-size:12px;color:var(--text-primary);display:none;
+}
+
+/* ---------- Экраны ---------- */
+.screen{display:none;animation:screenIn .25s ease}
+.screen.active{display:block}
+@keyframes screenIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ---------- Разное ---------- */
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.flex{display:flex;align-items:center;gap:10px}
+.flex-between{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mt{margin-top:14px}
+.hidden{display:none!important}
+summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:var(--text-muted);font-size:14px}
+details{border:1px solid var(--border);border-radius:12px;padding:0 14px;margin-top:14px}
+header.app-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+header.app-header h1{font-size:18px;font-weight:500;display:flex;align-items:center;gap:8px}
+textarea{resize:vertical;min-height:70px}
+.readme-box{font-size:13px;color:var(--text-secondary);line-height:1.6;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px;white-space:pre-wrap;word-break:break-word}
+.readme-box b{color:var(--accent)}
+</style>
+</head>
+<body>
+<nav id="navTop" aria-label="Основная навигация"></nav>
+<div id="app">
+  <header class="app-header">
+    <h1>🏋️ Дневник тренировок</h1>
+    <div id="syncBadge" role="status"></div>
+  </header>
+
+  <!-- ===== ЭКРАН: ТРЕНИРОВКА ===== -->
+  <section id="screen-workout" class="screen" aria-label="Тренировка">
+    <h2 class="screen-title" id="workoutTitle">Тренировка</h2>
+    <div id="weekBanner"></div>
+
+    <div id="restTimerBar">
+      <div class="timer-svg-wrap">
+        <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
+          <defs>
+            <linearGradient id="timerGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#00d4aa"/><stop offset="100%" stop-color="#00b4d8"/>
+            </linearGradient>
+          </defs>
+          <circle cx="28" cy="28" r="24" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)" stroke-width="3"/>
+          <circle id="timerArc" cx="28" cy="28" r="24" fill="none" stroke="url(#timerGrad)" stroke-width="3"
+                  stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-num" id="timerNum">90</div>
+      </div>
+      <div class="timer-info">
+        <div class="timer-label">Таймер отдыха</div>
+        <div class="muted" id="timerState">готов</div>
+      </div>
+      <button class="icon-btn" id="timerStartBtn" aria-label="Старт / пауза таймера">▶️</button>
+      <button class="icon-btn" id="timerResetBtn" aria-label="Сбросить таймер">⏹</button>
+    </div>
+
+    <div class="card">
+      <div class="seg" role="tablist" aria-label="Тип тренировки">
+        <button id="typeA" role="tab">Тренировка А</button>
+        <button id="typeB" role="tab">Тренировка Б</button>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label for="workoutDate">Дата тренировки</label>
+          <input type="date" id="workoutDate">
+        </div>
+        <div class="field">
+          <label>Длительность</label>
+          <input type="text" id="workoutDuration" readonly aria-label="Длительность тренировки" value="—">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" id="startWorkoutBtn">▶️ Начать тренировку</button>
+    </div>
+
+    <div id="exerciseList"></div>
+
+    <div class="dropdown" id="addExWrap">
+      <button class="btn btn-secondary btn-block" id="addExBtn">➕ Добавить упражнение</button>
+    </div>
+
+    <div class="field mt">
+      <label for="workoutNote">Примечание к тренировке</label>
+      <textarea id="workoutNote" placeholder="Самочувствие, заметки..."></textarea>
+    </div>
+
+    <div class="card">
+      <div class="flex-between">
+        <span class="muted">Общий объём</span>
+        <span class="accent" style="font-size:22px;font-weight:500" id="totalVolumeView">0 кг</span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-block" id="saveWorkoutBtn">💾 Сохранить тренировку</button>
+    <button class="btn btn-ghost btn-block mt hidden" id="cancelEditBtn">Отменить редактирование</button>
+  </section>
+
+  <!-- ===== ЭКРАН: ИСТОРИЯ ===== -->
+  <section id="screen-history" class="screen" aria-label="История тренировок">
+    <h2 class="screen-title">История</h2>
+    <div class="filters">
+      <select id="histFilterType" aria-label="Фильтр по типу">
+        <option value="">Все типы</option>
+        <option value="A">Тренировка А</option>
+        <option value="B">Тренировка Б</option>
+      </select>
+      <input type="date" id="histFilterDate" aria-label="Фильтр по дате">
+      <button class="btn btn-ghost" id="histFilterReset">Сброс</button>
+    </div>
+    <div id="historyList"></div>
+    <button class="btn btn-ghost btn-block hidden" id="historyMoreBtn">Показать ещё</button>
+  </section>
+
+  <!-- ===== ЭКРАН: ЗАМЕРЫ ===== -->
+  <section id="screen-measure" class="screen" aria-label="Замеры тела">
+    <h2 class="screen-title">Замеры</h2>
+    <div class="card">
+      <div class="row-2">
+        <div class="field"><label for="measDate">Дата</label><input type="date" id="measDate"></div>
+        <div class="field">
+          <label for="measTime">Время суток</label>
+          <select id="measTime"><option value="утро">утро</option><option value="вечер">вечер</option></select>
+        </div>
+      </div>
+      <div id="measFields" class="row-3"></div>
+      <div class="field">
+        <label for="measNote">Примечание</label>
+        <input type="text" id="measNote" placeholder="Необязательно">
+      </div>
+      <button class="btn btn-primary btn-block" id="saveMeasBtn">💾 Сохранить замер</button>
+      <button class="btn btn-ghost btn-block mt hidden" id="cancelMeasEditBtn">Отменить редактирование</button>
+    </div>
+
+    <div class="card">
+      <div class="chart-title">Сравнение замеров</div>
+      <div class="table-wrap" id="measCompare"></div>
+    </div>
+
+    <div class="card">
+      <div class="chart-title">История замеров</div>
+      <div class="table-wrap" id="measHistory"></div>
+    </div>
+  </section>
+
+  <!-- ===== ЭКРАН: ДАШБОРД ===== -->
+  <section id="screen-dashboard" class="screen" aria-label="Дашборд">
+    <h2 class="screen-title">Дашборд</h2>
+    <div class="stat-grid" id="statGrid"></div>
+    <div class="chart-card">
+      <div class="chart-title">Вес тела</div>
+      <div id="chartWeight"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Объёмы тела</div>
+      <div id="chartSizes"></div>
+      <div class="chart-legend" id="chartSizesLegend"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Прогресс силы</div>
+      <div class="field">
+        <label for="strengthExSelect">Упражнение</label>
+        <select id="strengthExSelect"></select>
+      </div>
+      <div id="chartStrength"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Объём тренировок (последние 20)</div>
+      <div id="chartVolume"></div>
+    </div>
+  </section>
+
+  <!-- ===== ЭКРАН: НАСТРОЙКИ ===== -->
+  <section id="screen-settings" class="screen" aria-label="Настройки">
+    <h2 class="screen-title">Настройки</h2>
+    <div class="card">
+      <div class="flex-between">
+        <span class="muted">Статус облака</span>
+        <span id="cloudStatus" class="muted">—</span>
+      </div>
+      <div class="flex-between mt">
+        <span class="muted">Неделя цикла</span>
+        <span id="settingsCycleInfo" class="accent"></span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label for="settingsKey">Ключ дневника</label>
+        <input type="text" id="settingsKey" placeholder="moy_dnevnik_2026">
+      </div>
+      <button class="btn btn-secondary btn-block" id="applyKeyBtn">Применить ключ</button>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label for="settingsRest">Таймер отдыха (секунды)</label>
+        <input type="number" id="settingsRest" step="1" min="10" max="600">
+      </div>
+      <button class="btn btn-secondary btn-block" id="saveRestBtn">Сохранить</button>
+    </div>
+    <div class="card">
+      <button class="btn btn-primary btn-block" id="syncNowBtn">🔄 Синхронизировать сейчас</button>
+      <button class="btn btn-danger btn-block mt" id="resetDataBtn">🗑️ Сбросить все локальные данные</button>
+    </div>
+    <details>
+      <summary>Расширенные</summary>
+      <div class="mt">
+        <div class="muted" style="margin-bottom:10px">JSON-бэкап всех данных (тренировки, замеры, настройки).</div>
+        <button class="btn btn-ghost btn-block" id="exportJsonBtn">⬇️ Экспорт JSON</button>
+        <label class="btn btn-ghost btn-block mt" style="text-align:center" for="importJsonInput">⬆️ Импорт JSON</label>
+        <input type="file" id="importJsonInput" accept=".json" class="hidden">
+      </div>
+      <div class="mt">
+        <div class="muted" style="margin-bottom:8px">Инструкция по настройке Firebase:</div>
+        <div class="readme-box">1. Зайди на https://console.firebase.google.com
+2. Создай проект → включи <b>Firestore Database</b>
+3. В <b>Project Settings → General</b> скопируй credentials веб-приложения
+4. Вставь их в <b>firebaseConfig</b> в начале &lt;script&gt; этого файла
+5. В <b>Firestore Database → Rules</b> установи правила:
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /diaries/{diaryKey}/{collection}/{docId} {
+      allow read, write: if request.auth == null;
+    }
+  }
+}
+6. Готово. Одинаковый «Ключ дневника» на всех устройствах = одни данные.</div>
+      </div>
+      <div style="height:14px"></div>
+    </details>
+  </section>
+</div>
+
+<nav id="navBottom" aria-label="Основная навигация"></nav>
+
+<!-- Модальное окно подтверждения -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-text" id="modalText"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modalCancel">Отмена</button>
+      <button class="btn btn-danger" id="modalOk">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно ввода ключа -->
+<div class="modal-overlay" id="keyOverlay" role="dialog" aria-modal="true">
+  <div class="modal-card" style="max-width:360px">
+    <div class="modal-title">Ключ дневника</div>
+    <div class="modal-text">Введите одинаковый ключ на всех устройствах — и данные будут синхронизироваться через облако. Без ключа приложение работает локально.</div>
+    <div class="field">
+      <label for="keyInput">Ключ (любая строка)</label>
+      <input type="text" id="keyInput" placeholder="moy_dnevnik_2026" autocomplete="off">
+    </div>
+    <div class="modal-actions" style="justify-content:stretch;flex-direction:column">
+      <button class="btn btn-primary btn-block" id="keySaveBtn">Сохранить ключ</button>
+      <button class="btn btn-ghost btn-block" id="keySkipBtn">Продолжить локально</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastWrap" aria-live="polite"></div>
+<div class="chart-tooltip" id="chartTooltip"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+'use strict';
+/* ================================================================
+   ДНЕВНИК ТРЕНИРОВОК — single-file app
+   ================================================================ */
+
+// ===== CONFIG =====
+const firebaseConfig = {
+  apiKey: "AIzaSyBmnW5X19QLMSulwmO0zODGS802cuJIWDQ",
+  authDomain: "athlete-s-notes.firebaseapp.com",
+  projectId: "athlete-s-notes",
+  storageBucket: "athlete-s-notes.firebasestorage.app",
+  messagingSenderId: "436563228078",
+  appId: "1:436563228078:web:0f11ad0291c3dbf97b843f"
+};
+const START_DATE = '2026-09-01';   // стартовая дата программы
+const GOAL_WEIGHT = 70;            // целевой вес, кг
+const DAY_MS = 86400000;
+const HISTORY_PAGE = 50;
+
+// ===== DATA =====
+const PROGRAM_A = [
+  {name:'Приседания со штангой', category:'ноги', alternatives:['Жим ногами','Гакк-приседания','Болгарские сплит-приседания с гантелями','Приседания в Смите']},
+  {name:'Сгибание ног лёжа', category:'ноги', alternatives:['Сгибание ног сидя','Румынская тяга','Ягодичный мост']},
+  {name:'Гиперэкстензия', category:'спина', alternatives:['Обратная гиперэкстензия','Ягодичный мост с гантелью']},
+  {name:'Жим гантелей на наклонной скамье', category:'грудь', alternatives:['Жим штанги на наклонной','Жим в тренажёре сидя','Жим гантелей на горизонтальной скамье']},
+  {name:'Сведение в тренажёре с упором предплечий (локти)', category:'грудь', alternatives:['Сведение в кроссовере','Отжимания на брусьях','Жим гантелей с супинацией']},
+  {name:'Тяга верхнего блока к груди', category:'спина', alternatives:['Подтягивания в тренажёре','Тяга верхнего блока узким обратным хватом','Тяга верхнего блока V-рукояткой']},
+  {name:'Тяга гантели в наклоне к поясу', category:'спина', alternatives:['Тяга в тренажёре Хаммер','Тяга Т-грифа','Тяга штанги в наклоне']},
+  {name:'Французский жим лёжа', category:'руки', alternatives:['Трицепс в кроссовере с канатной рукояткой','Отжимания на брусьях','Французский жим одной гантелью из-за головы']},
+  {name:'Бицепс в Скотте', category:'руки', alternatives:['Сгибание рук молотком','Тяга на бицепс ко лбу','Сгибание рук со штангой Z-грифом','Концентрированное сгибание']}
+];
+const PROGRAM_B = [
+  {name:'Разгибание ног в тренажёре', category:'ноги', alternatives:['Приседания со штангой','Гакк-приседания','Жим ногами']},
+  {name:'Румынская тяга', category:'ноги', alternatives:['Сгибание ног лёжа','Сгибание ног сидя','Гиперэкстензия']},
+  {name:'Ягодичный мост со штангой', category:'ноги', alternatives:['Ягодичный мост с гантелью','Обратная гиперэкстензия']},
+  {name:'Подъём на носки стоя', category:'ноги', alternatives:['Подъём на носки сидя','Подъём на носки в тренажёре','Подъём на ступеньку с гантелями']},
+  {name:'Пожимание плечами с гантелями', category:'плечи', alternatives:['Пожимание со штангой','Тяга штанги к подбородку','Тяга к подбородку в Смите']},
+  {name:'Протяжка', category:'плечи', alternatives:['Жим гантелей сидя','Арнольд-жим','Жим в тренажёре плеч','Махи гантелей в стороны']},
+  {name:'Обратное разведение в тренажёре / Тяга Ли Хейни', category:'плечи', alternatives:['Разведение гантелей в наклоне','Тяга верхнего блока к лицу']},
+  {name:'Сведение рук в кроссовере', category:'грудь', alternatives:['Сведение в тренажёре','Отжимания на брусьях','Жим в кроссовере снизу']},
+  {name:'Отжимания на брусьях', category:'руки', alternatives:['Французский жим одной гантелью из-за головы','Трицепс в кроссовере с канатной рукояткой','Французский жим лёжа']},
+  {name:'Сгибание рук молотком', category:'руки', alternatives:['Бицепс в Скотте','Тяга на бицепс ко лбу','Сгибание рук со штангой Z-грифом','Концентрированное сгибание']}
+];
+const PROGRAMS = {A: PROGRAM_A, B: PROGRAM_B};
+const ALT_CATEGORY = {
+  'Жим ногами':'ноги','Гакк-приседания':'ноги','Болгарские сплит-приседания с гантелями':'ноги',
+  'Приседания в Смите':'ноги','Сгибание ног сидя':'ноги','Румынская тяга':'ноги','Ягодичный мост':'ноги',
+  'Ягодичный мост с гантелью':'ноги','Обратная гиперэкстензия':'спина','Жим штанги на наклонной':'грудь',
+  'Жим в тренажёре сидя':'грудь','Жим гантелей на горизонтальной скамье':'грудь','Сведение в кроссовере':'грудь',
+  'Жим гантелей с супинацией':'грудь','Подтягивания в тренажёре':'спина','Тяга верхнего блока узким обратным хватом':'спина',
+  'Тяга верхнего блока V-рукояткой':'спина','Тяга в тренажёре Хаммер':'спина','Тяга Т-грифа':'спина',
+  'Тяга штанги в наклоне':'спина','Трицепс в кроссовере с канатной рукояткой':'руки',
+  'Французский жим одной гантелью из-за головы':'руки','Тяга на бицепс ко лбу':'руки',
+  'Сгибание рук со штангой Z-грифом':'руки','Концентрированное сгибание':'руки','Подъём на носки сидя':'ноги',
+  'Подъём на носки в тренажёре':'ноги','Подъём на ступеньку с гантелями':'ноги','Пожимание со штангой':'плечи',
+  'Тяга штанги к подбородку':'плечи','Тяга к подбородку в Смите':'плечи','Жим гантелей сидя':'плечи',
+  'Арнольд-жим':'плечи','Жим в тренажёре плеч':'плечи','Махи гантелей в стороны':'плечи',
+  'Разведение гантелей в наклоне':'плечи','Тяга верхнего блока к лицу':'плечи','Сведение в тренажёре':'грудь',
+  'Жим в кроссовере снизу':'грудь','Гиперэкстензия':'спина','Отжимания на брусьях':'руки',
+  'Сгибание ног лёжа':'ноги','Сгибание рук молотком':'руки','Бицепс в Скотте':'руки',
+  'Приседания со штангой':'ноги','Французский жим лёжа':'руки'
+};
+// Общая библиотека упражнений (все уникальные названия из А и Б + альтернативы)
+const EXERCISE_LIBRARY = (function(){
+  const map = {};
+  [PROGRAM_A, PROGRAM_B].forEach(function(prog){
+    prog.forEach(function(ex){
+      map[ex.name] = ex.category;
+      ex.alternatives.forEach(function(a){ if(!map[a]) map[a] = ALT_CATEGORY[a] || 'прочее'; });
+    });
+  });
+  return Object.keys(map).sort(function(a,b){return a.localeCompare(b,'ru');})
+    .map(function(n){ return {name:n, category:map[n]}; });
+})();
+const CATEGORY_ORDER = ['ноги','спина','грудь','плечи','руки','пресс','прочее'];
+
+const MEASURE_FIELDS = [
+  {key:'weight',   label:'Вес (кг)'},
+  {key:'neck',     label:'Шея (см)'},
+  {key:'shoulders',label:'Плечи (см)'},
+  {key:'chest',    label:'Грудь (см)'},
+  {key:'waist',    label:'Талия (см)'},
+  {key:'bicepR',   label:'Бицепс прав (см)'},
+  {key:'bicepL',   label:'Бицепс лев (см)'},
+  {key:'forearmR', label:'Предплечье прав (см)'},
+  {key:'forearmL', label:'Предплечье лев (см)'},
+  {key:'wrist',    label:'Запястья (см)'},
+  {key:'hips',     label:'Бёдра (см)'},
+  {key:'thigh',    label:'Ляшки (см)'},
+  {key:'calfR',    label:'Икра прав (см)'},
+  {key:'calfL',    label:'Икра лев (см)'}
+];
+const DEFAULT_MEASUREMENTS = [
+  {date:'2026-05-24', timeOfDay:'утро', weight:65.0, neck:38.3, shoulders:112.5, chest:99.0, waist:73.5,
+   bicepR:34.0, bicepL:34.0, forearmR:29.0, forearmL:29.3, wrist:16.5, hips:89.0, thigh:54.5, calfR:36.3, calfL:35.5, note:''},
+  {date:'2026-06-27', timeOfDay:'утро', weight:66.3, neck:39.0, shoulders:112.5, chest:101.0, waist:74.5,
+   bicepR:34.5, bicepL:34.5, forearmR:29.5, forearmL:29.5, wrist:16.5, hips:90.0, thigh:56.0, calfR:36.5, calfL:35.5, note:''},
+  {date:'2026-08-01', timeOfDay:'утро', weight:67.3, neck:39.0, shoulders:112.0, chest:101.0, waist:75.0,
+   bicepR:34.5, bicepL:34.5, forearmR:29.0, forearmL:29.0, wrist:16.5, hips:91.0, thigh:58.0, calfR:36.5, calfL:36.0, note:''}
+];
+
+// ===== STATE =====
+const state = {
+  diaryKey: null,          // null = локальный режим
+  workouts: [],
+  measurements: [],
+  config: {restSeconds: 90},
+  screen: 'workout',
+  db: null,
+  online: navigator.onLine,
+  cloudReady: false,
+  historyShown: HISTORY_PAGE,
+  histFilter: {type:'', date:''},
+  strengthEx: '',
+  seeded: false
+};
+// Текущая форма тренировки
+let form = null; // {id, type, date, exercises:[], note, startTime, duration, weekCycle}
+let editingWorkoutId = null;
+let editingMeasId = null;
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 9); }
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function fmtDate(dStr){
+  if(!dStr) return '';
+  const p = dStr.split('-');
+  return p[2] + '.' + p[1] + '.' + p[0];
+}
+function num(v){ const n = parseFloat(v); return isNaN(n) ? null : n; }
+
+// ===== STORAGE (localStorage, offline-first) =====
+function storageKey(name){ return 'dn_' + (state.diaryKey || 'local') + '_' + name; }
+function saveLocal(){
+  try{
+    localStorage.setItem(storageKey('workouts'), JSON.stringify(state.workouts));
+    localStorage.setItem(storageKey('measurements'), JSON.stringify(state.measurements));
+    localStorage.setItem(storageKey('config'), JSON.stringify(state.config));
+    localStorage.setItem(storageKey('seeded'), state.seeded ? '1' : '');
+  }catch(e){ console.warn('saveLocal', e); }
+}
+function loadLocal(){
+  try{
+    state.workouts = JSON.parse(localStorage.getItem(storageKey('workouts')) || '[]');
+    state.measurements = JSON.parse(localStorage.getItem(storageKey('measurements')) || '[]');
+    state.config = Object.assign({restSeconds:90}, JSON.parse(localStorage.getItem(storageKey('config')) || '{}'));
+    state.seeded = localStorage.getItem(storageKey('seeded')) === '1';
+  }catch(e){ console.warn('loadLocal', e); }
+}
+function getQueue(){
+  try{ return JSON.parse(localStorage.getItem(storageKey('syncQueue')) || '[]'); }
+  catch(e){ return []; }
+}
+function setQueue(q){ localStorage.setItem(storageKey('syncQueue'), JSON.stringify(q)); updateSyncBadge(); }
+function enqueue(type, collection, docId, data){
+  const q = getQueue();
+  q.push({id: uid(), type: type, collection: collection, docId: docId, data: data, timestamp: Date.now(), attempts: 0});
+  setQueue(q);
+  processQueue();
+}
+
+// ===== FIREBASE =====
+function initFirebase(){
+  if(!state.diaryKey){ state.cloudReady = false; updateSyncBadge(); return; }
+  if(firebaseConfig.apiKey === 'YOUR_API_KEY'){
+    toast('Firebase не настроен: заполните firebaseConfig в коде. Работаем локально.', 'warning');
+    state.cloudReady = false; updateSyncBadge(); return;
+  }
+  try{
+    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    state.db = firebase.firestore();
+    state.db.enablePersistence({synchronizeTabs: true}).catch(function(err){
+      console.warn('offline persistence:', err.code);
+    });
+    state.cloudReady = true;
+    pullFromCloud();
+  }catch(e){
+    console.warn('Firebase init error', e);
+    toast('Облако недоступно, работаем локально', 'warning');
+    state.cloudReady = false;
+  }
+  updateSyncBadge();
+}
+function diaryRef(){ return state.db.collection('diaries').doc(state.diaryKey); }
+
+// Загрузка облака + merge (last write wins по updatedAt)
+function pullFromCloud(){
+  if(!state.cloudReady || !navigator.onLine){ updateSyncBadge(); return; }
+  const cols = ['workouts', 'measurements'];
+  Promise.all(cols.map(function(c){ return diaryRef().collection(c).get(); })).then(function(snaps){
+    let changed = false;
+    snaps.forEach(function(snap, i){
+      const col = cols[i];
+      const localArr = col === 'workouts' ? state.workouts : state.measurements;
+      snap.forEach(function(doc){
+        const cloud = doc.data();
+        const idx = localArr.findIndex(function(x){ return x.id === doc.id; });
+        if(idx === -1){ localArr.push(cloud); changed = true; }
+        else{
+          const local = localArr[idx];
+          if((cloud.updatedAt || 0) > (local.updatedAt || 0)){ localArr[idx] = cloud; changed = true; }
+          else if((local.updatedAt || 0) > (cloud.updatedAt || 0)){
+            enqueue('update', col, local.id, local); // локальная версия новее — зальём в облако
+          }
+        }
+      });
+    });
+    if(changed){ saveLocal(); renderAll(); }
+    // Конфиг
+    return diaryRef().collection('config').doc('settings').get();
+  }).then(function(cfgDoc){
+    if(cfgDoc && cfgDoc.exists){
+      const cloud = cfgDoc.data();
+      if((cloud.updatedAt || 0) > (state.config.updatedAt || 0)){
+        state.config = Object.assign({restSeconds:90}, cloud);
+        saveLocal();
+      }
+    }
+    processQueue();
+    updateSyncBadge();
+  }).catch(function(e){
+    console.warn('pullFromCloud', e);
+    toast('Облако недоступно, работаем локально', 'warning');
+    state.cloudReady = false;
+    updateSyncBadge();
+  });
+}
+
+// Очередь синхронизации: batch по 10 операций, 3 попытки
+let queueRunning = false;
+function processQueue(){
+  if(queueRunning) return;
+  const q = getQueue();
+  if(!q.length){ updateSyncBadge(); return; }
+  if(!state.cloudReady || !state.db || !navigator.onLine){ updateSyncBadge(); return; }
+  queueRunning = true;
+  const chunk = q.slice(0, 10);
+  const batch = state.db.batch();
+  chunk.forEach(function(op){
+    const ref = diaryRef().collection(op.collection).doc(op.docId);
+    if(op.type === 'delete') batch.delete(ref);
+    else batch.set(ref, op.data, {merge: true});
+  });
+  batch.commit().then(function(){
+    const rest = getQueue().filter(function(op){
+      return !chunk.some(function(c){ return c.id === op.id; });
+    });
+    setQueue(rest);
+    queueRunning = false;
+    if(rest.length) processQueue(); else updateSyncBadge();
+  }).catch(function(e){
+    console.warn('sync error', e);
+    queueRunning = false;
+    const updated = getQueue().map(function(op){
+      if(chunk.some(function(c){ return c.id === op.id; })) op.attempts = (op.attempts || 0) + 1;
+      return op;
+    }).filter(function(op){ return (op.attempts || 0) < 3; });
+    const failed = getQueue().length - updated.length;
+    setQueue(updated);
+    if(failed > 0) toast('Часть операций не синхронизирована (ошибка облака)', 'warning');
+    else if(updated.length) setTimeout(processQueue, 3000);
+    updateSyncBadge();
+  });
+}
+function pushConfig(){
+  state.config.updatedAt = Date.now();
+  saveLocal();
+  if(state.cloudReady) enqueue('update', 'config', 'settings', state.config);
+}
+
+// ===== СТАТУС СИНХРОНИЗАЦИИ =====
+function updateSyncBadge(){
+  const badge = document.getElementById('syncBadge');
+  const qLen = getQueue().length;
+  let cls, txt;
+  if(!navigator.onLine){ cls = 'off'; txt = 'offline'; }
+  else if(qLen > 0){ cls = 'pending'; txt = 'ожидает: ' + qLen; }
+  else if(state.cloudReady){ cls = 'ok'; txt = 'online'; }
+  else{ cls = state.diaryKey ? 'pending' : 'off'; txt = state.diaryKey ? ('ожидает: ' + qLen) : 'локально'; }
+  badge.innerHTML = '<span class="sync-dot ' + cls + '"></span><span>' + esc(txt) + '</span>';
+  const cs = document.getElementById('cloudStatus');
+  cs.textContent = !state.diaryKey ? 'Локальный режим (ключ не задан)' :
+    (!navigator.onLine ? 'Offline' : (state.cloudReady ? 'Online, синхронизировано' : 'Подключение...'));
+}
+window.addEventListener('online', function(){ state.online = true; updateSyncBadge(); processQueue(); pullFromCloud(); });
+window.addEventListener('offline', function(){ state.online = false; updateSyncBadge(); });
+
+// ===== ПЕРИОДИЗАЦИЯ =====
+function getPeriodization(dateStr){
+  const start = new Date(START_DATE + 'T00:00:00');
+  const cur = new Date(dateStr + 'T00:00:00');
+  const diffDays = Math.floor((cur - start) / DAY_MS);
+  const weekNumber = Math.floor(diffDays / 7) + 1;
+  if(weekNumber < 1) return {weekNumber: weekNumber, notStarted: true};
+  const cycleNumber = Math.ceil(weekNumber / 3);
+  const weekInCycle = ((weekNumber - 1) % 3) + 1;
+  const labels = {
+    1: 'Лёгкая неделя (15-16 повторов, 1-2 РИР)',
+    2: 'Средняя неделя (12-14 повторов, 1-2 РИР)',
+    3: 'Тяжёлая неделя (8-10 повторов, отказ)'
+  };
+  return {
+    weekNumber: weekNumber, cycleNumber: cycleNumber, weekInCycle: weekInCycle,
+    finished: weekNumber > 21,
+    label: labels[weekInCycle] || ''
+  };
+}
+function renderWeekBanner(){
+  const el = document.getElementById('weekBanner');
+  const p = getPeriodization(form ? form.date : todayStr());
+  if(p.notStarted){
+    el.innerHTML = '<div class="week-banner">Программа стартует 01.09.2026 — до старта ещё есть время 💪</div>';
+  } else if(p.finished){
+    el.innerHTML = '<div class="week-banner done">🏆 Программа завершена! ' + esc(programStatsText()) + '</div>';
+  } else {
+    el.innerHTML = '<div class="week-banner">Неделя ' + p.weekNumber + ' из 21 · Цикл ' + p.cycleNumber +
+      ', неделя ' + p.weekInCycle + ' — <b>' + esc(p.label) + '</b></div>';
+  }
+}
+function programStatsText(){
+  const totalVol = state.workouts.reduce(function(s,w){ return s + (w.totalVolume || 0); }, 0);
+  const ms = state.measurements.slice().sort(function(a,b){ return a.date < b.date ? -1 : 1; });
+  let wTxt = '';
+  if(ms.length >= 2){
+    const d = (ms[ms.length-1].weight || 0) - (ms[0].weight || 0);
+    wTxt = ' Вес: ' + (d >= 0 ? '+' : '') + d.toFixed(1) + ' кг.';
+  }
+  return 'Всего тренировок: ' + state.workouts.length + ', общий объём: ' + Math.round(totalVol) + ' кг.' + wTxt;
+}
+
+// ===== МОДАЛЬНЫЕ ОКНА И TOAST =====
+let modalCb = null;
+function showConfirm(title, text, okLabel, cb){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalText').textContent = text;
+  document.getElementById('modalOk').textContent = okLabel || 'Удалить';
+  document.getElementById('modalOverlay').classList.add('open');
+  modalCb = cb;
+}
+document.getElementById('modalOk').addEventListener('click', function(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  if(modalCb){ const cb = modalCb; modalCb = null; cb(); }
+});
+document.getElementById('modalCancel').addEventListener('click', function(){
+  document.getElementById('modalOverlay').classList.remove('open'); modalCb = null;
+});
+document.getElementById('modalOverlay').addEventListener('click', function(e){
+  if(e.target === this){ this.classList.remove('open'); modalCb = null; }
+});
+
+function toast(msg, type, actions){
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = 'toast' + (type ? ' ' + type : '');
+  const span = document.createElement('span');
+  span.textContent = msg;
+  el.appendChild(span);
+  if(actions && actions.length){
+    const box = document.createElement('div');
+    box.className = 'toast-actions';
+    actions.forEach(function(a){
+      const b = document.createElement('button');
+      b.textContent = a.label;
+      b.className = a.primary ? 'btn-primary' : 'btn-ghost';
+      b.addEventListener('click', function(){ dismiss(); a.fn && a.fn(); });
+      box.appendChild(b);
+    });
+    el.appendChild(box);
+  }
+  wrap.appendChild(el);
+  let dismissed = false;
+  function dismiss(){
+    if(dismissed) return; dismissed = true;
+    el.classList.add('hide');
+    setTimeout(function(){ el.remove(); }, 350);
+  }
+  if(!actions || !actions.length) setTimeout(dismiss, 3500);
+  return dismiss;
+}
+
+// ===== ТАЙМЕР ОТДЫХА =====
+const CIRC = 150.8; // 2πr, r=24
+let timer = {total: 90, left: 90, running: false, interval: null};
+function timerRender(){
+  document.getElementById('timerNum').textContent = timer.left;
+  const arc = document.getElementById('timerArc');
+  const frac = timer.total > 0 ? timer.left / timer.total : 0;
+  arc.setAttribute('stroke-dashoffset', String(CIRC * (1 - frac)));
+  document.getElementById('timerState').textContent =
+    timer.running ? 'идёт отсчёт' : (timer.left < timer.total ? 'пауза' : 'готов · ' + timer.total + ' сек');
+  document.getElementById('timerStartBtn').textContent = timer.running ? '⏸' : '▶️';
+}
+function timerStartPause(){
+  if(timer.running){
+    clearInterval(timer.interval); timer.running = false; timerRender(); return;
+  }
+  if(timer.left <= 0) timer.left = timer.total;
+  timer.running = true;
+  timer.interval = setInterval(function(){
+    timer.left--;
+    if(timer.left <= 0){
+      clearInterval(timer.interval); timer.running = false; timer.left = 0;
+      timerRender();
+      if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      // fallback для iOS: визуальная пульсация
+      document.body.classList.add('timer-done');
+      setTimeout(function(){ document.body.classList.remove('timer-done'); }, 2500);
+      toast('Отдых окончен! 💪');
+      return;
+    }
+    timerRender();
+  }, 1000);
+  timerRender();
+}
+function timerReset(){
+  clearInterval(timer.interval);
+  timer.running = false;
+  timer.total = state.config.restSeconds || 90;
+  timer.left = timer.total;
+  timerRender();
+}
+document.getElementById('timerStartBtn').addEventListener('click', timerStartPause);
+document.getElementById('timerResetBtn').addEventListener('click', timerReset);
+
+// ===== ЧЕРНОВИК (автосохранение, debounce 500мс) =====
+let draftTimer = null;
+function scheduleDraftSave(){
+  if(editingWorkoutId) return; // в режиме редактирования черновик не ведём
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(function(){
+    if(!form) return;
+    try{
+      localStorage.setItem('workoutDraft', JSON.stringify({
+        type: form.type, date: form.date, exercises: form.exercises,
+        note: form.note, startTime: form.startTime
+      }));
+    }catch(e){}
+  }, 500);
+}
+function clearDraft(){ localStorage.removeItem('workoutDraft'); }
+function checkDraft(){
+  let d = null;
+  try{ d = JSON.parse(localStorage.getItem('workoutDraft') || 'null'); }catch(e){}
+  if(!d || editingWorkoutId) return;
+  if(!d.exercises || !d.exercises.some(function(ex){ return ex.sets && ex.sets.length; }) && !d.note) return;
+  toast('Найден несохранённый черновик тренировки. Восстановить?', 'warning', [
+    {label:'Да', primary:true, fn:function(){
+      form.type = d.type; form.date = d.date; form.exercises = d.exercises || [];
+      form.note = d.note || ''; form.startTime = d.startTime || null;
+      renderWorkoutScreen();
+      toast('Черновик восстановлен');
+    }},
+    {label:'Нет', fn:function(){ clearDraft(); }}
+  ]);
+}
+</script>
+<script>
+'use strict';
+// ===== UI RENDERERS: ТРЕНИРОВКА =====
+function newForm(){
+  return {
+    id: null, type: 'A', date: todayStr(),
+    exercises: buildProgramExercises('A'),
+    note: '', startTime: null, duration: null, weekCycle: 1
+  };
+}
+function buildProgramExercises(type){
+  return PROGRAMS[type].map(function(ex){
+    return {name: ex.name, category: ex.category, isAlternative: false, sets: []};
+  });
+}
+function setWorkoutType(type){
+  if(!form) form = newForm();
+  if(form.type === type) return;
+  if(form.exercises.some(function(ex){ return ex.sets.length; })){
+    showConfirm('Сменить тип тренировки?', 'Введённые подходы будут заменены списком программы ' + (type === 'A' ? 'А' : 'Б') + '.', 'Сменить', function(){
+      form.type = type;
+      form.exercises = buildProgramExercises(type);
+      scheduleDraftSave();
+      renderWorkoutScreen();
+    });
+    renderTypeSeg();
+    return;
+  }
+  form.type = type;
+  form.exercises = buildProgramExercises(type);
+  scheduleDraftSave();
+  renderWorkoutScreen();
+}
+function renderTypeSeg(){
+  document.getElementById('typeA').classList.toggle('active', form && form.type === 'A');
+  document.getElementById('typeB').classList.toggle('active', form && form.type === 'B');
+}
+function renderWorkoutScreen(){
+  if(!form) form = newForm();
+  document.getElementById('workoutTitle').textContent =
+    editingWorkoutId ? 'Редактирование тренировки' : 'Тренировка';
+  renderTypeSeg();
+  document.getElementById('workoutDate').value = form.date;
+  document.getElementById('workoutNote').value = form.note || '';
+  document.getElementById('startWorkoutBtn').classList.toggle('hidden', !!editingWorkoutId || !!form.startTime);
+  document.getElementById('cancelEditBtn').classList.toggle('hidden', !editingWorkoutId);
+  renderDuration();
+  renderWeekBanner();
+  renderExercises();
+  renderTotalVolume();
+}
+function renderDuration(){
+  const el = document.getElementById('workoutDuration');
+  if(editingWorkoutId && form.duration != null){ el.value = form.duration + ' мин'; return; }
+  if(form.startTime){
+    el.value = Math.max(1, Math.round((Date.now() - form.startTime) / 60000)) + ' мин (идёт)';
+  } else el.value = '—';
+}
+function exerciseAlternativesFor(name){
+  for(const t of ['A','B']){
+    for(const ex of PROGRAMS[t]){
+      if(ex.name === name) return ex.alternatives;
+      const i = ex.alternatives.indexOf(name);
+      if(i !== -1){
+        // текущее — альтернатива: предложить базовое + остальные альтернативы
+        return [ex.name].concat(ex.alternatives.filter(function(a){ return a !== name; }));
+      }
+    }
+  }
+  return [];
+}
+function renderExercises(){
+  const wrap = document.getElementById('exerciseList');
+  wrap.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  form.exercises.forEach(function(ex, idx){
+    const card = document.createElement('div');
+    card.className = 'ex-card';
+    // Заголовок: 1-й ряд — название + категория, 2-й ряд — кнопки управления
+    const head = document.createElement('div');
+    head.className = 'ex-head';
+    const titleRow = document.createElement('div');
+    titleRow.className = 'ex-title-row';
+    const nameEl = document.createElement('div');
+    nameEl.className = 'ex-name';
+    nameEl.textContent = (idx + 1) + '. ' + ex.name;
+    const cat = document.createElement('span');
+    cat.className = 'ex-cat';
+    cat.textContent = ex.category;
+    titleRow.appendChild(nameEl);
+    titleRow.appendChild(cat);
+    head.appendChild(titleRow);
+    // Кнопки управления
+    const controls = document.createElement('div');
+    controls.className = 'ex-controls';
+    const mkBtn = function(txt, label, fn){
+      const b = document.createElement('button');
+      b.className = 'icon-btn'; b.textContent = txt; b.setAttribute('aria-label', label);
+      b.addEventListener('click', fn);
+      return b;
+    };
+    controls.appendChild(mkBtn('🔄', 'Заменить упражнение', function(){ toggleExDropdown(card, idx); }));
+    controls.appendChild(mkBtn('↑', 'Переместить вверх', function(){
+      if(idx === 0) return;
+      const t = form.exercises[idx-1]; form.exercises[idx-1] = form.exercises[idx]; form.exercises[idx] = t;
+      scheduleDraftSave(); renderExercises();
+    }));
+    controls.appendChild(mkBtn('↓', 'Переместить вниз', function(){
+      if(idx === form.exercises.length - 1) return;
+      const t = form.exercises[idx+1]; form.exercises[idx+1] = form.exercises[idx]; form.exercises[idx] = t;
+      scheduleDraftSave(); renderExercises();
+    }));
+    controls.appendChild(mkBtn('🗑️', 'Удалить упражнение', function(){
+      showConfirm('Удалить упражнение?', 'Удалить «' + ex.name + '» из тренировки?', 'Удалить', function(){
+        form.exercises.splice(idx, 1);
+        scheduleDraftSave(); renderExercises(); renderTotalVolume();
+      });
+    }));
+    head.appendChild(controls);
+    card.appendChild(head);
+    // Таблица подходов
+    if(ex.sets.length){
+      const table = document.createElement('table');
+      table.className = 'sets-table';
+      const thead = document.createElement('thead');
+      thead.innerHTML = '<tr><th>№</th><th>Вес (кг)</th><th>Повторы</th><th>РИР</th><th>Примечание</th><th></th></tr>';
+      table.appendChild(thead);
+      const tbody = document.createElement('tbody');
+      ex.sets.forEach(function(set, si){
+        const tr = document.createElement('tr');
+        const numTd = document.createElement('td');
+        numTd.className = 'set-num'; numTd.textContent = si + 1;
+        tr.appendChild(numTd);
+        tr.appendChild(mkInput('number', set.weight, '0.1', 'Вес, кг', function(v){ set.weight = num(v) || 0; scheduleDraftSave(); renderTotalVolume(); }));
+        tr.appendChild(mkInput('number', set.reps, '1', 'Повторы', function(v){ set.reps = parseInt(v) || 0; scheduleDraftSave(); renderTotalVolume(); }));
+        tr.appendChild(mkInput('number', set.rir, '1', 'РИР', function(v){ set.rir = v === '' ? null : (parseInt(v) || 0); scheduleDraftSave(); }));
+        tr.appendChild(mkInput('text', set.note, null, 'Примечание', function(v){ set.note = v; scheduleDraftSave(); }));
+        const delTd = document.createElement('td');
+        const delBtn = document.createElement('button');
+        delBtn.className = 'icon-btn'; delBtn.textContent = '🗑️'; delBtn.setAttribute('aria-label', 'Удалить подход');
+        delBtn.addEventListener('click', function(){ // без подтверждения
+          ex.sets.splice(si, 1); scheduleDraftSave(); renderExercises(); renderTotalVolume();
+        });
+        delTd.appendChild(delBtn);
+        tr.appendChild(delTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      card.appendChild(table);
+    }
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-set-btn';
+    addBtn.textContent = '+ Подход';
+    addBtn.addEventListener('click', function(){
+      const prev = ex.sets[ex.sets.length - 1];
+      ex.sets.push({
+        weight: prev ? prev.weight : null, reps: prev ? prev.reps : null,
+        rir: null, note: ''
+      });
+      scheduleDraftSave(); renderExercises(); renderTotalVolume();
+    });
+    card.appendChild(addBtn);
+    frag.appendChild(card);
+  });
+  wrap.appendChild(frag);
+}
+function mkInput(type, value, step, label, onChange){
+  const td = document.createElement('td');
+  const inp = document.createElement('input');
+  inp.type = type;
+  if(step) inp.step = step;
+  if(type === 'number') inp.inputMode = 'decimal';
+  inp.value = (value === null || value === undefined) ? '' : value;
+  inp.setAttribute('aria-label', label);
+  inp.addEventListener('input', function(){ onChange(inp.value); });
+  td.appendChild(inp);
+  return td;
+}
+// Dropdown замены упражнения
+let openDropdown = null;
+function closeDropdowns(){
+  document.querySelectorAll('.dropdown-panel').forEach(function(p){ p.remove(); });
+  openDropdown = null;
+}
+function toggleExDropdown(card, idx){
+  const old = card.querySelector('.dropdown-panel');
+  closeDropdowns();
+  if(old) return;
+  const ex = form.exercises[idx];
+  const panel = buildExercisePanel(function(name, category){
+    form.exercises[idx] = {name: name, category: category, isAlternative: true, sets: ex.sets};
+    scheduleDraftSave(); renderExercises(); closeDropdowns();
+  }, ex);
+  panel.style.position = 'absolute';
+  card.style.position = 'relative';
+  card.appendChild(panel);
+  openDropdown = panel;
+}
+function buildExercisePanel(onPick, currentEx){
+  const panel = document.createElement('div');
+  panel.className = 'dropdown-panel';
+  if(currentEx){
+    const cur = document.createElement('button');
+    cur.className = 'dropdown-item current';
+    cur.textContent = '✓ ' + currentEx.name;
+    cur.addEventListener('click', closeDropdowns);
+    panel.appendChild(cur);
+    const alts = exerciseAlternativesFor(currentEx.name);
+    alts.forEach(function(a){
+      const b = document.createElement('button');
+      b.className = 'dropdown-item'; b.textContent = a;
+      b.addEventListener('click', function(){ onPick(a, ALT_CATEGORY[a] || categoryOf(a)); });
+      panel.appendChild(b);
+    });
+    const hr = document.createElement('hr'); hr.className = 'dropdown-divider';
+    panel.appendChild(hr);
+    const cap = document.createElement('div');
+    cap.className = 'dropdown-cat'; cap.textContent = 'Вся библиотека';
+    panel.appendChild(cap);
+  }
+  CATEGORY_ORDER.forEach(function(cat){
+    const items = EXERCISE_LIBRARY.filter(function(e){ return e.category === cat; });
+    if(!items.length) return;
+    const h = document.createElement('div');
+    h.className = 'dropdown-cat'; h.textContent = cat;
+    panel.appendChild(h);
+    items.forEach(function(item){
+      const b = document.createElement('button');
+      b.className = 'dropdown-item'; b.textContent = item.name;
+      b.addEventListener('click', function(){ onPick(item.name, item.category); });
+      panel.appendChild(b);
+    });
+  });
+  return panel;
+}
+function categoryOf(name){
+  const f = EXERCISE_LIBRARY.find(function(e){ return e.name === name; });
+  return f ? f.category : 'прочее';
+}
+document.addEventListener('click', function(e){
+  if(openDropdown && !e.target.closest('.dropdown-panel') && !e.target.closest('.ex-card') && !e.target.closest('#addExWrap')){
+    closeDropdowns();
+  }
+});
+document.getElementById('addExBtn').addEventListener('click', function(){
+  const wrap = document.getElementById('addExWrap');
+  if(wrap.querySelector('.dropdown-panel')){ closeDropdowns(); return; }
+  closeDropdowns();
+  const panel = buildExercisePanel(function(name, category){
+    form.exercises.push({name: name, category: category, isAlternative: true, sets: []});
+    scheduleDraftSave(); renderExercises(); closeDropdowns();
+  }, null);
+  panel.style.left = '0'; panel.style.right = 'auto'; panel.style.width = '100%';
+  wrap.appendChild(panel);
+  openDropdown = panel;
+});
+function renderTotalVolume(){
+  const vol = form.exercises.reduce(function(s, ex){
+    return s + ex.sets.reduce(function(ss, set){ return ss + (set.weight || 0) * (set.reps || 0); }, 0);
+  }, 0);
+  document.getElementById('totalVolumeView').textContent = Math.round(vol) + ' кг';
+}
+
+// ===== EVENT HANDLERS: ТРЕНИРОВКА =====
+document.getElementById('typeA').addEventListener('click', function(){ setWorkoutType('A'); });
+document.getElementById('typeB').addEventListener('click', function(){ setWorkoutType('B'); });
+document.getElementById('workoutDate').addEventListener('change', function(e){
+  form.date = e.target.value || todayStr();
+  renderWeekBanner(); scheduleDraftSave();
+});
+document.getElementById('workoutNote').addEventListener('input', function(e){
+  form.note = e.target.value; scheduleDraftSave();
+});
+document.getElementById('startWorkoutBtn').addEventListener('click', function(){
+  form.startTime = Date.now();
+  this.classList.add('hidden');
+  scheduleDraftSave();
+  renderDuration();
+  toast('Тренировка начата! Таймер длительности запущен.');
+});
+setInterval(function(){ if(form && form.startTime && !editingWorkoutId && state.screen === 'workout') renderDuration(); }, 30000);
+
+document.getElementById('saveWorkoutBtn').addEventListener('click', function(){
+  const totalVolume = form.exercises.reduce(function(s, ex){
+    return s + ex.sets.reduce(function(ss, set){ return ss + (set.weight || 0) * (set.reps || 0); }, 0);
+  }, 0);
+  const hasSets = form.exercises.some(function(ex){ return ex.sets.length; });
+  if(!hasSets && !form.note.trim()){
+    toast('Добавьте хотя бы один подход или примечание', 'warning'); return;
+  }
+  const p = getPeriodization(form.date);
+  const duration = editingWorkoutId
+    ? form.duration // при редактировании duration не пересчитывается
+    : (form.startTime ? Math.max(1, Math.round((Date.now() - form.startTime) / 60000)) : null);
+  const doc = {
+    id: editingWorkoutId || uid(),
+    date: form.date,
+    type: form.type,
+    weekCycle: p.weekInCycle || 1,
+    note: form.note,
+    exercises: form.exercises,
+    totalVolume: Math.round(totalVolume),
+    duration: duration,
+    createdAt: editingWorkoutId ? form.createdAt : Date.now(),
+    updatedAt: Date.now()
+  };
+  if(editingWorkoutId){
+    const i = state.workouts.findIndex(function(w){ return w.id === editingWorkoutId; });
+    if(i !== -1) state.workouts[i] = doc;
+    enqueue('update', 'workouts', doc.id, doc);
+    toast('Тренировка обновлена ✅');
+  } else {
+    state.workouts.push(doc);
+    enqueue('create', 'workouts', doc.id, doc);
+    clearDraft();
+    toast('Тренировка сохранена ✅ Объём: ' + doc.totalVolume + ' кг');
+  }
+  saveLocal();
+  editingWorkoutId = null;
+  form = newForm();
+  renderWorkoutScreen();
+});
+document.getElementById('cancelEditBtn').addEventListener('click', function(){
+  editingWorkoutId = null;
+  form = newForm();
+  renderWorkoutScreen();
+});
+function editWorkout(id){
+  const w = state.workouts.find(function(x){ return x.id === id; });
+  if(!w) return;
+  editingWorkoutId = id;
+  form = JSON.parse(JSON.stringify(w)); // глубокая копия
+  form.createdAt = w.createdAt;
+  switchScreen('workout');
+  renderWorkoutScreen();
+  window.scrollTo(0, 0);
+}
+function deleteWorkout(id){
+  const w = state.workouts.find(function(x){ return x.id === id; });
+  if(!w) return;
+  showConfirm('Удалить тренировку?', 'Удалить тренировку от ' + fmtDate(w.date) + '? Это действие нельзя отменить.', 'Удалить', function(){
+    state.workouts = state.workouts.filter(function(x){ return x.id !== id; });
+    enqueue('delete', 'workouts', id, null);
+    saveLocal();
+    renderHistory();
+    toast('Тренировка удалена');
+  });
+}
+</script>
+<script>
+'use strict';
+// ===== UI RENDERERS: ИСТОРИЯ =====
+function sortedWorkouts(){
+  return state.workouts.slice().sort(function(a,b){
+    if(a.date !== b.date) return a.date < b.date ? 1 : -1;
+    return (b.createdAt || 0) - (a.createdAt || 0);
+  });
+}
+function renderHistory(){
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+  const f = state.histFilter;
+  let items = sortedWorkouts().filter(function(w){
+    if(f.type && w.type !== f.type) return false;
+    if(f.date && w.date !== f.date) return false;
+    return true;
+  });
+  const total = items.length;
+  items = items.slice(0, state.historyShown);
+  if(!items.length){
+    list.innerHTML = '<div class="card muted" style="text-align:center">Пока нет сохранённых тренировок</div>';
+  }
+  const frag = document.createDocumentFragment();
+  items.forEach(function(w){
+    const card = document.createElement('div');
+    card.className = 'hist-card';
+    const head = document.createElement('button');
+    head.className = 'hist-head';
+    head.setAttribute('aria-expanded', 'false');
+    head.innerHTML =
+      '<span class="hist-date">' + esc(fmtDate(w.date)) + '</span>' +
+      '<span class="hist-type">' + (w.type === 'A' ? 'А' : 'Б') + '</span>' +
+      '<span class="hist-meta">' + esc(String(w.totalVolume || 0)) + ' кг' +
+      (w.duration ? '<br>' + esc(String(w.duration)) + ' мин' : '') + '</span>' +
+      '<span class="hist-chevron">▾</span>';
+    head.addEventListener('click', function(){
+      card.classList.toggle('open');
+      head.setAttribute('aria-expanded', card.classList.contains('open') ? 'true' : 'false');
+    });
+    card.appendChild(head);
+    const body = document.createElement('div');
+    body.className = 'hist-body';
+    let html = '';
+    (w.exercises || []).forEach(function(ex){
+      html += '<div style="margin-top:10px"><div style="font-size:14px;font-weight:500">' + esc(ex.name) + '</div>';
+      if(ex.sets && ex.sets.length){
+        html += '<div class="sets-scroll"><table class="sets-table"><tbody>';
+        ex.sets.forEach(function(s, i){
+          html += '<tr><td class="set-num">' + (i+1) + '</td>' +
+            '<td>' + esc(String(s.weight != null ? s.weight : '—')) + ' кг</td>' +
+            '<td>× ' + esc(String(s.reps != null ? s.reps : '—')) + '</td>' +
+            '<td>' + (s.rir != null ? 'РИР ' + esc(String(s.rir)) : '') + '</td>' +
+            '<td class="muted">' + esc(s.note || '') + '</td></tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+      html += '</div>';
+    });
+    if(w.note) html += '<div class="muted" style="margin-top:10px">📝 ' + esc(w.note) + '</div>';
+    body.innerHTML = html;
+    const actions = document.createElement('div');
+    actions.className = 'flex mt';
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-secondary'; editBtn.style.flex = '1';
+    editBtn.textContent = '✏️ Редактировать';
+    editBtn.addEventListener('click', function(){ editWorkout(w.id); });
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn btn-danger'; delBtn.style.flex = '1';
+    delBtn.textContent = '🗑️ Удалить';
+    delBtn.addEventListener('click', function(){ deleteWorkout(w.id); });
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+    body.appendChild(actions);
+    card.appendChild(body);
+    frag.appendChild(card);
+  });
+  list.appendChild(frag);
+  const moreBtn = document.getElementById('historyMoreBtn');
+  moreBtn.classList.toggle('hidden', total <= state.historyShown);
+}
+document.getElementById('historyMoreBtn').addEventListener('click', function(){
+  state.historyShown += HISTORY_PAGE;
+  renderHistory();
+});
+document.getElementById('histFilterType').addEventListener('change', function(e){
+  state.histFilter.type = e.target.value; state.historyShown = HISTORY_PAGE; renderHistory();
+});
+document.getElementById('histFilterDate').addEventListener('change', function(e){
+  state.histFilter.date = e.target.value; state.historyShown = HISTORY_PAGE; renderHistory();
+});
+document.getElementById('histFilterReset').addEventListener('click', function(){
+  state.histFilter = {type:'', date:''};
+  document.getElementById('histFilterType').value = '';
+  document.getElementById('histFilterDate').value = '';
+  state.historyShown = HISTORY_PAGE;
+  renderHistory();
+});
+
+// ===== UI RENDERERS: ЗАМЕРЫ =====
+function renderMeasForm(){
+  const wrap = document.getElementById('measFields');
+  wrap.innerHTML = '';
+  MEASURE_FIELDS.forEach(function(f){
+    const div = document.createElement('div');
+    div.className = 'field';
+    const label = document.createElement('label');
+    label.textContent = f.label;
+    label.setAttribute('for', 'meas_' + f.key);
+    const inp = document.createElement('input');
+    inp.type = 'number'; inp.step = '0.1'; inp.inputMode = 'decimal';
+    inp.id = 'meas_' + f.key;
+    div.appendChild(label); div.appendChild(inp);
+    wrap.appendChild(div);
+  });
+}
+function sortedMeasurements(){
+  return state.measurements.slice().sort(function(a,b){
+    if(a.date !== b.date) return a.date < b.date ? -1 : 1;
+    return (a.createdAt || 0) - (b.createdAt || 0);
+  });
+}
+document.getElementById('saveMeasBtn').addEventListener('click', function(){
+  const date = document.getElementById('measDate').value;
+  if(!date){ toast('Укажите дату замера', 'warning'); return; }
+  const doc = { id: editingMeasId || uid(), date: date,
+    timeOfDay: document.getElementById('measTime').value,
+    note: document.getElementById('measNote').value.trim(),
+    updatedAt: Date.now(), createdAt: Date.now() };
+  MEASURE_FIELDS.forEach(function(f){
+    doc[f.key] = num(document.getElementById('meas_' + f.key).value);
+  });
+  if(editingMeasId){
+    const old = state.measurements.find(function(m){ return m.id === editingMeasId; });
+    doc.createdAt = (old && old.createdAt) || Date.now();
+    const i = state.measurements.findIndex(function(m){ return m.id === editingMeasId; });
+    if(i !== -1) state.measurements[i] = doc;
+    enqueue('update', 'measurements', doc.id, doc);
+    toast('Замер обновлён ✅');
+  } else {
+    state.measurements.push(doc);
+    enqueue('create', 'measurements', doc.id, doc);
+    toast('Замер сохранён ✅');
+  }
+  saveLocal();
+  editingMeasId = null;
+  resetMeasForm();
+  renderMeasurements();
+});
+document.getElementById('cancelMeasEditBtn').addEventListener('click', function(){
+  editingMeasId = null;
+  resetMeasForm();
+});
+function resetMeasForm(){
+  document.getElementById('measDate').value = todayStr();
+  document.getElementById('measTime').value = 'утро';
+  document.getElementById('measNote').value = '';
+  MEASURE_FIELDS.forEach(function(f){ document.getElementById('meas_' + f.key).value = ''; });
+  document.getElementById('saveMeasBtn').textContent = '💾 Сохранить замер';
+  document.getElementById('cancelMeasEditBtn').classList.add('hidden');
+}
+function editMeasurement(id){
+  const m = state.measurements.find(function(x){ return x.id === id; });
+  if(!m) return;
+  editingMeasId = id;
+  document.getElementById('measDate').value = m.date;
+  document.getElementById('measTime').value = m.timeOfDay || 'утро';
+  document.getElementById('measNote').value = m.note || '';
+  MEASURE_FIELDS.forEach(function(f){
+    document.getElementById('meas_' + f.key).value = m[f.key] != null ? m[f.key] : '';
+  });
+  document.getElementById('saveMeasBtn').textContent = '💾 Обновить замер';
+  document.getElementById('cancelMeasEditBtn').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+function deleteMeasurement(id){
+  const m = state.measurements.find(function(x){ return x.id === id; });
+  showConfirm('Удалить замер?', 'Удалить замер от ' + fmtDate(m ? m.date : '') + '? Это действие нельзя отменить.', 'Удалить', function(){
+    state.measurements = state.measurements.filter(function(x){ return x.id !== id; });
+    enqueue('delete', 'measurements', id, null);
+    saveLocal();
+    renderMeasurements();
+    toast('Замер удалён');
+  });
+}
+function cmpCell(last, ref, isWaist){
+  if(last == null || ref == null) return '<span class="cmp-neutral">—</span>';
+  const d = +(last - ref).toFixed(1);
+  if(isWaist) return '<span class="cmp-neutral">' + (d > 0 ? '+' : '') + d + '</span>';
+  if(d > 0) return '<span class="cmp-pos">↑ +' + d + '</span>';
+  if(d < 0) return '<span class="cmp-neg">↓ ' + d + '</span>';
+  return '<span class="cmp-neutral">— 0</span>';
+}
+function renderMeasurements(){
+  const ms = sortedMeasurements();
+  // Таблица сравнения
+  const cmp = document.getElementById('measCompare');
+  if(ms.length === 0){
+    cmp.innerHTML = '<div class="muted" style="padding:12px 0">Нет данных для сравнения</div>';
+  } else {
+    const first = ms[0], last = ms[ms.length - 1], prev = ms.length > 1 ? ms[ms.length - 2] : null;
+    let html = '<table class="data"><thead><tr><th>Параметр</th><th>Первый<br>' + esc(fmtDate(first.date)) + '</th>' +
+      '<th>Предыд.<br>' + (prev ? esc(fmtDate(prev.date)) : '—') + '</th>' +
+      '<th>Последний<br>' + esc(fmtDate(last.date)) + '</th>' +
+      '<th>Δ пред.</th><th>Δ старт</th></tr></thead><tbody>';
+    MEASURE_FIELDS.forEach(function(f){
+      const isWaist = f.key === 'waist';
+      html += '<tr><td>' + esc(f.label.replace(/ \((кг|см)\)/, '')) + '</td>' +
+        '<td>' + (first[f.key] != null ? first[f.key] : '—') + '</td>' +
+        '<td>' + (prev && prev[f.key] != null ? prev[f.key] : '—') + '</td>' +
+        '<td><b>' + (last[f.key] != null ? last[f.key] : '—') + '</b></td>' +
+        '<td>' + (prev ? cmpCell(last[f.key], prev[f.key], isWaist) : '<span class="cmp-neutral">—</span>') + '</td>' +
+        '<td>' + cmpCell(last[f.key], first[f.key], isWaist) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    cmp.innerHTML = html;
+  }
+  // История замеров
+  const hist = document.getElementById('measHistory');
+  if(!ms.length){
+    hist.innerHTML = '<div class="muted" style="padding:12px 0">Замеров пока нет</div>';
+    return;
+  }
+  let html = '<table class="data"><thead><tr><th>Дата</th><th>Время</th>';
+  MEASURE_FIELDS.forEach(function(f){ html += '<th>' + esc(f.label.replace(/ \((кг|см)\)/, '')) + '</th>'; });
+  html += '<th></th></tr></thead><tbody>';
+  ms.slice().reverse().forEach(function(m){
+    html += '<tr><td>' + esc(fmtDate(m.date)) + '</td><td>' + esc(m.timeOfDay || '') + '</td>';
+    MEASURE_FIELDS.forEach(function(f){
+      html += '<td>' + (m[f.key] != null ? m[f.key] : '—') + '</td>';
+    });
+    html += '<td><button class="icon-btn" data-meas-edit="' + esc(m.id) + '" aria-label="Редактировать замер">✏️</button>' +
+      '<button class="icon-btn" data-meas-del="' + esc(m.id) + '" aria-label="Удалить замер">🗑️</button></td></tr>';
+    if(m.note) html += '<tr><td colspan="17" class="muted" style="border-top:none">📝 ' + esc(m.note) + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  hist.innerHTML = html;
+  hist.querySelectorAll('[data-meas-edit]').forEach(function(b){
+    b.addEventListener('click', function(){ editMeasurement(b.getAttribute('data-meas-edit')); });
+  });
+  hist.querySelectorAll('[data-meas-del]').forEach(function(b){
+    b.addEventListener('click', function(){ deleteMeasurement(b.getAttribute('data-meas-del')); });
+  });
+}
+</script>
+<script>
+'use strict';
+// ===== UI RENDERERS: ДАШБОРД (SVG-графики) =====
+const tooltip = document.getElementById('chartTooltip');
+// var() не работает в SVG presentation-атрибутах в Safari — берём вычисленное значение
+function cssVar(name){
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#00d4aa';
+}
+function showTooltip(x, y, text){
+  tooltip.textContent = text;
+  tooltip.style.display = 'block';
+  tooltip.style.left = Math.min(x + 10, window.innerWidth - 140) + 'px';
+  tooltip.style.top = (y - 34) + 'px';
+}
+function hideTooltip(){ tooltip.style.display = 'none'; }
+
+function svgEl(tag, attrs){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for(const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+// Универсальный мультилинейный график. series: [{label, color, points:[{x:dateStr,y:number}]}]
+function renderLineChart(container, series){
+  container.innerHTML = '';
+  const allPts = [];
+  series.forEach(function(s){ s.points.forEach(function(p){ allPts.push(p); }); });
+  if(allPts.length < 1){
+    container.innerHTML = '<div class="chart-empty">Недостаточно данных для графика</div>';
+    return;
+  }
+  const W = 600, H = 240, PAD = 40;
+  const dates = [];
+  allPts.forEach(function(p){ if(dates.indexOf(p.x) === -1) dates.push(p.x); });
+  dates.sort();
+  const ys = allPts.map(function(p){ return p.y; });
+  let yMin = Math.min.apply(null, ys), yMax = Math.max.apply(null, ys);
+  if(yMin === yMax){ yMin -= 1; yMax += 1; }
+  const yPad = (yMax - yMin) * 0.1;
+  yMin -= yPad; yMax += yPad;
+  const xOf = function(d){
+    if(dates.length === 1) return W / 2;
+    return PAD + (dates.indexOf(d) / (dates.length - 1)) * (W - PAD * 2);
+  };
+  const yOf = function(v){ return H - PAD - ((v - yMin) / (yMax - yMin)) * (H - PAD * 2); };
+  const svg = svgEl('svg', {viewBox: '0 0 ' + W + ' ' + H, role: 'img'});
+  // сетка
+  for(let i = 0; i <= 4; i++){
+    const y = PAD + (i / 4) * (H - PAD * 2);
+    svg.appendChild(svgEl('line', {x1: PAD, y1: y, x2: W - PAD, y2: y,
+      stroke: 'rgba(255,255,255,0.06)', 'stroke-width': 1}));
+    const val = yMax - (i / 4) * (yMax - yMin);
+    const t = svgEl('text', {x: PAD - 6, y: y + 4, 'text-anchor': 'end', 'font-size': 10,
+      fill: 'rgba(255,255,255,0.45)'});
+    t.textContent = val.toFixed(1);
+    svg.appendChild(t);
+  }
+  // подписи дат (до 6)
+  const step = Math.max(1, Math.ceil(dates.length / 6));
+  dates.forEach(function(d, i){
+    if(i % step !== 0 && i !== dates.length - 1) return;
+    const t = svgEl('text', {x: xOf(d), y: H - PAD + 16, 'text-anchor': 'middle', 'font-size': 10,
+      fill: 'rgba(255,255,255,0.45)'});
+    const p = d.split('-');
+    t.textContent = p[2] + '.' + p[1];
+    svg.appendChild(t);
+  });
+  // линии
+  series.forEach(function(s){
+    const pts = s.points.slice().sort(function(a,b){ return a.x < b.x ? -1 : 1; }).slice(-50);
+    if(pts.length > 1){
+      const dAttr = pts.map(function(p, i){
+        return (i === 0 ? 'M' : 'L') + xOf(p.x).toFixed(1) + ' ' + yOf(p.y).toFixed(1);
+      }).join(' ');
+      svg.appendChild(svgEl('path', {d: dAttr, fill: 'none', stroke: s.color,
+        'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round'}));
+    }
+    pts.forEach(function(p){
+      const c = svgEl('circle', {cx: xOf(p.x), cy: yOf(p.y), r: 4, fill: s.color, 'class': 'chart-dot'});
+      c.addEventListener('mouseenter', function(e){ showTooltip(e.clientX, e.clientY, fmtDate(p.x) + ': ' + p.y); });
+      c.addEventListener('mousemove', function(e){ showTooltip(e.clientX, e.clientY, fmtDate(p.x) + ': ' + p.y); });
+      c.addEventListener('mouseleave', hideTooltip);
+      c.addEventListener('click', function(e){ showTooltip(e.clientX, e.clientY, fmtDate(p.x) + ': ' + p.y); });
+      svg.appendChild(c);
+    });
+  });
+  container.appendChild(svg);
+}
+// Столбчатый график. bars: [{label, value}]
+function renderBarChart(container, bars){
+  container.innerHTML = '';
+  if(!bars.length){
+    container.innerHTML = '<div class="chart-empty">Недостаточно данных для графика</div>';
+    return;
+  }
+  const W = 600, H = 240, PAD = 40;
+  const maxV = Math.max.apply(null, bars.map(function(b){ return b.value; })) || 1;
+  const barW = (W - PAD * 2) / bars.length;
+  const svg = svgEl('svg', {viewBox: '0 0 ' + W + ' ' + H, role: 'img'});
+  for(let i = 0; i <= 4; i++){
+    const y = PAD + (i / 4) * (H - PAD * 2);
+    svg.appendChild(svgEl('line', {x1: PAD, y1: y, x2: W - PAD, y2: y,
+      stroke: 'rgba(255,255,255,0.06)', 'stroke-width': 1}));
+    const t = svgEl('text', {x: PAD - 6, y: y + 4, 'text-anchor': 'end', 'font-size': 10,
+      fill: 'rgba(255,255,255,0.45)'});
+    t.textContent = String(Math.round(maxV - (i / 4) * maxV));
+    svg.appendChild(t);
+  }
+  const grad = svgEl('linearGradient', {id: 'barGrad', x1: 0, y1: 0, x2: 0, y2: 1});
+  grad.appendChild(svgEl('stop', {offset: '0%', 'stop-color': '#00d4aa'}));
+  grad.appendChild(svgEl('stop', {offset: '100%', 'stop-color': '#00b4d8'}));
+  svg.appendChild(grad);
+  bars.forEach(function(b, i){
+    const h = (b.value / maxV) * (H - PAD * 2);
+    const rect = svgEl('rect', {
+      x: PAD + i * barW + barW * 0.15, y: H - PAD - h,
+      width: Math.max(4, barW * 0.7), height: Math.max(1, h),
+      rx: 4, fill: 'url(#barGrad)'
+    });
+    rect.addEventListener('mouseenter', function(e){ showTooltip(e.clientX, e.clientY, b.label + ': ' + b.value + ' кг'); });
+    rect.addEventListener('mouseleave', hideTooltip);
+    rect.addEventListener('click', function(e){ showTooltip(e.clientX, e.clientY, b.label + ': ' + b.value + ' кг'); });
+    svg.appendChild(rect);
+    if(bars.length <= 12){
+      const p = b.label.split('.');
+      const t = svgEl('text', {x: PAD + i * barW + barW / 2, y: H - PAD + 16, 'text-anchor': 'middle',
+        'font-size': 9, fill: 'rgba(255,255,255,0.45)'});
+      t.textContent = p[0] + '.' + p[1];
+      svg.appendChild(t);
+    }
+  });
+  container.appendChild(svg);
+}
+
+function renderDashboard(){
+  // --- Статистические карточки ---
+  const grid = document.getElementById('statGrid');
+  const totalW = state.workouts.length;
+  let totalSets = 0, totalVol = 0;
+  const exNames = {};
+  state.workouts.forEach(function(w){
+    totalVol += w.totalVolume || 0;
+    (w.exercises || []).forEach(function(ex){
+      exNames[ex.name] = true;
+      totalSets += (ex.sets || []).length;
+    });
+  });
+  const ms = sortedMeasurements().filter(function(m){ return m.weight != null; });
+  const curW = ms.length ? ms[ms.length - 1].weight : null;
+  const startW = ms.length ? ms[0].weight : null;
+  const wChange = (curW != null && startW != null) ? +(curW - startW).toFixed(1) : null;
+  const toGoal = curW != null ? +(GOAL_WEIGHT - curW).toFixed(1) : null;
+  const cards = [
+    {v: totalW, l: 'Всего тренировок'},
+    {v: Object.keys(exNames).length, l: 'Упражнений'},
+    {v: totalSets, l: 'Подходов'},
+    {v: Math.round(totalVol), l: 'Общий объём (кг)'},
+    {v: curW != null ? curW + ' кг' : '—', l: 'Текущий вес'},
+    {v: wChange != null ? (wChange >= 0 ? '+' : '') + wChange + ' кг' : '—', l: 'Изменение от старта'},
+    {v: toGoal != null ? (toGoal > 0 ? toGoal + ' кг' : '🎉 достигнуто') : '—', l: 'До цели (' + GOAL_WEIGHT + ' кг)'}
+  ];
+  grid.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  cards.forEach(function(c){
+    const d = document.createElement('div');
+    d.className = 'stat-card';
+    const v = document.createElement('div'); v.className = 'stat-value'; v.textContent = c.v;
+    const l = document.createElement('div'); l.className = 'stat-label'; l.textContent = c.l;
+    d.appendChild(v); d.appendChild(l);
+    frag.appendChild(d);
+  });
+  grid.appendChild(frag);
+
+  // --- График веса ---
+  renderLineChart(document.getElementById('chartWeight'), [{
+    label: 'Вес', color: 'var(--chart-1)',
+    points: ms.map(function(m){ return {x: m.date, y: m.weight}; })
+  }]);
+
+  // --- График объёмов ---
+  const sizeSeries = [
+    {key: 'waist',  label: 'Талия',  color: 'var(--chart-2)'},
+    {key: 'hips',   label: 'Бёдра',  color: 'var(--chart-3)'},
+    {key: 'bicepR', label: 'Бицепс', color: 'var(--chart-1)'},
+    {key: 'chest',  label: 'Грудь',  color: 'var(--chart-4)'}
+  ].map(function(s){
+    return {label: s.label, color: s.color,
+      points: sortedMeasurements().filter(function(m){ return m[s.key] != null; })
+        .map(function(m){ return {x: m.date, y: m[s.key]}; })};
+  }).filter(function(s){ return s.points.length; });
+  renderLineChart(document.getElementById('chartSizes'), sizeSeries);
+  const legend = document.getElementById('chartSizesLegend');
+  legend.innerHTML = '';
+  sizeSeries.forEach(function(s){
+    const span = document.createElement('span');
+    const dot = document.createElement('span');
+    dot.className = 'legend-dot';
+    dot.style.background = s.color;
+    span.appendChild(dot);
+    span.appendChild(document.createTextNode(s.label));
+    legend.appendChild(span);
+  });
+
+  // --- Прогресс силы ---
+  const sel = document.getElementById('strengthExSelect');
+  const names = Object.keys(exNames).sort(function(a,b){ return a.localeCompare(b, 'ru'); });
+  const prevSel = state.strengthEx;
+  sel.innerHTML = '';
+  names.forEach(function(n){
+    const o = document.createElement('option');
+    o.value = n; o.textContent = n;
+    sel.appendChild(o);
+  });
+  if(names.length){
+    sel.value = (prevSel && names.indexOf(prevSel) !== -1) ? prevSel : names[0];
+    state.strengthEx = sel.value;
+  }
+  renderStrengthChart();
+
+  // --- Объём тренировок (последние 20) ---
+  const volBars = sortedWorkouts().reverse().slice(0, 20).reverse().map(function(w){
+    return {label: fmtDate(w.date).slice(0, 5), value: w.totalVolume || 0};
+  });
+  renderBarChart(document.getElementById('chartVolume'), volBars);
+}
+function renderStrengthChart(){
+  const name = state.strengthEx;
+  const byDate = {};
+  state.workouts.forEach(function(w){
+    (w.exercises || []).forEach(function(ex){
+      if(ex.name !== name) return;
+      (ex.sets || []).forEach(function(s){
+        if(s.weight == null) return;
+        if(byDate[w.date] == null || s.weight > byDate[w.date]) byDate[w.date] = s.weight;
+      });
+    });
+  });
+  const pts = Object.keys(byDate).sort().map(function(d){ return {x: d, y: byDate[d]}; });
+  renderLineChart(document.getElementById('chartStrength'),
+    pts.length ? [{label: name, color: cssVar('--chart-1'), points: pts}] : []);
+}
+document.getElementById('strengthExSelect').addEventListener('change', function(e){
+  state.strengthEx = e.target.value;
+  renderStrengthChart();
+});
+
+// ===== UI RENDERERS: НАСТРОЙКИ =====
+function renderSettings(){
+  document.getElementById('settingsKey').value = state.diaryKey || '';
+  document.getElementById('settingsRest').value = state.config.restSeconds || 90;
+  const p = getPeriodization(todayStr());
+  const info = document.getElementById('settingsCycleInfo');
+  if(p.notStarted) info.textContent = 'Старт 01.09.2026';
+  else if(p.finished) info.textContent = 'Программа завершена 🏆';
+  else info.textContent = 'Неделя ' + p.weekNumber + '/21 · цикл ' + p.cycleNumber + ' · ' + p.label.split(' (')[0];
+  updateSyncBadge();
+}
+document.getElementById('applyKeyBtn').addEventListener('click', function(){
+  const k = document.getElementById('settingsKey').value.trim();
+  showConfirm('Сменить ключ дневника?', k ?
+    'Будут загружены данные дневника «' + k + '». Локальные данные текущего ключа останутся на устройстве.' :
+    'Ключ будет очищен — приложение перейдёт в локальный режим.', 'Применить', function(){
+    document.getElementById('modalOk').textContent = 'Удалить';
+    setDiaryKey(k || null);
+  });
+});
+function setDiaryKey(k){
+  state.diaryKey = k;
+  if(k) localStorage.setItem('dn_diaryKey', k); else localStorage.removeItem('dn_diaryKey');
+  loadLocal();
+  seedMeasurements();
+  editingWorkoutId = null; editingMeasId = null;
+  form = newForm();
+  state.db = null; state.cloudReady = false;
+  initFirebase();
+  renderAll();
+  toast(k ? 'Ключ применён: ' + k : 'Локальный режим');
+}
+document.getElementById('saveRestBtn').addEventListener('click', function(){
+  const v = parseInt(document.getElementById('settingsRest').value) || 90;
+  state.config.restSeconds = Math.max(10, Math.min(600, v));
+  pushConfig();
+  timerReset();
+  toast('Время отдыха: ' + state.config.restSeconds + ' сек');
+});
+document.getElementById('syncNowBtn').addEventListener('click', function(){
+  if(!state.diaryKey){ toast('Сначала задайте ключ дневника', 'warning'); return; }
+  if(!state.cloudReady){ initFirebase(); toast('Подключаемся к облаку...', 'warning'); return; }
+  toast('Синхронизация...');
+  pullFromCloud();
+  processQueue();
+});
+document.getElementById('resetDataBtn').addEventListener('click', function(){
+  showConfirm('Сбросить все данные?', 'Все локальные данные этого дневника будут удалены с устройства. Это действие нельзя отменить.', 'Сбросить', function(){
+    ['workouts','measurements','config','syncQueue','seeded'].forEach(function(n){
+      localStorage.removeItem(storageKey(n));
+    });
+    clearDraft();
+    state.workouts = []; state.measurements = []; state.config = {restSeconds: 90};
+    state.seeded = false;
+    editingWorkoutId = null; editingMeasId = null;
+    form = newForm();
+    seedMeasurements();
+    saveLocal();
+    renderAll();
+    toast('Локальные данные сброшены');
+  });
+});
+// JSON-бэкап (скрытая секция)
+document.getElementById('exportJsonBtn').addEventListener('click', function(){
+  const data = {
+    version: 1, exportedAt: new Date().toISOString(),
+    workouts: state.workouts, measurements: state.measurements, config: state.config
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dnevnik_backup_' + todayStr() + '.json';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+  toast('Бэкап выгружен');
+});
+document.getElementById('importJsonInput').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(){
+    try{
+      const data = JSON.parse(reader.result);
+      if(!data || !Array.isArray(data.workouts) || !Array.isArray(data.measurements)){
+        throw new Error('bad structure');
+      }
+      showConfirm('Импортировать бэкап?', 'Это заменит все текущие данные. Продолжить?', 'Импортировать', function(){
+        state.workouts = data.workouts;
+        state.measurements = data.measurements;
+        if(data.config) state.config = Object.assign({restSeconds: 90}, data.config);
+        state.seeded = true;
+        saveLocal();
+        state.workouts.forEach(function(w){ enqueue('update', 'workouts', w.id, w); });
+        state.measurements.forEach(function(m){ enqueue('update', 'measurements', m.id, m); });
+        renderAll();
+        toast('Бэкап импортирован ✅');
+      });
+    }catch(err){
+      toast('Ошибка: неверный формат файла', 'danger');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+});
+
+// ===== НАВИГАЦИЯ =====
+const SCREENS = [
+  {id: 'workout',    label: 'Тренировка', ico: '🏋️'},
+  {id: 'history',    label: 'История',    ico: '📋'},
+  {id: 'measure',    label: 'Замеры',     ico: '📏'},
+  {id: 'dashboard',  label: 'Дашборд',    ico: '📊'},
+  {id: 'settings',   label: 'Настройки',  ico: '⚙️'}
+];
+function renderNav(){
+  ['navTop', 'navBottom'].forEach(function(navId){
+    const nav = document.getElementById(navId);
+    nav.innerHTML = '';
+    SCREENS.forEach(function(s){
+      const b = document.createElement('button');
+      b.className = 'nav-tab' + (state.screen === s.id ? ' active' : '');
+      b.setAttribute('aria-label', s.label);
+      b.innerHTML = '<span class="nav-ico">' + s.ico + '</span><span>' + s.label + '</span>';
+      b.addEventListener('click', function(){ switchScreen(s.id); });
+      nav.appendChild(b);
+    });
+  });
+}
+function switchScreen(id){
+  state.screen = id;
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('screen-' + id).classList.add('active');
+  renderNav();
+  if(id === 'history') renderHistory();
+  if(id === 'measure'){ renderMeasurements(); }
+  if(id === 'dashboard') renderDashboard();
+  if(id === 'settings') renderSettings();
+  if(id === 'workout') renderWorkoutScreen();
+  window.scrollTo(0, 0);
+}
+
+// ===== INIT =====
+function seedMeasurements(){
+  if(state.seeded || state.measurements.length) return;
+  DEFAULT_MEASUREMENTS.forEach(function(m){
+    const doc = Object.assign({id: uid(), updatedAt: Date.now(), createdAt: Date.now()}, m);
+    state.measurements.push(doc);
+    enqueue('create', 'measurements', doc.id, doc);
+  });
+  state.seeded = true;
+  saveLocal();
+}
+function renderAll(){
+  renderWorkoutScreen();
+  if(state.screen === 'history') renderHistory();
+  if(state.screen === 'measure') renderMeasurements();
+  if(state.screen === 'dashboard') renderDashboard();
+  if(state.screen === 'settings') renderSettings();
+  updateSyncBadge();
+}
+function registerServiceWorker(){
+  if(!('serviceWorker' in navigator)) return;
+  try{
+    const swCode =
+      "const CACHE='dnevnik-v1';" +
+      "self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.add('./')).catch(()=>{}));self.skipWaiting();});" +
+      "self.addEventListener('activate',e=>{e.waitUntil(self.clients.claim());});" +
+      "self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{" +
+      "const cl=resp.clone();caches.open(CACHE).then(c=>c.put(e.request,cl)).catch(()=>{});return resp;}).catch(()=>caches.match('./'))));});";
+    const blob = new Blob([swCode], {type: 'application/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function(e){
+      console.warn('SW registration failed', e);
+    });
+  }catch(e){ console.warn('SW error', e); }
+}
+function init(){
+  state.diaryKey = localStorage.getItem('dn_diaryKey') || null;
+  loadLocal();
+  seedMeasurements();
+  form = newForm();
+  renderNav();
+  renderMeasForm();
+  resetMeasForm();
+  renderWorkoutScreen();
+  document.getElementById('screen-workout').classList.add('active');
+  timerReset();
+  updateSyncBadge();
+  // Модальное окно ключа при первом запуске
+  if(!localStorage.getItem('dn_keyAsked')){
+    document.getElementById('keyOverlay').classList.add('open');
+  }
+  document.getElementById('keySaveBtn').addEventListener('click', function(){
+    const k = document.getElementById('keyInput').value.trim();
+    localStorage.setItem('dn_keyAsked', '1');
+    document.getElementById('keyOverlay').classList.remove('open');
+    if(k) setDiaryKey(k); else toast('Локальный режим. Ключ можно задать в Настройках.', 'warning');
+  });
+  document.getElementById('keySkipBtn').addEventListener('click', function(){
+    localStorage.setItem('dn_keyAsked', '1');
+    document.getElementById('keyOverlay').classList.remove('open');
+    toast('Локальный режим. Ключ можно задать в Настройках.', 'warning');
+  });
+  if(state.diaryKey) initFirebase();
+  checkDraft();
+  registerServiceWorker();
+}
+init();
+</script>
+</body>
+</html>
