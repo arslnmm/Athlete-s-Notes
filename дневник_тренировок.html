@@ -1780,9 +1780,11 @@ function nutGoals(){ return state.config.nutrition || DEFAULT_CONFIG.nutrition; 
 function nutAgeDays(dateStr){
   return Math.floor((new Date(todayStr() + 'T00:00:00') - new Date(dateStr + 'T00:00:00')) / DAY_MS);
 }
-function nutCellClass(value, goal, ageDays){
+function nutCellClass(value, goal, ageDays, key){
   if(value == null) return 'nut-old';
   if(ageDays > 5) return 'nut-old'; // записи старше 5 дней — серая раскраска
+  // Для жиров логика обратная: превышение нормы — плохо
+  if(key === 'fat') return value <= goal ? 'nut-ok' : 'nut-bad';
   return value >= goal ? 'nut-ok' : 'nut-bad';
 }
 function renderNutrition(){
@@ -1837,7 +1839,7 @@ function renderNutTable(){
     const age = nutAgeDays(n.date);
     html += '<tr><td>' + esc(fmtDate(n.date)) + '</td>';
     NUT_FIELDS.forEach(function(f){
-      const cls = nutCellClass(n[f.key], g[f.key], age);
+      const cls = nutCellClass(n[f.key], g[f.key], age, f.key);
       html += '<td class="' + cls + '">' + (n[f.key] != null ? n[f.key] : '—') + '</td>';
     });
     html += '<td><button class="icon-btn" data-nut-edit="' + esc(n.id) + '" aria-label="Изменить запись">✏️</button>' +
