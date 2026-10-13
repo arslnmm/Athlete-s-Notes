@@ -361,7 +361,7 @@ table.nut-table td,table.nut-table th{white-space:nowrap}
 .meal-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
 .meal-name{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .meal-time{font-size:13px;color:var(--text-muted)}
-.meal-total{margin-left:auto;font-size:12px;color:var(--text-muted);white-space:nowrap}
+.meal-total{margin-left:auto;font-size:12px;color:var(--text-muted);text-align:right}
 .food-row{
   display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;
   background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
@@ -2327,12 +2327,13 @@ function renderNutEntries(day, t){
     if(ta !== tb) return ta < tb ? -1 : 1;
     return (a.createdAt || 0) - (b.createdAt || 0);
   });
-  let lastKey = null, mealBox = null, mealSum = 0, mealCount = 0;
+  let lastKey = null, mealBox = null, mealSum = 0, mealCount = 0, mealP = 0, mealF = 0, mealC = 0;
   function flushMeal(){
     if(mealBox && mealBox._totalEl && mealCount > 0){
-      mealBox._totalEl.textContent = Math.round(mealSum) + ' ккал';
+      mealBox._totalEl.textContent =
+        'Б ' + r1(mealP) + ' · Ж ' + r1(mealF) + ' · У ' + r1(mealC) + ' · ' + Math.round(mealSum) + ' ккал';
     }
-    mealSum = 0; mealCount = 0;
+    mealSum = 0; mealCount = 0; mealP = 0; mealF = 0; mealC = 0;
   }
   items.forEach(function(it){
     const key = (it.meal || 'Другое') + '|' + (it.time || '');
@@ -2370,6 +2371,7 @@ function renderNutEntries(day, t){
     }
     const v = entryPFC(it);
     mealSum += v.k; mealCount++;
+    mealP += v.p; mealF += v.f; mealC += v.c;
     const row = document.createElement('div');
     row.className = 'food-row';
     row.setAttribute('data-nut-item', it.id);
