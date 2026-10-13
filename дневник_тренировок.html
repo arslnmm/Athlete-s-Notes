@@ -135,6 +135,39 @@ label{display:block;font-size:13px;color:var(--text-muted);margin:0 0 6px 2px}
   .nav-tab .nav-ico{font-size:18px}
 }
 
+/* ---------- Вложенные экраны Настроек ---------- */
+.sub-screen{
+  position:fixed;inset:0;z-index:80;background:var(--bg);
+  transform:translateX(100%);transition:transform .28s ease;
+  overflow-y:auto;overscroll-behavior:contain;
+}
+.sub-screen.open{transform:translateX(0)}
+.sub-inner{max-width:860px;margin:0 auto;padding:14px 16px 48px}
+.sub-header{
+  position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;
+  background:var(--bg);padding:10px 0 12px;border-bottom:1px solid var(--border);
+  margin-bottom:14px;
+}
+.sub-back{
+  flex:none;width:40px;height:40px;border-radius:10px;font-size:22px;line-height:1;
+  background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);
+  cursor:pointer;
+}
+.sub-back:active{background:var(--bg-card-hover)}
+.sub-title{font-size:18px;font-weight:600;color:var(--text-primary)}
+.menu-item{
+  display:flex;align-items:center;gap:12px;width:100%;min-height:52px;
+  background:transparent;border:none;border-bottom:1px solid var(--border);
+  color:var(--text-primary);font-size:15px;text-align:left;cursor:pointer;
+  padding:12px 2px;
+}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:var(--bg-card)}
+.menu-item .mi-ico{font-size:20px;flex:none}
+.menu-item .mi-text{flex:1}
+.menu-item .mi-sub{display:block;font-size:12px;color:var(--text-muted);margin-top:2px}
+.menu-item .mi-arrow{color:var(--text-muted);font-size:18px;flex:none}
+
 /* ---------- Табы выбора типа тренировки ---------- */
 .seg{display:flex;gap:8px;margin-bottom:14px}
 .seg button{
@@ -296,6 +329,73 @@ table.sticky-cols thead th{position:sticky;top:0;z-index:3;background:#151532}
 .nut-old{color:var(--text-muted);font-weight:400}
 table.nut-table td,table.nut-table th{white-space:nowrap}
 
+/* Журнал питания: день и записи */
+.day-nav{display:flex;align-items:center;gap:8px}
+.day-nav input{flex:1;min-width:0}
+.day-nav .icon-btn{flex:none;border:1px solid var(--border)}
+.nut-progress{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.nut-progress .np-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary)}
+.nut-progress .np-label{width:74px;flex:none;color:var(--text-muted)}
+.nut-progress .np-bar{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,0.07);overflow:hidden;min-width:60px}
+.nut-progress .np-fill{height:100%;border-radius:4px;background:var(--gradient-accent);transition:width .3s ease}
+.nut-progress .np-fill.over{background:var(--danger)}
+.nut-progress .np-val{width:86px;flex:none;text-align:right;white-space:nowrap}
+
+/* Предложения продуктов (автоподсказка) */
+.ac-wrap{position:relative}
+.ac-panel{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:70;
+  max-height:260px;overflow-y:auto;background:#12122a;border:1px solid var(--border);
+  border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.ac-item{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  padding:10px 12px;font-size:14px;color:var(--text-secondary);min-height:44px;
+}
+.ac-item:hover,.ac-item.active{background:rgba(0,212,170,0.08)}
+.ac-item .ac-kcal{margin-left:auto;font-size:12px;color:var(--text-muted);white-space:nowrap}
+.ac-hint{padding:8px 12px;font-size:12px;color:var(--accent)}
+
+/* Записи рациона за день */
+.meal-block{margin-bottom:12px}
+.meal-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.meal-name{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:3px 10px;white-space:nowrap}
+.meal-time{font-size:13px;color:var(--text-muted)}
+.meal-total{margin-left:auto;font-size:12px;color:var(--text-muted);white-space:nowrap}
+.food-row{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;
+  background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+}
+.food-row .food-name{flex:1;min-width:0;font-size:14px;overflow-wrap:break-word;line-height:1.3}
+.food-row .food-grams{color:var(--text-muted);font-size:13px;white-space:nowrap}
+.food-row .food-kcal{font-size:13px;color:var(--accent);white-space:nowrap;width:64px;text-align:right}
+.food-row .icon-btn{min-width:36px;min-height:36px;font-size:14px;flex:none}
+.food-pfc{font-size:11px;color:var(--text-muted);display:block;margin-top:2px}
+
+/* Переключатель «продукт / БЖУ без продукта» */
+.mini-seg{display:flex;gap:6px;margin-bottom:12px}
+.mini-seg button{
+  flex:1;min-height:40px;border-radius:8px;font-size:13px;font-weight:500;
+  border:1px solid var(--border);color:var(--text-secondary);background:var(--bg-card);
+  transition:all .25s ease;
+}
+.mini-seg button.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.custom-pfc{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.calc-preview{
+  font-size:13px;color:var(--text-secondary);background:var(--accent-soft);
+  border-radius:8px;padding:8px 12px;margin-top:8px;line-height:1.5;
+}
+
+/* Банк продуктов (настройки) */
+.prod-bank-row{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.prod-bank-row .pb-name{display:flex;gap:6px}
+.prod-bank-row .pb-name input{flex:1;min-width:0;min-height:40px}
+.prod-bank-row .pb-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.prod-bank-row .pb-nums input{min-height:40px;padding:6px 8px;font-size:13px}
+.prod-bank-row .icon-btn{min-width:40px;min-height:40px;flex:none}
+.prod-bank-add{display:grid;grid-template-columns:1fr;gap:6px}
+.prod-bank-add .pb-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+
 /* ---------- Банк упражнений ---------- */
 .bank-cat-row{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;padding:10px 2px 4px}
 .bank-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
@@ -396,8 +496,8 @@ textarea{resize:vertical;min-height:70px}
           <input type="date" id="workoutDate">
         </div>
         <div class="field">
-          <label>Длительность</label>
-          <input type="text" id="workoutDuration" readonly aria-label="Длительность тренировки" value="—">
+          <label for="workoutDuration">Длительность (мин)</label>
+          <input type="number" id="workoutDuration" step="1" min="0" inputmode="numeric" aria-label="Длительность тренировки в минутах">
         </div>
       </div>
       <button class="btn btn-primary btn-block" id="startWorkoutBtn">▶️ Начать тренировку</button>
@@ -469,29 +569,113 @@ textarea{resize:vertical;min-height:70px}
   <!-- ===== ЭКРАН: ПИТАНИЕ ===== -->
   <section id="screen-nutrition" class="screen" aria-label="Питание">
     <h2 class="screen-title">🍎 Питание</h2>
-    <div class="stat-grid" id="nutStatGrid"></div>
+
     <div class="card">
       <div class="flex-between" style="margin-bottom:12px">
-        <span class="chart-title" style="margin:0">Запись за день</span>
+        <span class="chart-title" style="margin:0">Дневник за день</span>
         <span class="muted" id="nutGoalsLine"></span>
       </div>
-      <div class="field">
-        <label for="nutDate">Дата</label>
-        <input type="date" id="nutDate">
+      <div class="day-nav">
+        <button class="icon-btn" id="nutDayPrev" aria-label="Предыдущий день">‹</button>
+        <input type="date" id="nutDate" aria-label="Дата дневника питания">
+        <button class="icon-btn" id="nutDayNext" aria-label="Следующий день">›</button>
       </div>
+      <div class="nut-progress" id="nutProgress"></div>
+      <button class="btn btn-ghost btn-block mt" id="nutCopyBtn">📋 Скопировать рацион из другого дня</button>
+    </div>
+
+    <div class="card" id="nutAddCard">
+      <div class="chart-title" id="nutAddTitle">Добавить запись</div>
       <div class="row-2">
-        <div class="field"><label for="nutProtein">Белки (г)</label><input type="number" id="nutProtein" step="1" inputmode="decimal"></div>
-        <div class="field"><label for="nutFat">Жиры (г)</label><input type="number" id="nutFat" step="1" inputmode="decimal"></div>
-        <div class="field"><label for="nutCarbs">Углеводы (г)</label><input type="number" id="nutCarbs" step="1" inputmode="decimal"></div>
-        <div class="field"><label for="nutKcal">Ккал</label><input type="number" id="nutKcal" step="1" inputmode="decimal"></div>
+        <div class="field">
+          <label for="nutMeal">Приём пищи</label>
+          <select id="nutMeal"></select>
+        </div>
+        <div class="field">
+          <label for="nutTime">Время</label>
+          <input type="time" id="nutTime">
+        </div>
       </div>
-      <button class="btn btn-primary btn-block" id="saveNutBtn">💾 Сохранить запись</button>
+      <div class="mini-seg" role="tablist" aria-label="Тип записи">
+        <button id="nutModeProduct" role="tab" class="active">🍽️ Продукт</button>
+        <button id="nutModeManual" role="tab">✏️ БЖУ без продукта</button>
+      </div>
+
+      <div id="nutProductForm">
+        <div class="field ac-wrap">
+          <label for="nutProductName">Продукт</label>
+          <input type="text" id="nutProductName" placeholder="Начните вводить: яй, овс…" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="nutGrams">Граммы</label>
+          <input type="number" id="nutGrams" step="1" min="0" inputmode="decimal" placeholder="например, 40">
+        </div>
+        <div id="nutKnownBox">
+          <div class="calc-preview hidden" id="nutKnownPreview"></div>
+        </div>
+        <div id="nutCustomBox" class="hidden">
+          <div class="muted" style="margin-bottom:8px">Такого продукта нет в справочнике. Укажите БЖУ на 100 г — под ваши граммы всё пересчитается автоматически.</div>
+          <div class="custom-pfc">
+            <div class="field" style="margin:0"><label for="nutCustomP">Белки/100г</label><input type="number" id="nutCustomP" step="0.1" min="0" inputmode="decimal"></div>
+            <div class="field" style="margin:0"><label for="nutCustomF">Жиры/100г</label><input type="number" id="nutCustomF" step="0.1" min="0" inputmode="decimal"></div>
+            <div class="field" style="margin:0"><label for="nutCustomC">Углев./100г</label><input type="number" id="nutCustomC" step="0.1" min="0" inputmode="decimal"></div>
+            <div class="field" style="margin:0"><label for="nutCustomK">Ккал/100г</label><input type="number" id="nutCustomK" step="0.1" min="0" inputmode="decimal"></div>
+          </div>
+          <label class="flex mt" style="font-size:13px;color:var(--text-secondary);min-height:32px;cursor:pointer">
+            <input type="checkbox" id="nutCustomSave" style="width:20px;min-height:20px;flex:none"> Сохранить в справочник продуктов
+          </label>
+          <div class="calc-preview hidden" id="nutCustomPreview"></div>
+        </div>
+        <button class="btn btn-primary btn-block" id="nutAddBtn">➕ Добавить в рацион</button>
+      </div>
+
+      <div id="nutManualForm" class="hidden">
+        <div class="muted" style="margin-bottom:8px">Добавьте белки, жиры и углеводы напрямую — без продукта. Ккал посчитаются автоматически.</div>
+        <div class="field" style="margin-bottom:8px">
+          <label for="nutManualName">Название (необязательно)</label>
+          <input type="text" id="nutManualName" placeholder="например, «ужин у мамы»">
+        </div>
+        <div class="custom-pfc">
+          <div class="field" style="margin:0"><label for="nutManualP">Белки (г)</label><input type="number" id="nutManualP" step="0.1" min="0" inputmode="decimal"></div>
+          <div class="field" style="margin:0"><label for="nutManualF">Жиры (г)</label><input type="number" id="nutManualF" step="0.1" min="0" inputmode="decimal"></div>
+          <div class="field" style="margin:0"><label for="nutManualC">Углеводы (г)</label><input type="number" id="nutManualC" step="0.1" min="0" inputmode="decimal"></div>
+          <div class="field" style="margin:0"><label for="nutManualK">Ккал</label><input type="number" id="nutManualK" step="0.1" min="0" inputmode="decimal" placeholder="авто"></div>
+        </div>
+        <button class="btn btn-primary btn-block mt" id="nutAddManualBtn">➕ Добавить БЖУ</button>
+      </div>
+
       <button class="btn btn-ghost btn-block mt hidden" id="cancelNutEditBtn">Отменить редактирование</button>
     </div>
+
+    <div class="card">
+      <div class="flex-between" style="margin-bottom:10px">
+        <span class="chart-title" style="margin:0">Записи за день</span>
+        <span class="muted" id="nutDayTotal"></span>
+      </div>
+      <div id="nutDayEntries"></div>
+    </div>
+
     <div class="card">
       <div class="chart-title">История питания</div>
-      <div class="muted" style="margin-bottom:10px">Зелёным — норма выполнена, красным — ниже нормы. Записи старше 5 дней — серые.</div>
+      <div class="muted" style="margin-bottom:10px">Итоги считаются автоматически из записей. Зелёным — норма выполнена, красным — ниже нормы. Записи старше 5 дней — серые. Нормы: будни / выходные.</div>
       <div class="table-wrap" id="nutTable"></div>
+    </div>
+
+    <!-- Панель копирования рациона -->
+    <div class="modal-overlay" id="copyOverlay" role="dialog" aria-modal="true">
+      <div class="modal-card" style="max-width:360px">
+        <div class="modal-title">Скопировать рацион</div>
+        <div class="modal-text">Перенести все записи с граммами из выбранного дня в <b id="copyTargetDate"></b>. Существующие записи за этот день останутся.</div>
+        <div class="field">
+          <label for="copySourceDate">Дата-источник</label>
+          <input type="date" id="copySourceDate">
+        </div>
+        <div class="modal-actions" style="justify-content:stretch;flex-direction:column">
+          <button class="btn btn-secondary btn-block" id="copyYesterdayBtn">📋 Взять вчерашний день</button>
+          <button class="btn btn-primary btn-block mt" id="copyConfirmBtn">Скопировать</button>
+          <button class="btn btn-ghost btn-block mt" id="copyCancelBtn">Отмена</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -507,6 +691,22 @@ textarea{resize:vertical;min-height:70px}
         <span class="muted">Неделя цикла</span>
         <span id="settingsCycleInfo" class="accent"></span>
       </div>
+    </div>
+    <div class="card">
+      <button class="menu-item" id="openSubProducts">
+        <span class="mi-ico">🥗</span>
+        <span class="mi-text">Справочник продуктов
+          <span class="mi-sub" id="subProductsCount">БЖУ и ккал на 100 г · <span id="prodCountLabel"></span></span>
+        </span>
+        <span class="mi-arrow">›</span>
+      </button>
+      <button class="menu-item" id="openSubExercises">
+        <span class="mi-ico">🏋️</span>
+        <span class="mi-text">Банк упражнений
+          <span class="mi-sub">Упражнения и категории для тренировок</span>
+        </span>
+        <span class="mi-arrow">›</span>
+      </button>
     </div>
     <div class="card">
       <div class="field">
@@ -530,26 +730,37 @@ textarea{resize:vertical;min-height:70px}
       <button class="btn btn-secondary btn-block" id="saveGoalBtn">Сохранить цель</button>
     </div>
     <div class="card">
-      <div class="chart-title">Нормы питания (ориентир на день)</div>
+      <div class="chart-title">Программа и периодизация</div>
+      <div class="muted" style="margin-bottom:10px" id="programAutoInfo"></div>
+      <div class="row-2">
+        <div class="field"><label for="progWeek">Неделя программы (1–21)</label><input type="number" id="progWeek" step="1" min="1" max="21"></div>
+        <div class="field"><label for="progCycle">Цикл (1–7)</label><input type="number" id="progCycle" step="1" min="1" max="7"></div>
+      </div>
+      <label style="margin-top:2px">Периодизация недели</label>
+      <div class="seg" role="tablist" aria-label="Периодизация недели" style="margin-top:2px">
+        <button type="button" id="progType1" role="tab">Лёгкая</button>
+        <button type="button" id="progType2" role="tab">Средняя</button>
+        <button type="button" id="progType3" role="tab">Тяжёлая</button>
+      </div>
+      <button class="btn btn-secondary btn-block" id="saveProgramBtn">Сохранить вручную</button>
+      <button class="btn btn-ghost btn-block mt" id="resetProgramBtn">Вернуть автоопределение по дате</button>
+    </div>
+    <div class="card">
+      <div class="chart-title">Нормы питания — будни</div>
       <div class="row-2">
         <div class="field"><label for="goalProtein">Белки (г)</label><input type="number" id="goalProtein" step="1" min="0"></div>
         <div class="field"><label for="goalFat">Жиры (г)</label><input type="number" id="goalFat" step="1" min="0"></div>
         <div class="field"><label for="goalCarbs">Углеводы (г)</label><input type="number" id="goalCarbs" step="1" min="0"></div>
         <div class="field"><label for="goalKcal">Ккал</label><input type="number" id="goalKcal" step="1" min="0"></div>
       </div>
-      <button class="btn btn-secondary btn-block" id="saveNutGoalsBtn">Сохранить нормы</button>
-    </div>
-    <div class="card">
-      <div class="chart-title">Банк упражнений</div>
-      <div class="muted" style="margin-bottom:10px">Переименование, добавление и удаление упражнений в выпадающих списках.</div>
-      <div id="exerciseBank"></div>
-      <div class="row-2 mt">
-        <div class="field" style="margin:0"><label for="bankNewName">Новое упражнение</label><input type="text" id="bankNewName" placeholder="Название"></div>
-        <div class="field" style="margin:0"><label for="bankNewCat">Категория</label>
-          <select id="bankNewCat"></select>
-        </div>
+      <div class="chart-title" style="margin-top:10px">Нормы питания — выходные</div>
+      <div class="row-2">
+        <div class="field"><label for="goalWEProtein">Белки (г)</label><input type="number" id="goalWEProtein" step="1" min="0"></div>
+        <div class="field"><label for="goalWEFat">Жиры (г)</label><input type="number" id="goalWEFat" step="1" min="0"></div>
+        <div class="field"><label for="goalWECarbs">Углеводы (г)</label><input type="number" id="goalWECarbs" step="1" min="0"></div>
+        <div class="field"><label for="goalWEKcal">Ккал</label><input type="number" id="goalWEKcal" step="1" min="0"></div>
       </div>
-      <button class="btn btn-secondary btn-block mt" id="bankAddBtn">➕ Добавить в банк</button>
+      <button class="btn btn-secondary btn-block" id="saveNutGoalsBtn">Сохранить нормы</button>
     </div>
     <div class="card">
       <button class="btn btn-primary btn-block" id="syncNowBtn">🔄 Синхронизировать сейчас</button>
@@ -583,6 +794,47 @@ service cloud.firestore {
       </div>
       <div style="height:14px"></div>
     </details>
+
+    <!-- Вложенный экран: справочник продуктов -->
+    <div class="sub-screen" id="subProducts" role="dialog" aria-modal="true" aria-label="Справочник продуктов">
+      <div class="sub-inner">
+        <div class="sub-header">
+          <button class="sub-back" id="subProductsBack" aria-label="Назад в настройки">‹</button>
+          <span class="sub-title">🥗 Справочник продуктов</span>
+        </div>
+        <div class="muted" style="margin-bottom:10px">БЖУ и ккал на 100 г. Переименование, добавление и удаление продуктов. Старые записи рациона сохраняют свои цифры. Список отсортирован по алфавиту.</div>
+        <div id="productBank"></div>
+        <div class="prod-bank-add mt">
+          <input type="text" id="prodNewName" placeholder="Новый продукт" aria-label="Название продукта">
+          <div class="pb-nums">
+            <input type="number" id="prodNewP" step="0.1" min="0" placeholder="Белки" aria-label="Белки на 100 г" inputmode="decimal">
+            <input type="number" id="prodNewF" step="0.1" min="0" placeholder="Жиры" aria-label="Жиры на 100 г" inputmode="decimal">
+            <input type="number" id="prodNewC" step="0.1" min="0" placeholder="Углев." aria-label="Углеводы на 100 г" inputmode="decimal">
+            <input type="number" id="prodNewK" step="0.1" min="0" placeholder="Ккал" aria-label="Ккал на 100 г" inputmode="decimal">
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-block mt" id="prodAddBtn">➕ Добавить продукт</button>
+      </div>
+    </div>
+
+    <!-- Вложенный экран: банк упражнений -->
+    <div class="sub-screen" id="subExercises" role="dialog" aria-modal="true" aria-label="Банк упражнений">
+      <div class="sub-inner">
+        <div class="sub-header">
+          <button class="sub-back" id="subExercisesBack" aria-label="Назад в настройки">‹</button>
+          <span class="sub-title">🏋️ Банк упражнений</span>
+        </div>
+        <div class="muted" style="margin-bottom:10px">Переименование, добавление и удаление упражнений в выпадающих списках тренировки.</div>
+        <div id="exerciseBank"></div>
+        <div class="row-2 mt">
+          <div class="field" style="margin:0"><label for="bankNewName">Новое упражнение</label><input type="text" id="bankNewName" placeholder="Название"></div>
+          <div class="field" style="margin:0"><label for="bankNewCat">Категория</label>
+            <select id="bankNewCat"></select>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-block mt" id="bankAddBtn">➕ Добавить в банк</button>
+      </div>
+    </div>
   </section>
 </div>
 
@@ -722,19 +974,118 @@ const DEFAULT_MEASUREMENTS = [
    bicepR:34.5, bicepL:34.5, forearmR:29.0, forearmL:29.0, wrist:16.5, hips:91.0, thigh:58.0, calfR:36.5, calfL:36.0, note:''}
 ];
 
+// ===== СПРАВОЧНИК ПРОДУКТОВ (БЖУ на 100 г) =====
+const DEFAULT_PRODUCTS = [
+  {name:'Яйцо', p:12.7, f:11.5, c:0.7, k:157},
+  {name:'5 злаков', p:12, f:3, c:70, k:350},
+  {name:'Джем', p:0, f:0, c:68, k:272},
+  {name:'Подсолнечное масло', p:0, f:99.9, c:0, k:890},
+  {name:'Протеин Праймкрафт', p:76.9, f:6.7, c:8.5, k:402},
+  {name:'Молоко', p:3, f:2.5, c:4.75, k:53},
+  {name:'Яблоко', p:0.4, f:0.4, c:9.8, k:47},
+  {name:'Макароны сваренные', p:4.7, f:0.9, c:28.4, k:143},
+  {name:'Филе грудки', p:24, f:2, c:0, k:113},
+  {name:'Соевый соус', p:0.3, f:0, c:4.5, k:19.1},
+  {name:'Савушкин (творог 0,1%)', p:10, f:0.1, c:1, k:44.9},
+  {name:'Томатная паста', p:8.6, f:0.5, c:64, k:294},
+  {name:'Перец болгарский', p:1.3, f:0.1, c:5.3, k:27},
+  {name:'Курица томатная', p:30.4, f:2.6, c:2, k:153},
+  {name:'Квашеная капуста', p:1.9, f:0, c:2.2, k:19},
+  {name:'Маслины', p:0.5, f:13, c:0, k:120},
+  {name:'Хлеб фитнес', p:8.8, f:4.4, c:36.6, k:224},
+  {name:'Сыр сулугуни', p:21.9, f:21.2, c:0, k:279},
+  {name:'Киви', p:1, f:0.3, c:14, k:61},
+  {name:'Кавказ травы', p:17.2, f:4.4, c:27.1, k:253},
+  {name:'Груша Конференция', p:0.4, f:0.3, c:10.3, k:56},
+  {name:'Рис + мекс смесь', p:3.1, f:1.3, c:25.3, k:129},
+  {name:'Креветки в рассоле', p:18.9, f:7.2, c:0.2, k:96.8},
+  {name:'Сосиски индилайт', p:11, f:18, c:1, k:210},
+  {name:'Соус барбекю', p:1, f:0.3, c:28, k:120},
+  {name:'Панкейк на кефире', p:7.2, f:4.3, c:34.7, k:207},
+  {name:'Какао', p:24, f:15, c:10, k:350},
+  {name:'ФрутоНяня Овсяная с бананом', p:2.7, f:2, c:10.6, k:72},
+  {name:'Скумбрия', p:19, f:2, c:0, k:256},
+  {name:'Морской коктейль', p:9, f:1.5, c:2.5, k:60},
+  {name:'Сливочное масло 82,5%', p:0.6, f:82.5, c:0.8, k:748},
+  {name:'Индилайт ветчина', p:16, f:2, c:4, k:100},
+  {name:'Бонди печенье', p:9, f:11, c:74, k:410},
+  {name:'Белевская пастила', p:4, f:0, c:65, k:276},
+  {name:'Финики', p:1.6, f:10.5, c:45.6, k:285},
+  {name:'Картошка в духовке', p:7.1, f:1.5, c:10.4, k:84},
+  {name:'Котлета из индейки', p:21, f:3.7, c:4.4, k:138},
+  {name:'Баклажан и грибы с черри', p:1.8, f:2.3, c:6.2, k:55},
+  {name:'Оливки', p:1, f:15, c:0, k:150},
+  {name:'Сыр Голландский', p:26.3, f:25.2, c:0, k:330},
+  {name:'Форель ломтики', p:21, f:9, c:1, k:160},
+  {name:'Спар Хлеб Чемпион', p:12.9, f:9.7, c:36, k:285},
+  {name:'Фасоль с грибами', p:4.5, f:2, c:14, k:92},
+  {name:'Протеин Бумбар', p:80, f:8, c:6, k:415},
+  {name:'Квас', p:4.7, f:2.5, c:0, k:25},
+  {name:'Творожное зерно', p:11.2, f:5.3, c:6, k:104},
+  {name:'Минтай', p:15.9, f:0.9, c:0, k:70},
+  {name:'Печенье с грушей', p:5, f:15, c:69, k:430},
+  {name:'Банан', p:1.5, f:0.5, c:21, k:96},
+  {name:'Рубленые котлеты', p:24, f:5, c:2.8, k:151},
+  {name:'Сардины', p:15, f:4, c:5.2, k:130},
+  {name:'Филе кусочками', p:26.2, f:2.8, c:2.5, k:138},
+  {name:'Костный бульон', p:7.3, f:1.3, c:3.1, k:31.3},
+  {name:'Банановое немолоко', p:2, f:14, c:3, k:33},
+  {name:'Кетчуп', p:1.5, f:0.1, c:26, k:110},
+  {name:'Слива', p:0.7, f:0.3, c:9, k:46},
+  {name:'Балык', p:22, f:6, c:0, k:140},
+  {name:'Сыр Маасдам', p:25, f:25, c:0, k:330},
+  {name:'Нектарин', p:1.1, f:0.3, c:8.9, k:44},
+  {name:'Сырок фисташка', p:10, f:24, c:15, k:376},
+  {name:'Творог 5%', p:17, f:5, c:4, k:129},
+  {name:'Сгущенка какао', p:6.5, f:5, c:54, k:290},
+  {name:'Чиабатта Мини Темная', p:8.2, f:2.3, c:43.1, k:230},
+  {name:'Барни', p:1.9, f:4.3, c:18, k:118},
+  {name:'Морковь по-корейски', p:4.2, f:4, c:10.6, k:95},
+  {name:'Шоколадное немолоко', p:1, f:3.2, c:9.5, k:70},
+  {name:'Багет', p:8, f:1, c:33, k:280},
+  {name:'Тунец', p:24, f:1, c:1, k:104},
+  {name:'Гречневые хлопья', p:11, f:2, c:74, k:360},
+  {name:'Корейка', p:17, f:2.5, c:4, k:110}
+];
+
 // ===== STATE =====
 const DEFAULT_CONFIG = {
   restSeconds: 90,
   goalWeight: 70,
-  nutrition: {protein: 150, fat: 60, carbs: 350, kcal: 2700}
+  nutrition: {
+    weekday: {protein: 150, fat: 60, carbs: 350, kcal: 2700},
+    weekend: {protein: 150, fat: 80, carbs: 300, kcal: 2400}
+  }
 };
+// Приведение config.nutrition к виду {weekday, weekend} (поддержка старого формата)
+function normalizeNutritionConfig(n){
+  const def = DEFAULT_CONFIG.nutrition;
+  const out = {weekday: Object.assign({}, def.weekday), weekend: Object.assign({}, def.weekend)};
+  if(!n) return out;
+  if(n.weekday) out.weekday = Object.assign({}, def.weekday, n.weekday);
+  if(n.weekend) out.weekend = Object.assign({}, def.weekend, n.weekend);
+  // Старый плоский формат {protein, fat, carbs, kcal} — считаем его буднями
+  if(n.protein != null || n.fat != null || n.carbs != null || n.kcal != null){
+    ['protein','fat','carbs','kcal'].forEach(function(k){ if(n[k] != null) out.weekday[k] = n[k]; });
+  }
+  return out;
+}
+// Нормы для конкретной даты: сб/вс — выходные
+function nutGoalsFor(dateStr){
+  const d = new Date((dateStr || todayStr()) + 'T00:00:00');
+  const day = d.getDay();
+  const g = normalizeNutritionConfig(state.config.nutrition);
+  return (day === 0 || day === 6) ? g.weekend : g.weekday;
+}
 const state = {
   diaryKey: null,          // null = локальный режим
   workouts: [],
   measurements: [],
-  nutrition: [],           // записи питания
+  nutrition: [],           // дневники питания по дням: {id, date, items:[]}
   library: null,           // банк упражнений (редактируемый)
   libraryUpdatedAt: 0,
+  products: null,          // справочник продуктов (редактируемый)
+  productsUpdatedAt: 0,
   config: Object.assign({}, DEFAULT_CONFIG),
   screen: 'workout',
   db: null,
@@ -776,6 +1127,7 @@ function saveLocal(){
     localStorage.setItem(storageKey('nutrition'), JSON.stringify(state.nutrition));
     localStorage.setItem(storageKey('config'), JSON.stringify(state.config));
     if(state.library) localStorage.setItem(storageKey('library'), JSON.stringify(state.library));
+    if(state.products) localStorage.setItem(storageKey('products'), JSON.stringify(state.products));
     localStorage.setItem(storageKey('seeded'), state.seeded ? '1' : '');
   }catch(e){ console.warn('saveLocal', e); }
 }
@@ -786,8 +1138,9 @@ function loadLocal(){
     state.nutrition = JSON.parse(localStorage.getItem(storageKey('nutrition')) || '[]');
     const cfg = JSON.parse(localStorage.getItem(storageKey('config')) || '{}');
     state.config = Object.assign({}, DEFAULT_CONFIG, cfg);
-    state.config.nutrition = Object.assign({}, DEFAULT_CONFIG.nutrition, cfg.nutrition || {});
+    state.config.nutrition = normalizeNutritionConfig(cfg.nutrition);
     state.library = JSON.parse(localStorage.getItem(storageKey('library')) || 'null');
+    state.products = JSON.parse(localStorage.getItem(storageKey('products')) || 'null');
     state.seeded = localStorage.getItem(storageKey('seeded')) === '1';
   }catch(e){ console.warn('loadLocal', e); }
 }
@@ -802,6 +1155,21 @@ function pushLibrary(){
   state.libraryUpdatedAt = Date.now();
   saveLocal();
   if(state.cloudReady) enqueue('update', 'config', 'library', {items: state.library, updatedAt: state.libraryUpdatedAt});
+}
+// Справочник продуктов: редактируемая копия списка по умолчанию
+function getProducts(){
+  if(!state.products){
+    state.products = DEFAULT_PRODUCTS.map(function(p){ return {name: p.name, p: p.p, f: p.f, c: p.c, k: p.k}; });
+  }
+  return state.products;
+}
+function pushProducts(){
+  state.productsUpdatedAt = Date.now();
+  saveLocal();
+  if(state.cloudReady) enqueue('update', 'config', 'products', {items: state.products, updatedAt: state.productsUpdatedAt});
+}
+function findProduct(name){
+  return getProducts().find(function(p){ return p.name.toLowerCase() === String(name || '').toLowerCase(); }) || null;
 }
 function getQueue(){
   try{ return JSON.parse(localStorage.getItem(storageKey('syncQueue')) || '[]'); }
@@ -869,7 +1237,7 @@ function pullFromCloud(){
       const cloud = cfgDoc.data();
       if((cloud.updatedAt || 0) > (state.config.updatedAt || 0)){
         state.config = Object.assign({}, DEFAULT_CONFIG, cloud);
-        state.config.nutrition = Object.assign({}, DEFAULT_CONFIG.nutrition, cloud.nutrition || {});
+        state.config.nutrition = normalizeNutritionConfig(cloud.nutrition);
         saveLocal();
       }
     }
@@ -882,6 +1250,19 @@ function pullFromCloud(){
       if((cloud.updatedAt || 0) > localUpd && Array.isArray(cloud.items)){
         state.library = cloud.items;
         state.libraryUpdatedAt = cloud.updatedAt;
+        saveLocal();
+        renderAll();
+      }
+    }
+    // Справочник продуктов из облака
+    return diaryRef().collection('config').doc('products').get();
+  }).then(function(prodDoc){
+    if(prodDoc && prodDoc.exists){
+      const cloud = prodDoc.data();
+      const localUpd = state.productsUpdatedAt || 0;
+      if((cloud.updatedAt || 0) > localUpd && Array.isArray(cloud.items)){
+        state.products = cloud.items;
+        state.productsUpdatedAt = cloud.updatedAt;
         saveLocal();
         renderAll();
       }
@@ -956,31 +1337,48 @@ window.addEventListener('online', function(){ state.online = true; updateSyncBad
 window.addEventListener('offline', function(){ state.online = false; updateSyncBadge(); });
 
 // ===== ПЕРИОДИЗАЦИЯ =====
+const WEEK_TYPE_LABELS = {
+  1: 'Лёгкая неделя (15-16 повторов, 1-2 РИР)',
+  2: 'Средняя неделя (12-14 повторов, 1-2 РИР)',
+  3: 'Тяжёлая неделя (8-10 повторов, отказ)'
+};
 function getPeriodization(dateStr){
   const start = new Date(START_DATE + 'T00:00:00');
   const cur = new Date(dateStr + 'T00:00:00');
   const diffDays = Math.floor((cur - start) / DAY_MS);
-  const weekNumber = Math.floor(diffDays / 7) + 1;
-  if(weekNumber < 1) return {weekNumber: weekNumber, notStarted: true};
-  const cycleNumber = Math.ceil(weekNumber / 3);
-  const weekInCycle = ((weekNumber - 1) % 3) + 1;
-  const labels = {
-    1: 'Лёгкая неделя (15-16 повторов, 1-2 РИР)',
-    2: 'Средняя неделя (12-14 повторов, 1-2 РИР)',
-    3: 'Тяжёлая неделя (8-10 повторов, отказ)'
-  };
-  return {
-    weekNumber: weekNumber, cycleNumber: cycleNumber, weekInCycle: weekInCycle,
-    finished: weekNumber > 21,
-    label: labels[weekInCycle] || ''
-  };
+  const rawWeek = Math.floor(diffDays / 7) + 1;
+  const raw = rawWeek < 1
+    ? {weekNumber: rawWeek, notStarted: true, cycleNumber: null, weekInCycle: null, label: '', finished: false}
+    : {
+        weekNumber: rawWeek,
+        cycleNumber: Math.ceil(rawWeek / 3),
+        weekInCycle: ((rawWeek - 1) % 3) + 1,
+        finished: rawWeek > 21,
+        label: WEEK_TYPE_LABELS[((rawWeek - 1) % 3) + 1] || ''
+      };
+  // Ручной override из Настроек (неделя / цикл / тип недели)
+  const ov = (typeof state !== 'undefined' && state.config) ? state.config.programOverride : null;
+  if(ov && ov.week){
+    const weekNumber = Math.min(21, Math.max(1, ov.week));
+    const weekInCycle = ov.type || ((weekNumber - 1) % 3) + 1;
+    return {
+      weekNumber: weekNumber,
+      cycleNumber: ov.cycle || Math.ceil(weekNumber / 3),
+      weekInCycle: weekInCycle,
+      finished: false, override: true,
+      label: WEEK_TYPE_LABELS[weekInCycle] || '',
+      autoWeekNumber: raw.weekNumber, autoCycleNumber: raw.cycleNumber,
+      autoLabel: raw.label, notStarted: raw.notStarted
+    };
+  }
+  return raw;
 }
 function renderWeekBanner(){
   const el = document.getElementById('weekBanner');
   const p = getPeriodization(form ? form.date : todayStr());
   const w = effectiveWeek();
   const wi = WEEK_INFO[w];
-  const manual = form && form.weekOverride ? ' · выбрана вручную' : '';
+  const manual = (form && form.weekOverride ? ' · выбрана вручную' : '') + (p.override ? ' · задано в Настройках' : '');
   let base;
   if(p.notStarted){
     base = 'Программа стартует 01.09.2026. ';
@@ -1147,6 +1545,7 @@ function checkDraft(){
 'use strict';
 // ===== UI RENDERERS: ТРЕНИРОВКА =====
 function newForm(){
+  durationTouched = false;
   return {
     id: null, type: 'A', date: todayStr(),
     exercises: buildProgramExercises('A'),
@@ -1223,13 +1622,20 @@ function renderWorkoutScreen(){
   renderWeekBanner();
   renderExercises();
 }
+let durationTouched = false; // пользователь вручную вписал длительность — автозаполнение не трогаем
 function renderDuration(){
   const el = document.getElementById('workoutDuration');
-  if(editingWorkoutId && form.duration != null){ el.value = form.duration + ' мин'; return; }
+  if(document.activeElement === el) return;        // не мешаем вводу
+  if(durationTouched) return;                      // ручное значение сохраняем
+  if(editingWorkoutId && form.duration != null){ el.value = form.duration; return; }
   if(form.startTime){
-    el.value = Math.max(1, Math.round((Date.now() - form.startTime) / 60000)) + ' мин (идёт)';
-  } else el.value = '—';
+    el.value = Math.max(1, Math.round((Date.now() - form.startTime) / 60000));
+    el.title = 'Автоподсчёт по таймеру. Можно вписать вручную.';
+  } else el.value = '';
 }
+document.getElementById('workoutDuration').addEventListener('input', function(){
+  durationTouched = true;
+});
 function exerciseAlternativesFor(name){
   for(const t of ['A','B']){
     for(const ex of PROGRAMS[t]){
@@ -1461,9 +1867,13 @@ document.getElementById('saveWorkoutBtn').addEventListener('click', function(){
   if(!hasSets && !form.note.trim()){
     toast('Добавьте хотя бы один подход или примечание', 'warning'); return;
   }
-  const duration = editingWorkoutId
-    ? form.duration // при редактировании duration не пересчитывается
-    : (form.startTime ? Math.max(1, Math.round((Date.now() - form.startTime) / 60000)) : null);
+  // Длительность: приоритет у ручного ввода; иначе автоподсчёт по таймеру; иначе старое значение
+  const durManual = num(document.getElementById('workoutDuration').value);
+  const duration = durManual != null
+    ? durManual
+    : (form.startTime && !editingWorkoutId
+        ? Math.max(1, Math.round((Date.now() - form.startTime) / 60000))
+        : (editingWorkoutId ? form.duration : null));
   const doc = {
     id: editingWorkoutId || uid(),
     date: form.date,
@@ -1501,6 +1911,7 @@ function editWorkout(id){
   const w = state.workouts.find(function(x){ return x.id === id; });
   if(!w) return;
   editingWorkoutId = id;
+  durationTouched = false;
   form = JSON.parse(JSON.stringify(w)); // глубокая копия
   form.createdAt = w.createdAt;
   switchScreen('workout');
@@ -1769,14 +2180,94 @@ function renderMeasurements(){
 <script>
 'use strict';
 // ===== UI RENDERERS: ПИТАНИЕ =====
-let editingNutId = null;
-const NUT_FIELDS = [
-  {key:'protein', label:'Белки, г'},
-  {key:'fat',     label:'Жиры, г'},
-  {key:'carbs',   label:'Углеводы, г'},
-  {key:'kcal',    label:'Ккал'}
-];
-function nutGoals(){ return state.config.nutrition || DEFAULT_CONFIG.nutrition; }
+const MEALS = ['Завтрак', 'Перекус', 'Обед', 'Ужин', 'Сонник', 'Другое'];
+let nutViewDate = todayStr();
+let editingNutItemId = null;   // id записи, которая сейчас редактируется
+let nutScrollReturn = null;    // куда вернуть скрол после сохранения правки
+let nutMode = 'product';       // 'product' | 'manual'
+let acSelected = null;         // продукт, выбранный из справочника
+let acPanelOpen = false;
+
+function kcalFromPFC(p, f, c){ return Math.round((p || 0) * 4 + (f || 0) * 9 + (c || 0) * 4); }
+function r1(x){ return Math.round(x * 10) / 10; }
+function nowTimeStr(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+function shiftDate(dateStr, delta){
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + delta);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+// --- Дневник питания: документ дня с записями ---
+function getNutDay(dateStr, create){
+  let day = state.nutrition.find(function(x){ return x.date === dateStr; });
+  if(!day && create){
+    day = {id: uid(), date: dateStr, items: [], createdAt: Date.now(), updatedAt: Date.now()};
+    state.nutrition.push(day);
+  }
+  return day || null;
+}
+function saveNutDay(day){
+  day.updatedAt = Date.now();
+  saveLocal();
+  enqueue('update', 'nutrition', day.id, day);
+}
+function removeNutDayIfEmpty(day){
+  if(!day || day.items.length) return false;
+  state.nutrition = state.nutrition.filter(function(x){ return x.id !== day.id; });
+  enqueue('delete', 'nutrition', day.id, null);
+  saveLocal();
+  return true;
+}
+// БЖУ записи: продукты пересчитываются живьём из справочника (снимок per100 — запасной вариант)
+function entryPFC(it){
+  if(it.kind === 'manual') return {p: it.p || 0, f: it.f || 0, c: it.c || 0, k: it.k || 0};
+  const g = it.grams || 0;
+  let base = it.per100 || null;
+  if(it.kind === 'product'){
+    const prod = findProduct(it.name);
+    if(prod) base = prod;
+  }
+  if(!base) base = {p: 0, f: 0, c: 0, k: 0};
+  const k = base.k != null ? base.k : kcalFromPFC(base.p, base.f, base.c);
+  return {p: base.p * g / 100, f: base.f * g / 100, c: base.c * g / 100, k: k * g / 100};
+}
+function dayTotals(day){
+  const t = {p: 0, f: 0, c: 0, k: 0};
+  if(!day) return t;
+  day.items.forEach(function(it){
+    const v = entryPFC(it);
+    t.p += v.p; t.f += v.f; t.c += v.c; t.k += v.k;
+  });
+  t.p = r1(t.p); t.f = r1(t.f); t.c = r1(t.c); t.k = Math.round(t.k);
+  return t;
+}
+// Миграция старых записей (одна запись = итоги за день): оставляем самую позднюю,
+// переносим её в дневник как «БЖУ вручную», остальные удаляем
+function migrateNutrition(){
+  const oldFmt = state.nutrition.filter(function(n){ return !Array.isArray(n.items); });
+  if(!oldFmt.length) return;
+  oldFmt.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
+  const keep = oldFmt[oldFmt.length - 1];
+  const day = {
+    id: keep.id || uid(), date: keep.date,
+    items: [{
+      id: uid(), kind: 'manual', name: '', meal: '', time: '',
+      p: keep.protein || 0, f: keep.fat || 0, c: keep.carbs || 0,
+      k: keep.kcal != null ? keep.kcal : kcalFromPFC(keep.protein, keep.fat, keep.carbs),
+      createdAt: keep.createdAt || Date.now(), updatedAt: Date.now()
+    }],
+    createdAt: keep.createdAt || Date.now(), updatedAt: Date.now()
+  };
+  state.nutrition = state.nutrition.filter(function(n){ return Array.isArray(n.items); });
+  state.nutrition.push(day);
+  oldFmt.slice(0, -1).forEach(function(n){ if(n.id) enqueue('delete', 'nutrition', n.id, null); });
+  saveLocal();
+  enqueue('update', 'nutrition', day.id, day);
+}
+
 function nutAgeDays(dateStr){
   return Math.floor((new Date(todayStr() + 'T00:00:00') - new Date(dateStr + 'T00:00:00')) / DAY_MS);
 }
@@ -1787,160 +2278,652 @@ function nutCellClass(value, goal, ageDays, key){
   if(key === 'fat') return value <= goal ? 'nut-ok' : 'nut-bad';
   return value >= goal ? 'nut-ok' : 'nut-bad';
 }
+
 function renderNutrition(){
-  // --- Статистика: вес и счётчики тренировок ---
-  const grid = document.getElementById('nutStatGrid');
-  const ms = sortedMeasurements().filter(function(m){ return m.weight != null; });
-  const curW = ms.length ? ms[ms.length - 1].weight : null;
-  const startW = ms.length ? ms[0].weight : null;
-  const goal = state.config.goalWeight || DEFAULT_CONFIG.goalWeight;
-  const wChange = (curW != null && startW != null) ? +(curW - startW).toFixed(1) : null;
-  const toGoal = curW != null ? +(goal - curW).toFixed(1) : null;
-  const cA = state.workouts.filter(function(w){ return w.type === 'A'; }).length;
-  const cB = state.workouts.filter(function(w){ return w.type === 'B'; }).length;
-  const cC = state.workouts.filter(function(w){ return w.type === 'C'; }).length;
-  const cards = [
-    {v: curW != null ? curW + ' кг' : '—', l: 'Текущий вес'},
-    {v: wChange != null ? (wChange >= 0 ? '+' : '') + wChange + ' кг' : '—', l: 'Изменение от старта'},
-    {v: toGoal != null ? (toGoal > 0 ? toGoal + ' кг' : '🎉 достигнуто') : '—', l: 'До цели (' + goal + ' кг)'},
-    {v: cA, l: 'Тренировок А'},
-    {v: cB, l: 'Тренировок Б'},
-    {v: cC, l: 'Своих тренировок'}
-  ];
-  grid.innerHTML = '';
-  const frag = document.createDocumentFragment();
-  cards.forEach(function(c){
-    const d = document.createElement('div');
-    d.className = 'stat-card';
-    const v = document.createElement('div'); v.className = 'stat-value'; v.textContent = c.v;
-    const l = document.createElement('div'); l.className = 'stat-label'; l.textContent = c.l;
-    d.appendChild(v); d.appendChild(l);
-    frag.appendChild(d);
-  });
-  grid.appendChild(frag);
-  const g = nutGoals();
+  // --- Шапка дня: дата, нормы, прогресс ---
+  document.getElementById('nutDate').value = nutViewDate;
+  const isWeekend = (function(){ const d = new Date(nutViewDate + 'T00:00:00').getDay(); return d === 0 || d === 6; })();
+  const g = nutGoalsFor(nutViewDate);
   document.getElementById('nutGoalsLine').textContent =
-    'Норма: Б ' + g.protein + ' · Ж ' + g.fat + ' · У ' + g.carbs + ' · ' + g.kcal + ' ккал';
+    (isWeekend ? 'Норма (выходные)' : 'Норма (будни)') + ': Б ' + g.protein + ' · Ж ' + g.fat + ' · У ' + g.carbs + ' · ' + g.kcal + ' ккал';
+
+  const day = getNutDay(nutViewDate, false);
+  const t = dayTotals(day);
+  const prog = [
+    {label: 'Белки', val: t.p, goal: g.protein, unit: 'г'},
+    {label: 'Жиры', val: t.f, goal: g.fat, unit: 'г'},
+    {label: 'Углеводы', val: t.c, goal: g.carbs, unit: 'г'},
+    {label: 'Ккал', val: t.k, goal: g.kcal, unit: ''}
+  ];
+  const progWrap = document.getElementById('nutProgress');
+  progWrap.innerHTML = '';
+  prog.forEach(function(row){
+    const pct = row.goal > 0 ? Math.min(100, row.val / row.goal * 100) : 0;
+    const over = row.goal > 0 && row.val > row.goal;
+    const div = document.createElement('div');
+    div.className = 'np-row';
+    div.innerHTML = '<span class="np-label">' + row.label + '</span>' +
+      '<span class="np-bar"><span class="np-fill' + (over ? ' over' : '') + '" style="width:' + pct + '%"></span></span>' +
+      '<span class="np-val">' + Math.round(row.val) + ' / ' + row.goal + (row.unit ? ' ' + row.unit : '') + '</span>';
+    progWrap.appendChild(div);
+  });
+
+  renderNutEntries(day, t);
   renderNutTable();
 }
+
+// --- Записи за выбранный день, сгруппированные по приёму пищи и времени ---
+function renderNutEntries(day, t){
+  document.getElementById('nutDayTotal').textContent =
+    'Итого: ' + t.k + ' ккал · Б ' + t.p + ' · Ж ' + t.f + ' · У ' + t.c;
+  const wrap = document.getElementById('nutDayEntries');
+  wrap.innerHTML = '';
+  if(!day || !day.items.length){
+    wrap.innerHTML = '<div class="muted" style="padding:8px 0">За этот день пока ничего не записано. Добавьте первый продукт выше 👆</div>';
+    return;
+  }
+  const items = day.items.slice().sort(function(a, b){
+    const ta = a.time || '99:99', tb = b.time || '99:99';
+    if(ta !== tb) return ta < tb ? -1 : 1;
+    return (a.createdAt || 0) - (b.createdAt || 0);
+  });
+  let lastKey = null, mealBox = null, mealSum = 0, mealCount = 0;
+  function flushMeal(){
+    if(mealBox && mealBox._totalEl && mealCount > 0){
+      mealBox._totalEl.textContent = Math.round(mealSum) + ' ккал';
+    }
+    mealSum = 0; mealCount = 0;
+  }
+  items.forEach(function(it){
+    const key = (it.meal || 'Другое') + '|' + (it.time || '');
+    if(key !== lastKey){
+      flushMeal();
+      lastKey = key;
+      mealBox = document.createElement('div');
+      mealBox.className = 'meal-block';
+      const head = document.createElement('div');
+      head.className = 'meal-head';
+      const name = document.createElement('span');
+      name.className = 'meal-name';
+      name.textContent = it.meal || 'Другое';
+      head.appendChild(name);
+      if(it.time){
+        const timeEl = document.createElement('span');
+        timeEl.className = 'meal-time';
+        timeEl.textContent = it.time;
+        head.appendChild(timeEl);
+      }
+      const total = document.createElement('span');
+      total.className = 'meal-total';
+      head.appendChild(total);
+      mealBox.appendChild(head);
+      mealBox._totalEl = total;
+      wrap.appendChild(mealBox);
+    }
+    const v = entryPFC(it);
+    mealSum += v.k; mealCount++;
+    const row = document.createElement('div');
+    row.className = 'food-row';
+    row.setAttribute('data-nut-item', it.id);
+    const nameBox = document.createElement('div');
+    nameBox.className = 'food-name';
+    nameBox.textContent = it.name || (it.kind === 'manual' ? 'БЖУ вручную' : 'Продукт');
+    const sub = document.createElement('span');
+    sub.className = 'food-pfc';
+    sub.textContent = it.kind === 'manual'
+      ? 'добавлено напрямую, без продукта'
+      : 'Б ' + r1(v.p) + ' · Ж ' + r1(v.f) + ' · У ' + r1(v.c) + (it.kind === 'custom' ? ' · разовый продукт' : '');
+    nameBox.appendChild(sub);
+    const grams = document.createElement('span');
+    grams.className = 'food-grams';
+    grams.textContent = it.kind === 'manual' ? '' : (it.grams || 0) + ' г';
+    const kcal = document.createElement('span');
+    kcal.className = 'food-kcal';
+    kcal.textContent = Math.round(v.k) + ' ккал';
+    const editBtn = document.createElement('button');
+    editBtn.className = 'icon-btn'; editBtn.textContent = '✏️'; editBtn.setAttribute('aria-label', 'Редактировать запись');
+    editBtn.addEventListener('click', function(){ editNutItem(it.id); });
+    const delBtn = document.createElement('button');
+    delBtn.className = 'icon-btn'; delBtn.textContent = '🗑️'; delBtn.setAttribute('aria-label', 'Удалить запись');
+    delBtn.addEventListener('click', function(){ deleteNutItem(it.id); });
+    row.appendChild(nameBox); row.appendChild(grams); row.appendChild(kcal);
+    row.appendChild(editBtn); row.appendChild(delBtn);
+    mealBox.appendChild(row);
+  });
+  flushMeal();
+}
+
+// --- История питания: итоги по дням ---
 function renderNutTable(){
   const wrap = document.getElementById('nutTable');
-  const g = nutGoals();
-  const rows = state.nutrition.slice().sort(function(a,b){
-    if(a.date !== b.date) return a.date < b.date ? 1 : -1;
-    return (b.createdAt || 0) - (a.createdAt || 0);
-  });
+  const rows = state.nutrition
+    .filter(function(n){ return Array.isArray(n.items) && n.items.length; })
+    .map(function(n){ return {n: n, t: dayTotals(n)}; })
+    .sort(function(a, b){ return a.n.date < b.n.date ? 1 : -1; });
   if(!rows.length){
     wrap.innerHTML = '<div class="muted" style="padding:12px 0">Записей питания пока нет</div>';
     return;
   }
-  let html = '<table class="data nut-table"><thead><tr><th>Дата</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Ккал</th><th></th></tr></thead><tbody>';
-  rows.forEach(function(n){
-    const age = nutAgeDays(n.date);
-    html += '<tr><td>' + esc(fmtDate(n.date)) + '</td>';
-    NUT_FIELDS.forEach(function(f){
-      const cls = nutCellClass(n[f.key], g[f.key], age, f.key);
-      html += '<td class="' + cls + '">' + (n[f.key] != null ? n[f.key] : '—') + '</td>';
+  const FIELDS = [
+    {key: 'protein', label: 'Белки', get: function(t){ return t.p; }},
+    {key: 'fat',     label: 'Жиры',  get: function(t){ return t.f; }},
+    {key: 'carbs',   label: 'Углеводы', get: function(t){ return t.c; }},
+    {key: 'kcal',    label: 'Ккал',  get: function(t){ return t.k; }}
+  ];
+  let html = '<table class="data nut-table"><thead><tr><th>Дата</th>' +
+    FIELDS.map(function(f){ return '<th>' + f.label + '</th>'; }).join('') +
+    '<th>Записей</th><th></th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    const age = nutAgeDays(r.n.date);
+    const g = nutGoalsFor(r.n.date);
+    const goalMap = {protein: g.protein, fat: g.fat, carbs: g.carbs, kcal: g.kcal};
+    html += '<tr><td>' + esc(fmtDate(r.n.date)) + '</td>';
+    FIELDS.forEach(function(f){
+      const val = f.get(r.t);
+      const cls = nutCellClass(val, goalMap[f.key], age, f.key);
+      html += '<td class="' + cls + '">' + val + '</td>';
     });
-    html += '<td><button class="icon-btn" data-nut-edit="' + esc(n.id) + '" aria-label="Изменить запись">✏️</button>' +
-      '<button class="icon-btn" data-nut-del="' + esc(n.id) + '" aria-label="Удалить запись">🗑️</button></td></tr>';
+    html += '<td>' + r.n.items.length + '</td>' +
+      '<td><button class="icon-btn" data-nutday-del="' + esc(r.n.id) + '" aria-label="Удалить день целиком">🗑️</button></td></tr>';
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
-  wrap.querySelectorAll('[data-nut-edit]').forEach(function(b){
-    b.addEventListener('click', function(){ editNutrition(b.getAttribute('data-nut-edit')); });
-  });
-  wrap.querySelectorAll('[data-nut-del]').forEach(function(b){
-    b.addEventListener('click', function(){ deleteNutrition(b.getAttribute('data-nut-del')); });
+  wrap.querySelectorAll('[data-nutday-del]').forEach(function(b){
+    b.addEventListener('click', function(){ deleteNutDay(b.getAttribute('data-nutday-del')); });
   });
 }
-function resetNutForm(){
-  document.getElementById('nutDate').value = todayStr();
-  NUT_FIELDS.forEach(function(f){ document.getElementById('nut' + f.key[0].toUpperCase() + f.key.slice(1)).value = ''; });
-  document.getElementById('saveNutBtn').textContent = '💾 Сохранить запись';
-  document.getElementById('cancelNutEditBtn').classList.add('hidden');
-  editingNutId = null;
-}
-function editNutrition(id){
-  const n = state.nutrition.find(function(x){ return x.id === id; });
-  if(!n) return;
-  editingNutId = id;
-  document.getElementById('nutDate').value = n.date;
-  NUT_FIELDS.forEach(function(f){
-    document.getElementById('nut' + f.key[0].toUpperCase() + f.key.slice(1)).value = n[f.key] != null ? n[f.key] : '';
-  });
-  document.getElementById('saveNutBtn').textContent = '💾 Обновить запись';
-  document.getElementById('cancelNutEditBtn').classList.remove('hidden');
-  window.scrollTo(0, 0);
-}
-function deleteNutrition(id){
-  const n = state.nutrition.find(function(x){ return x.id === id; });
-  showConfirm('Удалить запись питания?', 'Удалить запись от ' + fmtDate(n ? n.date : '') + '? Это действие нельзя отменить.', 'Удалить', function(){
+function deleteNutDay(id){
+  const d = state.nutrition.find(function(x){ return x.id === id; });
+  if(!d) return;
+  showConfirm('Удалить день?', 'Удалить все записи питания за ' + fmtDate(d.date) + '? Это действие нельзя отменить.', 'Удалить', function(){
     state.nutrition = state.nutrition.filter(function(x){ return x.id !== id; });
     enqueue('delete', 'nutrition', id, null);
     saveLocal();
-    renderNutTable();
+    renderNutrition();
+    toast('День удалён');
+  });
+}
+
+// ===== ДОБАВЛЕНИЕ / РЕДАКТИРОВАНИЕ ЗАПИСЕЙ =====
+function resetNutForm(){
+  editingNutItemId = null;
+  nutScrollReturn = null;
+  // Приём пищи и время НЕ сбрасываем — пользователь продолжает заполнять тот же приём пищи
+  document.getElementById('nutProductName').value = '';
+  document.getElementById('nutGrams').value = '';
+  ['nutCustomP','nutCustomF','nutCustomC','nutCustomK'].forEach(function(id){ document.getElementById(id).value = ''; });
+  document.getElementById('nutCustomSave').checked = false;
+  document.getElementById('nutManualName').value = '';
+  ['nutManualP','nutManualF','nutManualC','nutManualK'].forEach(function(id){ document.getElementById(id).value = ''; });
+  document.getElementById('nutAddTitle').textContent = 'Добавить запись';
+  document.getElementById('nutAddBtn').textContent = '➕ Добавить в рацион';
+  document.getElementById('nutAddManualBtn').textContent = '➕ Добавить БЖУ';
+  document.getElementById('cancelNutEditBtn').classList.add('hidden');
+  acSelected = null;
+  setNutMode('product');
+  updateProductForm();
+}
+function setNutMode(mode){
+  nutMode = mode;
+  document.getElementById('nutModeProduct').classList.toggle('active', mode === 'product');
+  document.getElementById('nutModeManual').classList.toggle('active', mode === 'manual');
+  document.getElementById('nutProductForm').classList.toggle('hidden', mode !== 'product');
+  document.getElementById('nutManualForm').classList.toggle('hidden', mode !== 'manual');
+}
+document.getElementById('nutModeProduct').addEventListener('click', function(){ setNutMode('product'); });
+document.getElementById('nutModeManual').addEventListener('click', function(){ setNutMode('manual'); });
+
+// --- Автоподсказка продукта ---
+function closeAcPanel(){
+  const p = document.querySelector('.ac-panel');
+  if(p) p.remove();
+  acPanelOpen = false;
+}
+function productMatches(query){
+  const q = query.trim().toLowerCase();
+  if(!q) return [];
+  return getProducts().filter(function(p){ return p.name.toLowerCase().indexOf(q) !== -1; }).slice(0, 8);
+}
+function updateProductForm(){
+  const nameInput = document.getElementById('nutProductName');
+  const grams = num(document.getElementById('nutGrams').value) || 0;
+  const knownBox = document.getElementById('nutKnownBox');
+  const customBox = document.getElementById('nutCustomBox');
+  const preview = document.getElementById('nutKnownPreview');
+  const customPreview = document.getElementById('nutCustomPreview');
+  if(!nameInput.value.trim()){
+    knownBox.classList.add('hidden');
+    customBox.classList.add('hidden');
+    return;
+  }
+  if(acSelected){
+    knownBox.classList.remove('hidden');
+    customBox.classList.add('hidden');
+    if(grams > 0){
+      const v = {
+        p: acSelected.p * grams / 100, f: acSelected.f * grams / 100,
+        c: acSelected.c * grams / 100, k: acSelected.k * grams / 100
+      };
+      preview.textContent = grams + ' г «' + acSelected.name + '» = Б ' + r1(v.p) + ' · Ж ' + r1(v.f) + ' · У ' + r1(v.c) + ' · ' + Math.round(v.k) + ' ккал';
+      preview.classList.remove('hidden');
+    } else preview.classList.add('hidden');
+  } else {
+    knownBox.classList.add('hidden');
+    // Показываем блок разового продукта только когда совпадений в справочнике нет
+    if(productMatches(nameInput.value).length){
+      customBox.classList.add('hidden');
+    } else {
+      customBox.classList.remove('hidden');
+    }
+    const p = num(document.getElementById('nutCustomP').value) || 0;
+    const f = num(document.getElementById('nutCustomF').value) || 0;
+    const c = num(document.getElementById('nutCustomC').value) || 0;
+    const kIn = num(document.getElementById('nutCustomK').value);
+    const k = kIn != null ? kIn : kcalFromPFC(p, f, c);
+    if(grams > 0 && (p || f || c || kIn != null)){
+      customPreview.textContent = 'Под ваши ' + grams + ' г: Б ' + r1(p * grams / 100) + ' · Ж ' + r1(f * grams / 100) +
+        ' · У ' + r1(c * grams / 100) + ' · ' + Math.round(k * grams / 100) + ' ккал' +
+        (kIn == null ? ' (ккал посчитаны по 4/9/4)' : '');
+      customPreview.classList.remove('hidden');
+    } else customPreview.classList.add('hidden');
+  }
+}
+const nutProductNameInput = document.getElementById('nutProductName');
+nutProductNameInput.addEventListener('input', function(){
+  const q = nutProductNameInput.value;
+  acSelected = null;
+  closeAcPanel();
+  const exact = findProduct(q);
+  if(exact && q.trim()){
+    acSelected = exact;
+    updateProductForm();
+    return;
+  }
+  const matches = productMatches(q);
+  if(q.trim() && matches.length){
+    const panel = document.createElement('div');
+    panel.className = 'ac-panel';
+    matches.forEach(function(prod){
+      const b = document.createElement('button');
+      b.className = 'ac-item';
+      b.innerHTML = '<span>' + esc(prod.name) + '</span><span class="ac-kcal">' + prod.k + ' ккал/100г</span>';
+      b.addEventListener('click', function(){
+        nutProductNameInput.value = prod.name;
+        acSelected = prod;
+        closeAcPanel();
+        updateProductForm();
+        document.getElementById('nutGrams').focus();
+      });
+      panel.appendChild(b);
+    });
+    if(!exact){
+      const hint = document.createElement('div');
+      hint.className = 'ac-hint';
+      hint.textContent = 'Нет в списке? Заполните БЖУ ниже — продукт останется разовым или сохранится в справочник.';
+      panel.appendChild(hint);
+    }
+    nutProductNameInput.closest('.ac-wrap').appendChild(panel);
+    acPanelOpen = true;
+  }
+  updateProductForm();
+});
+nutProductNameInput.addEventListener('keydown', function(e){
+  if(!acPanelOpen) return;
+  const panel = document.querySelector('.ac-panel');
+  if(!panel) return;
+  const items = Array.prototype.slice.call(panel.querySelectorAll('.ac-item'));
+  if(!items.length) return;
+  let active = panel.querySelector('.ac-item.active');
+  let idx = active ? items.indexOf(active) : -1;
+  if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+    e.preventDefault();
+    idx = e.key === 'ArrowDown' ? (idx + 1) % items.length : (idx - 1 + items.length) % items.length;
+    items.forEach(function(it){ it.classList.remove('active'); });
+    items[idx].classList.add('active');
+  } else if(e.key === 'Enter'){
+    e.preventDefault();
+    (active || items[0]).click();
+  } else if(e.key === 'Escape'){
+    closeAcPanel();
+  }
+});
+document.addEventListener('click', function(e){
+  if(acPanelOpen && !e.target.closest('.ac-wrap')) closeAcPanel();
+});
+['nutGrams','nutCustomP','nutCustomF','nutCustomC','nutCustomK'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', updateProductForm);
+});
+
+// --- Сохранение новой / отредактированной записи ---
+document.getElementById('nutAddBtn').addEventListener('click', function(){
+  const meal = document.getElementById('nutMeal').value;
+  const time = document.getElementById('nutTime').value;
+  const grams = num(document.getElementById('nutGrams').value);
+  const existing = editingNutItemId ? findNutItem(editingNutItemId) : null;
+  if(acSelected){
+    if(!grams || grams <= 0){ toast('Укажите граммы', 'warning'); return; }
+    const item = existing || {id: uid(), kind: 'product', createdAt: Date.now()};
+    item.kind = 'product';
+    item.name = acSelected.name;
+    item.grams = grams;
+    item.per100 = {p: acSelected.p, f: acSelected.f, c: acSelected.c, k: acSelected.k};
+    item.meal = meal; item.time = time; item.updatedAt = Date.now();
+    commitNutItem(item, existing);
+    return;
+  }
+  // Разовый продукт: название + граммы + БЖУ на 100 г
+  const name = nutProductNameInput.value.trim();
+  const p = num(document.getElementById('nutCustomP').value) || 0;
+  const f = num(document.getElementById('nutCustomF').value) || 0;
+  const c = num(document.getElementById('nutCustomC').value) || 0;
+  const kIn = num(document.getElementById('nutCustomK').value);
+  if(!name){ toast('Введите название продукта или выберите из списка', 'warning'); return; }
+  if(!grams || grams <= 0){ toast('Укажите граммы', 'warning'); return; }
+  if(!p && !f && !c && kIn == null){ toast('Укажите БЖУ продукта на 100 г', 'warning'); return; }
+  const k = kIn != null ? kIn : kcalFromPFC(p, f, c);
+  if(document.getElementById('nutCustomSave').checked){
+    if(findProduct(name)){
+      toast('Такой продукт уже есть в справочнике', 'warning');
+    } else {
+      getProducts().push({name: name, p: p, f: f, c: c, k: k});
+      getProducts().sort(function(a, b){ return a.name.localeCompare(b.name, 'ru'); });
+      pushProducts();
+      toast('Продукт сохранён в справочник ✅');
+    }
+  }
+  const item = existing || {id: uid(), kind: 'custom', createdAt: Date.now()};
+  item.kind = 'custom';
+  item.name = name;
+  item.grams = grams;
+  item.per100 = {p: p, f: f, c: c, k: k};
+  item.meal = meal; item.time = time; item.updatedAt = Date.now();
+  commitNutItem(item, existing);
+});
+document.getElementById('nutAddManualBtn').addEventListener('click', function(){
+  const meal = document.getElementById('nutMeal').value;
+  const time = document.getElementById('nutTime').value;
+  const name = document.getElementById('nutManualName').value.trim();
+  const p = num(document.getElementById('nutManualP').value);
+  const f = num(document.getElementById('nutManualF').value);
+  const c = num(document.getElementById('nutManualC').value);
+  const kIn = num(document.getElementById('nutManualK').value);
+  if(p == null && f == null && c == null && kIn == null){
+    toast('Заполните хотя бы одно поле', 'warning'); return;
+  }
+  const k = kIn != null ? kIn : kcalFromPFC(p, f, c);
+  const existing = editingNutItemId ? findNutItem(editingNutItemId) : null;
+  const item = existing || {id: uid(), kind: 'manual', createdAt: Date.now()};
+  item.kind = 'manual';
+  item.name = name;
+  item.grams = null;
+  item.p = p || 0; item.f = f || 0; item.c = c || 0; item.k = k;
+  item.meal = meal; item.time = time; item.updatedAt = Date.now();
+  commitNutItem(item, existing);
+});
+function findNutItem(itemId){
+  for(const d of state.nutrition){
+    if(!Array.isArray(d.items)) continue;
+    const it = d.items.find(function(x){ return x.id === itemId; });
+    if(it) return it;
+  }
+  return null;
+}
+function commitNutItem(item, existing){
+  const day = getNutDay(nutViewDate, true);
+  if(existing){
+    const i = day.items.findIndex(function(x){ return x.id === item.id; });
+    if(i !== -1) day.items[i] = item;
+  } else {
+    day.items.push(item);
+  }
+  mealTimePrefs[item.meal || 'Другое'] = item.time || document.getElementById('nutTime').value;
+  const returnTo = nutScrollReturn;
+  saveNutDay(day);
+  resetNutForm();
+  nutScrollReturn = null;
+  if(returnTo){
+    renderNutrition();
+    const el = document.querySelector('[data-nut-item="' + returnTo + '"]');
+    if(el) el.scrollIntoView({behavior: 'auto', block: 'center'});
+  } else {
+    const y = window.scrollY;
+    renderNutrition();
+    window.scrollTo(0, y);
+  }
+  toast(existing ? 'Запись обновлена ✅' : 'Добавлено в рацион ✅');
+}
+function editNutItem(itemId){
+  const day = getNutDay(nutViewDate, false);
+  if(!day) return;
+  const it = day.items.find(function(x){ return x.id === itemId; });
+  if(!it) return;
+  editingNutItemId = itemId;
+  nutScrollReturn = itemId; // вернём скрол к этой записи после сохранения
+  document.getElementById('nutMeal').value = it.meal || 'Другое';
+  document.getElementById('nutTime').value = it.time || nowTimeStr();
+  if(it.kind === 'manual'){
+    setNutMode('manual');
+    document.getElementById('nutManualName').value = it.name || '';
+    document.getElementById('nutManualP').value = it.p || '';
+    document.getElementById('nutManualF').value = it.f || '';
+    document.getElementById('nutManualC').value = it.c || '';
+    document.getElementById('nutManualK').value = (it.k != null && it.k !== kcalFromPFC(it.p, it.f, it.c)) ? it.k : '';
+  } else {
+    setNutMode('product');
+    const prod = it.kind === 'product' ? findProduct(it.name) : null;
+    acSelected = prod;
+    nutProductNameInput.value = it.name;
+    document.getElementById('nutGrams').value = it.grams || '';
+    if(!prod){
+      const b = it.per100 || {p: 0, f: 0, c: 0, k: 0};
+      document.getElementById('nutCustomP').value = b.p || '';
+      document.getElementById('nutCustomF').value = b.f || '';
+      document.getElementById('nutCustomC').value = b.c || '';
+      document.getElementById('nutCustomK').value = b.k != null && b.k !== kcalFromPFC(b.p, b.f, b.c) ? b.k : '';
+    }
+    updateProductForm();
+  }
+  document.getElementById('nutAddTitle').textContent = 'Редактировать запись';
+  document.getElementById('nutAddBtn').textContent = '💾 Сохранить изменения';
+  document.getElementById('nutAddManualBtn').textContent = '💾 Сохранить изменения';
+  document.getElementById('cancelNutEditBtn').classList.remove('hidden');
+  document.getElementById('nutAddCard').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+function deleteNutItem(itemId){
+  const day = getNutDay(nutViewDate, false);
+  if(!day) return;
+  const it = day.items.find(function(x){ return x.id === itemId; });
+  if(!it) return;
+  showConfirm('Удалить запись?', 'Удалить «' + (it.name || 'БЖУ вручную') + '» из рациона за ' + fmtDate(day.date) + '?', 'Удалить', function(){
+    day.items = day.items.filter(function(x){ return x.id !== itemId; });
+    if(editingNutItemId === itemId) resetNutForm();
+    if(removeNutDayIfEmpty(day)) {} else saveNutDay(day);
+    const y = window.scrollY;
+    renderNutrition();
+    window.scrollTo(0, y);
     toast('Запись удалена');
   });
 }
-document.getElementById('saveNutBtn').addEventListener('click', function(){
-  const date = document.getElementById('nutDate').value;
-  if(!date){ toast('Укажите дату', 'warning'); return; }
-  const doc = {id: editingNutId || uid(), date: date, updatedAt: Date.now(), createdAt: Date.now()};
-  let any = false;
-  NUT_FIELDS.forEach(function(f){
-    const v = num(document.getElementById('nut' + f.key[0].toUpperCase() + f.key.slice(1)).value);
-    doc[f.key] = v;
-    if(v != null) any = true;
-  });
-  if(!any){ toast('Заполните хотя бы одно поле', 'warning'); return; }
-  if(editingNutId){
-    const old = state.nutrition.find(function(x){ return x.id === editingNutId; });
-    doc.createdAt = (old && old.createdAt) || Date.now();
-    const i = state.nutrition.findIndex(function(x){ return x.id === editingNutId; });
-    if(i !== -1) state.nutrition[i] = doc;
-    enqueue('update', 'nutrition', doc.id, doc);
-    toast('Запись обновлена ✅');
-  } else {
-    // Одна запись на день: если за эту дату уже есть — обновляем её
-    const same = state.nutrition.find(function(x){ return x.date === date; });
-    if(same){
-      doc.id = same.id;
-      doc.createdAt = same.createdAt || Date.now();
-      const i = state.nutrition.findIndex(function(x){ return x.id === same.id; });
-      state.nutrition[i] = doc;
-      enqueue('update', 'nutrition', doc.id, doc);
-      toast('Запись за ' + fmtDate(date) + ' обновлена ✅');
-    } else {
-      state.nutrition.push(doc);
-      enqueue('create', 'nutrition', doc.id, doc);
-      toast('Запись сохранена ✅');
-    }
-  }
-  saveLocal();
-  resetNutForm();
-  renderNutTable();
-});
 document.getElementById('cancelNutEditBtn').addEventListener('click', resetNutForm);
+
+// --- Навигация по дням ---
+document.getElementById('nutDayPrev').addEventListener('click', function(){
+  nutViewDate = shiftDate(nutViewDate, -1);
+  resetNutForm();
+  renderNutrition();
+});
+document.getElementById('nutDayNext').addEventListener('click', function(){
+  nutViewDate = shiftDate(nutViewDate, 1);
+  resetNutForm();
+  renderNutrition();
+});
+document.getElementById('nutDate').addEventListener('change', function(e){
+  nutViewDate = e.target.value || todayStr();
+  resetNutForm();
+  renderNutrition();
+});
+
+// --- Копирование рациона из другого дня ---
+const copyOverlay = document.getElementById('copyOverlay');
+document.getElementById('nutCopyBtn').addEventListener('click', function(){
+  document.getElementById('copyTargetDate').textContent = fmtDate(nutViewDate);
+  document.getElementById('copySourceDate').value = shiftDate(nutViewDate, -1);
+  copyOverlay.classList.add('open');
+});
+document.getElementById('copyCancelBtn').addEventListener('click', function(){
+  copyOverlay.classList.remove('open');
+});
+copyOverlay.addEventListener('click', function(e){
+  if(e.target === this) this.classList.remove('open');
+});
+document.getElementById('copyYesterdayBtn').addEventListener('click', function(){
+  document.getElementById('copySourceDate').value = shiftDate(nutViewDate, -1);
+  doCopyRation();
+});
+document.getElementById('copyConfirmBtn').addEventListener('click', doCopyRation);
+function doCopyRation(){
+  const src = document.getElementById('copySourceDate').value;
+  if(!src){ toast('Выберите дату-источник', 'warning'); return; }
+  if(src === nutViewDate){ toast('Источник и цель совпадают', 'warning'); return; }
+  const srcDay = getNutDay(src, false);
+  if(!srcDay || !srcDay.items.length){ toast('За ' + fmtDate(src) + ' нет записей', 'warning'); return; }
+  const target = getNutDay(nutViewDate, true);
+  const now = Date.now();
+  srcDay.items.forEach(function(it){
+    const copy = JSON.parse(JSON.stringify(it));
+    copy.id = uid();
+    copy.createdAt = now;
+    copy.updatedAt = now;
+    target.items.push(copy);
+  });
+  saveNutDay(target);
+  copyOverlay.classList.remove('open');
+  const copyY = window.scrollY;
+  renderNutrition();
+  window.scrollTo(0, copyY);
+  toast('Скопировано записей: ' + srcDay.items.length + ' ✅');
+}
+
+// Заполнение списка приёмов пищи + дефолтные времена
+const MEAL_DEFAULT_TIMES = {'Завтрак': '06:20', 'Обед': '12:00', 'Ужин': '17:00', 'Сонник': '21:00'};
+let mealTimePrefs = {}; // приём пищи -> последнее использованное время (не сбрасывается при добавлении)
+function defaultTimeForMeal(meal){
+  return mealTimePrefs[meal] || MEAL_DEFAULT_TIMES[meal] || nowTimeStr();
+}
+(function(){
+  const sel = document.getElementById('nutMeal');
+  MEALS.forEach(function(m){
+    const o = document.createElement('option');
+    o.value = m; o.textContent = m;
+    sel.appendChild(o);
+  });
+  sel.value = 'Завтрак';
+  document.getElementById('nutTime').value = defaultTimeForMeal('Завтрак');
+  sel.addEventListener('change', function(){
+    document.getElementById('nutTime').value = defaultTimeForMeal(sel.value);
+  });
+  document.getElementById('nutTime').addEventListener('change', function(){
+    mealTimePrefs[sel.value] = document.getElementById('nutTime').value;
+  });
+})();
 
 // ===== UI RENDERERS: НАСТРОЙКИ =====
 function renderSettings(){
   document.getElementById('settingsKey').value = state.diaryKey || '';
   document.getElementById('settingsRest').value = state.config.restSeconds || 90;
   document.getElementById('settingsGoal').value = state.config.goalWeight || 70;
-  const ng = nutGoals();
-  document.getElementById('goalProtein').value = ng.protein;
-  document.getElementById('goalFat').value = ng.fat;
-  document.getElementById('goalCarbs').value = ng.carbs;
-  document.getElementById('goalKcal').value = ng.kcal;
+  const ng = normalizeNutritionConfig(state.config.nutrition);
+  document.getElementById('goalProtein').value = ng.weekday.protein;
+  document.getElementById('goalFat').value = ng.weekday.fat;
+  document.getElementById('goalCarbs').value = ng.weekday.carbs;
+  document.getElementById('goalKcal').value = ng.weekday.kcal;
+  document.getElementById('goalWEProtein').value = ng.weekend.protein;
+  document.getElementById('goalWEFat').value = ng.weekend.fat;
+  document.getElementById('goalWECarbs').value = ng.weekend.carbs;
+  document.getElementById('goalWEKcal').value = ng.weekend.kcal;
   renderExerciseBank();
+  renderProductBank();
+  document.getElementById('prodCountLabel').textContent = getProducts().length + ' продуктов';
+  // Программа и периодизация
+  const ov = state.config.programOverride;
+  const autoP = getPeriodization(todayStr());
+  const autoTxt = autoP.notStarted
+    ? 'авто: старт 01.09.2026'
+    : 'авто: неделя ' + (autoP.autoWeekNumber || autoP.weekNumber) + ' из 21 · цикл ' + (autoP.autoCycleNumber || autoP.cycleNumber) + ' · ' + (autoP.autoLabel || autoP.label || '').split(' (')[0];
+  document.getElementById('programAutoInfo').textContent = ov
+    ? 'Сейчас задано вручную: неделя ' + ov.week + ' · цикл ' + (ov.cycle || Math.ceil(ov.week / 3)) + ' · ' + (WEEK_TYPE_LABELS[ov.type] || '').split(' (')[0] + '. ' + autoTxt + '.'
+    : 'Сейчас ' + autoTxt + '. Можно задать вручную ниже.';
+  document.getElementById('progWeek').value = ov ? ov.week : (autoP.weekNumber || '');
+  document.getElementById('progCycle').value = ov ? (ov.cycle || '') : (autoP.cycleNumber || '');
+  renderProgTypeSeg(ov ? ov.type : null);
   const p = getPeriodization(todayStr());
   const info = document.getElementById('settingsCycleInfo');
   if(p.notStarted) info.textContent = 'Старт 01.09.2026';
   else if(p.finished) info.textContent = 'Программа завершена 🏆';
-  else info.textContent = 'Неделя ' + p.weekNumber + '/21 · цикл ' + p.cycleNumber + ' · ' + p.label.split(' (')[0];
+  else info.textContent = 'Неделя ' + p.weekNumber + '/21 · цикл ' + p.cycleNumber + ' · ' + p.label.split(' (')[0] + (p.override ? ' (вручную)' : '');
   updateSyncBadge();
 }
+// --- Программа и периодизация: ручной override ---
+let progTypeDraft = null; // выбранный тип недели в сегменте (1-3)
+function renderProgTypeSeg(t){
+  progTypeDraft = t || null;
+  [1,2,3].forEach(function(n){
+    document.getElementById('progType' + n).classList.toggle('active', progTypeDraft === n);
+  });
+}
+[1,2,3].forEach(function(n){
+  document.getElementById('progType' + n).addEventListener('click', function(){
+    progTypeDraft = (progTypeDraft === n) ? null : n;
+    renderProgTypeSeg(progTypeDraft);
+  });
+});
+// при смене недели подставляем цикл и тип по умолчанию (если не выбраны вручную)
+  document.getElementById('progWeek').addEventListener('change', function(){
+  const w = num(this.value);
+  if(w == null) return;
+  const ov = state.config.programOverride;
+  if(!ov || ov.week !== w){
+    if(!document.getElementById('progCycle').value) document.getElementById('progCycle').value = Math.ceil(Math.min(21, Math.max(1, w)) / 3);
+    if(progTypeDraft == null) progTypeDraft = ((Math.min(21, Math.max(1, w)) - 1) % 3) + 1;
+    renderProgTypeSeg(progTypeDraft);
+  }
+});
+document.getElementById('saveProgramBtn').addEventListener('click', function(){
+  const w = num(document.getElementById('progWeek').value);
+  if(w == null || w < 1 || w > 21){ toast('Укажите неделю от 1 до 21', 'warning'); return; }
+  const c = num(document.getElementById('progCycle').value);
+  state.config.programOverride = {
+    week: Math.round(w),
+    cycle: (c != null && c >= 1 && c <= 7) ? Math.round(c) : Math.ceil(Math.round(w) / 3),
+    type: progTypeDraft || ((Math.round(w) - 1) % 3) + 1
+  };
+  pushConfig();
+  renderSettings();
+  toast('Программа задана вручную: неделя ' + state.config.programOverride.week + ' ✅');
+});
+document.getElementById('resetProgramBtn').addEventListener('click', function(){
+  if(!state.config.programOverride){ toast('Сейчас и так автоопределение по дате', 'warning'); return; }
+  state.config.programOverride = null;
+  pushConfig();
+  renderSettings();
+  toast('Вернуто автоопределение по дате ✅');
+});
+// --- Вложенные экраны Настроек ---
+function openSub(id){
+  renderSettings();
+  document.getElementById(id).classList.add('open');
+  document.getElementById(id).scrollTop = 0;
+}
+document.getElementById('openSubProducts').addEventListener('click', function(){ openSub('subProducts'); });
+document.getElementById('openSubExercises').addEventListener('click', function(){ openSub('subExercises'); });
+document.getElementById('subProductsBack').addEventListener('click', function(){
+  document.getElementById('subProducts').classList.remove('open');
+  renderSettings();
+});
+document.getElementById('subExercisesBack').addEventListener('click', function(){
+  document.getElementById('subExercises').classList.remove('open');
+  renderSettings();
+});
 // --- Целевой вес ---
 document.getElementById('saveGoalBtn').addEventListener('click', function(){
   const v = num(document.getElementById('settingsGoal').value);
@@ -1949,13 +2932,19 @@ document.getElementById('saveGoalBtn').addEventListener('click', function(){
   pushConfig();
   toast('Цель обновлена: ' + v + ' кг');
 });
-// --- Нормы питания ---
+// --- Нормы питания (будни / выходные) ---
 document.getElementById('saveNutGoalsBtn').addEventListener('click', function(){
+  const read = function(p, f, c, k){
+    return {
+      protein: num(document.getElementById(p).value) || 0,
+      fat:     num(document.getElementById(f).value) || 0,
+      carbs:   num(document.getElementById(c).value) || 0,
+      kcal:    num(document.getElementById(k).value) || 0
+    };
+  };
   state.config.nutrition = {
-    protein: num(document.getElementById('goalProtein').value) || 0,
-    fat:     num(document.getElementById('goalFat').value) || 0,
-    carbs:   num(document.getElementById('goalCarbs').value) || 0,
-    kcal:    num(document.getElementById('goalKcal').value) || 0
+    weekday: read('goalProtein', 'goalFat', 'goalCarbs', 'goalKcal'),
+    weekend: read('goalWEProtein', 'goalWEFat', 'goalWECarbs', 'goalWEKcal')
   };
   pushConfig();
   toast('Нормы питания сохранены');
@@ -2042,6 +3031,87 @@ document.getElementById('bankAddBtn').addEventListener('click', function(){
     sel.appendChild(o);
   });
 })();
+
+// --- Справочник продуктов (редактирование) ---
+function renderProductBank(){
+  const wrap = document.getElementById('productBank');
+  wrap.innerHTML = '';
+  const prods = getProducts().slice().sort(function(a, b){ return a.name.localeCompare(b.name, 'ru'); });
+  const frag = document.createDocumentFragment();
+  prods.forEach(function(prod){
+    const row = document.createElement('div');
+    row.className = 'prod-bank-row';
+    const nameBox = document.createElement('div');
+    nameBox.className = 'pb-name';
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.value = prod.name;
+    inp.setAttribute('aria-label', 'Название продукта');
+    inp.addEventListener('change', function(){
+      const newName = inp.value.trim();
+      if(!newName || newName === prod.name) return;
+      const clash = getProducts().some(function(e){ return e !== prod && e.name.toLowerCase() === newName.toLowerCase(); });
+      if(clash){
+        toast('Продукт с таким названием уже есть', 'warning');
+        inp.value = prod.name; return;
+      }
+      prod.name = newName;
+      getProducts().sort(function(a, b){ return a.name.localeCompare(b.name, 'ru'); });
+      pushProducts();
+      renderProductBank();
+      toast('Переименовано ✅');
+    });
+    const del = document.createElement('button');
+    del.className = 'icon-btn'; del.textContent = '🗑️';
+    del.setAttribute('aria-label', 'Удалить продукт');
+    del.addEventListener('click', function(){
+      showConfirm('Удалить продукт?', 'Удалить «' + prod.name + '» из справочника? Записи рациона сохранят свои цифры.', 'Удалить', function(){
+        state.products = getProducts().filter(function(e){ return e !== prod; });
+        pushProducts();
+        renderProductBank();
+        toast('Продукт удалён');
+      });
+    });
+    nameBox.appendChild(inp); nameBox.appendChild(del);
+    row.appendChild(nameBox);
+    const nums = document.createElement('div');
+    nums.className = 'pb-nums';
+    [['p','Белки'],['f','Жиры'],['c','Углеводы'],['k','Ккал']].forEach(function(pair){
+      const cell = document.createElement('input');
+      cell.type = 'number'; cell.step = '0.1'; cell.min = '0';
+      cell.value = prod[pair[0]];
+      cell.setAttribute('aria-label', pair[1] + ' на 100 г');
+      cell.setAttribute('title', pair[1] + ' на 100 г');
+      cell.addEventListener('change', function(){
+        const v = num(cell.value);
+        prod[pair[0]] = v != null ? v : 0;
+        if(pair[0] === 'k' && v == null) prod.k = kcalFromPFC(prod.p, prod.f, prod.c);
+        pushProducts();
+        toast('Обновлено: ' + prod.name + ' ✅');
+      });
+      nums.appendChild(cell);
+    });
+    row.appendChild(nums);
+    frag.appendChild(row);
+  });
+  wrap.appendChild(frag);
+}
+document.getElementById('prodAddBtn').addEventListener('click', function(){
+  const name = document.getElementById('prodNewName').value.trim();
+  if(!name){ toast('Введите название продукта', 'warning'); return; }
+  if(findProduct(name)){ toast('Такой продукт уже есть в справочнике', 'warning'); return; }
+  const p = num(document.getElementById('prodNewP').value) || 0;
+  const f = num(document.getElementById('prodNewF').value) || 0;
+  const c = num(document.getElementById('prodNewC').value) || 0;
+  const kIn = num(document.getElementById('prodNewK').value);
+  if(!p && !f && !c && kIn == null){ toast('Укажите БЖУ или ккал продукта', 'warning'); return; }
+  getProducts().push({name: name, p: p, f: f, c: c, k: kIn != null ? kIn : kcalFromPFC(p, f, c)});
+  getProducts().sort(function(a, b){ return a.name.localeCompare(b.name, 'ru'); });
+  pushProducts();
+  document.getElementById('prodNewName').value = '';
+  ['prodNewP','prodNewF','prodNewC','prodNewK'].forEach(function(id){ document.getElementById(id).value = ''; });
+  renderProductBank();
+  toast('Продукт добавлен ✅');
+});
 document.getElementById('applyKeyBtn').addEventListener('click', function(){
   const k = document.getElementById('settingsKey').value.trim();
   showConfirm('Сменить ключ дневника?', k ?
@@ -2079,13 +3149,15 @@ document.getElementById('syncNowBtn').addEventListener('click', function(){
 });
 document.getElementById('resetDataBtn').addEventListener('click', function(){
   showConfirm('Сбросить все данные?', 'Все локальные данные этого дневника будут удалены с устройства. Это действие нельзя отменить.', 'Сбросить', function(){
-    ['workouts','measurements','nutrition','config','library','syncQueue','seeded'].forEach(function(n){
+    ['workouts','measurements','nutrition','config','library','products','syncQueue','seeded'].forEach(function(n){
       localStorage.removeItem(storageKey(n));
     });
     clearDraft();
     state.workouts = []; state.measurements = []; state.nutrition = [];
     state.config = Object.assign({}, DEFAULT_CONFIG);
+    state.config.nutrition = normalizeNutritionConfig(null);
     state.library = null; state.libraryUpdatedAt = 0;
+    state.products = null; state.productsUpdatedAt = 0;
     state.seeded = false;
     editingWorkoutId = null; editingMeasId = null;
     form = newForm();
@@ -2098,9 +3170,10 @@ document.getElementById('resetDataBtn').addEventListener('click', function(){
 // JSON-бэкап (скрытая секция)
 document.getElementById('exportJsonBtn').addEventListener('click', function(){
   const data = {
-    version: 2, exportedAt: new Date().toISOString(),
+    version: 3, exportedAt: new Date().toISOString(),
     workouts: state.workouts, measurements: state.measurements,
-    nutrition: state.nutrition, config: state.config, library: getLibrary()
+    nutrition: state.nutrition, config: state.config, library: getLibrary(),
+    products: getProducts()
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
@@ -2124,16 +3197,19 @@ document.getElementById('importJsonInput').addEventListener('change', function(e
         state.workouts = data.workouts;
         state.measurements = data.measurements;
         state.nutrition = Array.isArray(data.nutrition) ? data.nutrition : [];
+        migrateNutrition();
         if(data.config){
           state.config = Object.assign({}, DEFAULT_CONFIG, data.config);
-          state.config.nutrition = Object.assign({}, DEFAULT_CONFIG.nutrition, (data.config || {}).nutrition || {});
+          state.config.nutrition = normalizeNutritionConfig((data.config || {}).nutrition);
         }
         if(Array.isArray(data.library)) state.library = data.library;
+        if(Array.isArray(data.products)) state.products = data.products;
         state.seeded = true;
         saveLocal();
         state.workouts.forEach(function(w){ enqueue('update', 'workouts', w.id, w); });
         state.measurements.forEach(function(m){ enqueue('update', 'measurements', m.id, m); });
         state.nutrition.forEach(function(n){ enqueue('update', 'nutrition', n.id, n); });
+        if(state.cloudReady) enqueue('update', 'config', 'products', {items: getProducts(), updatedAt: Date.now()});
         renderAll();
         toast('Бэкап импортирован ✅');
       });
@@ -2256,17 +3332,30 @@ function exportExcel(){
       .concat(MEASURE_FIELDS.map(function(f){ return m[f.key] != null ? m[f.key] : ''; }))
       .concat([m.note || '']));
   });
-  // Лист 4: Питание
-  const g = nutGoals();
-  const shNut = [['Дата','Белки (г)','Жиры (г)','Углеводы (г)','Ккал','Норма Б','Норма Ж','Норма У','Норма ккал']];
-  state.nutrition.slice().sort(function(a,b){ return a.date < b.date ? -1 : 1; }).forEach(function(n){
-    shNut.push([n.date,
-      n.protein != null ? n.protein : '', n.fat != null ? n.fat : '',
-      n.carbs != null ? n.carbs : '', n.kcal != null ? n.kcal : '',
-      g.protein, g.fat, g.carbs, g.kcal]);
-  });
-  const sheetNames = ['Тренировки', 'Подходы', 'Замеры', 'Питание'];
-  const sheets = [shWorkouts, shSets, shMeas, shNut];
+  // Лист 4: Питание (итоги по дням, с нормами для этого дня недели)
+  const shNut = [['Дата','Белки (г)','Жиры (г)','Углеводы (г)','Ккал','Норма Б','Норма Ж','Норма У','Норма ккал','Записей']];
+  state.nutrition
+    .filter(function(n){ return Array.isArray(n.items) && n.items.length; })
+    .sort(function(a,b){ return a.date < b.date ? -1 : 1; })
+    .forEach(function(n){
+      const t = dayTotals(n);
+      const g = nutGoalsFor(n.date);
+      shNut.push([n.date, t.p, t.f, t.c, t.k, g.protein, g.fat, g.carbs, g.kcal, n.items.length]);
+    });
+  // Лист 5: Питание детально (каждая запись)
+  const shNutDet = [['Дата','Приём пищи','Время','Продукт','Граммы','Белки (г)','Жиры (г)','Углеводы (г)','Ккал']];
+  state.nutrition
+    .filter(function(n){ return Array.isArray(n.items) && n.items.length; })
+    .sort(function(a,b){ return a.date < b.date ? -1 : 1; })
+    .forEach(function(n){
+      n.items.forEach(function(it){
+        const v = entryPFC(it);
+        shNutDet.push([n.date, it.meal || '', it.time || '', it.name || (it.kind === 'manual' ? 'БЖУ вручную' : ''),
+          it.grams != null ? it.grams : '', r1(v.p), r1(v.f), r1(v.c), Math.round(v.k)]);
+      });
+    });
+  const sheetNames = ['Тренировки', 'Подходы', 'Замеры', 'Питание', 'Питание детально'];
+  const sheets = [shWorkouts, shSets, shMeas, shNut, shNutDet];
   const escN = function(s){ return xlsxEscape(s); };
   const workbook = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
     '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
@@ -2338,7 +3427,7 @@ function switchScreen(id){
   renderNav();
   if(id === 'history') renderHistory();
   if(id === 'measure'){ renderMeasurements(); }
-  if(id === 'nutrition'){ resetNutForm(); renderNutrition(); }
+  if(id === 'nutrition'){ nutViewDate = todayStr(); resetNutForm(); renderNutrition(); }
   if(id === 'settings') renderSettings();
   if(id === 'workout') renderWorkoutScreen();
   window.scrollTo(0, 0);
@@ -2403,6 +3492,7 @@ function init(){
   state.diaryKey = localStorage.getItem('dn_diaryKey') || null;
   loadLocal();
   dedupeMeasurements(); // чистим старые дубли замеров, если они успели накопиться
+  migrateNutrition();   // переносим старую ручную запись питания в новый дневник
   seedMeasurements();
   form = newForm();
   renderNav();
