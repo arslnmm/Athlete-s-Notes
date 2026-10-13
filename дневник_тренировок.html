@@ -358,7 +358,7 @@ table.nut-table td,table.nut-table th{white-space:nowrap}
 
 /* Записи рациона за день */
 .meal-block{margin-bottom:12px}
-.meal-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.meal-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
 .meal-name{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .meal-time{font-size:13px;color:var(--text-muted)}
 .meal-total{margin-left:auto;font-size:12px;color:var(--text-muted);white-space:nowrap}
@@ -2356,6 +2356,14 @@ function renderNutEntries(day, t){
       const total = document.createElement('span');
       total.className = 'meal-total';
       head.appendChild(total);
+      const mealDel = document.createElement('button');
+      mealDel.className = 'icon-btn';
+      mealDel.textContent = '🗑️';
+      mealDel.setAttribute('aria-label', 'Удалить весь приём пищи');
+      (function(mName, mTime){
+        mealDel.addEventListener('click', function(){ deleteMealGroup(mName, mTime); });
+      })(it.meal || 'Другое', it.time || '');
+      head.appendChild(mealDel);
       mealBox.appendChild(head);
       mealBox._totalEl = total;
       wrap.appendChild(mealBox);
@@ -2728,6 +2736,31 @@ function editNutItem(itemId){
   document.getElementById('nutAddManualBtn').textContent = '💾 Сохранить изменения';
   document.getElementById('cancelNutEditBtn').classList.remove('hidden');
   document.getElementById('nutAddCard').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+function deleteMealGroup(meal, time){
+  const day = getNutDay(nutViewDate, false);
+  if(!day) return;
+  const targets = day.items.filter(function(x){
+    return (x.meal || 'Другое') === meal && (x.time || '') === time;
+  });
+  if(!targets.length) return;
+  const sumK = targets.reduce(function(s, x){ return s + entryPFC(x).k; }, 0);
+  showConfirm(
+    'Удалить приём пищи?',
+    'Удалить «' + meal + (time ? ' ' + time : '') + '» целиком — ' + targets.length + ' записей, ≈' + Math.round(sumK) + ' ккал? Это действие нельзя отменить.',
+    'Удалить',
+    function(){
+      const ids = {};
+      targets.forEach(function(x){ ids[x.id] = true; });
+      if(editingNutItemId && ids[editingNutItemId]) resetNutForm();
+      day.items = day.items.filter(function(x){ return !ids[x.id]; });
+      if(removeNutDayIfEmpty(day)) {} else saveNutDay(day);
+      const y = window.scrollY;
+      renderNutrition();
+      window.scrollTo(0, y);
+      toast('Приём пищи удалён (' + targets.length + ' записей)');
+    }
+  );
 }
 function deleteNutItem(itemId){
   const day = getNutDay(nutViewDate, false);
