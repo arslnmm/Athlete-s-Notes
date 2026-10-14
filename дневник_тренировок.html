@@ -108,16 +108,17 @@ label{display:block;font-size:13px;color:var(--text-muted);margin:0 0 6px 2px}
 #navTop{display:none}
 #navBottom{
   position:fixed;left:0;right:0;bottom:0;z-index:50;
-  display:flex;justify-content:space-around;
+  display:flex;
   background:var(--bg);border-top:1px solid var(--border);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   padding:6px 4px calc(6px + env(safe-area-inset-bottom));
 }
 .nav-tab{
   display:flex;flex-direction:column;align-items:center;gap:2px;
-  min-width:56px;min-height:44px;padding:6px 8px;border-radius:10px;
+  flex:1;min-width:0;min-height:44px;padding:6px 2px;border-radius:10px;
   color:var(--text-muted);font-size:11px;transition:all .25s ease;
 }
+.nav-tab>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nav-tab .nav-ico{font-size:20px;line-height:1}
 .nav-tab.active{background:var(--accent-soft);color:var(--accent)}
 @media (min-width:768px){
@@ -197,6 +198,7 @@ label{display:block;font-size:13px;color:var(--text-muted);margin:0 0 6px 2px}
   font-size:15px;font-weight:500;color:var(--accent);
 }
 #restTimerBar .timer-info{flex:1;min-width:0}
+#restTimerBar .timer-btns{display:flex;gap:8px;flex:none}
 #restTimerBar .timer-label{font-size:13px;color:var(--text-muted)}
 body.timer-done #restTimerBar{animation:pulseBg 0.6s ease 4}
 @keyframes pulseBg{
@@ -336,9 +338,10 @@ table.nut-table td,table.nut-table th{white-space:nowrap}
 .nut-progress{display:flex;flex-direction:column;gap:8px;margin-top:4px}
 .nut-progress .np-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary)}
 .nut-progress .np-label{width:74px;flex:none;color:var(--text-muted)}
-.nut-progress .np-bar{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,0.07);overflow:hidden;min-width:60px}
-.nut-progress .np-fill{height:100%;border-radius:4px;background:var(--gradient-accent);transition:width .3s ease}
+.nut-progress .np-bar{flex:1;height:18px;border-radius:9px;background:rgba(255,255,255,0.07);overflow:hidden;min-width:60px;position:relative}
+.nut-progress .np-fill{display:block;height:100%;border-radius:9px;background-color:var(--accent);background-image:var(--gradient-accent);transition:width .4s ease}
 .nut-progress .np-fill.over{background:var(--danger)}
+.nut-progress .np-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.55);letter-spacing:.3px;pointer-events:none}
 .nut-progress .np-val{width:86px;flex:none;text-align:right;white-space:nowrap}
 
 /* Предложения продуктов (автоподсказка) */
@@ -358,19 +361,23 @@ table.nut-table td,table.nut-table th{white-space:nowrap}
 
 /* Записи рациона за день */
 .meal-block{margin-bottom:12px}
-.meal-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.meal-head{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:8px;margin-bottom:6px}
+.meal-head .meal-total{grid-column:1 / -1}
 .meal-name{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .meal-time{font-size:13px;color:var(--text-muted)}
-.meal-total{margin-left:auto;font-size:12px;color:var(--text-muted);text-align:right}
+.meal-total{font-size:12px;color:var(--text-muted);text-align:left}
+.meal-head .icon-btn{min-width:32px;min-height:32px;width:32px;height:32px;font-size:14px;padding:0;grid-row:1;grid-column:4}
 .food-row{
-  display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto;align-items:center;
+  gap:6px 8px;padding:8px 10px;margin-bottom:6px;
   background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
 }
-.food-row .food-name{flex:1;min-width:0;font-size:14px;overflow-wrap:break-word;line-height:1.3}
-.food-row .food-grams{color:var(--text-muted);font-size:13px;white-space:nowrap}
-.food-row .food-kcal{font-size:13px;color:var(--accent);white-space:nowrap;width:64px;text-align:right}
-.food-row .icon-btn{min-width:36px;min-height:36px;font-size:14px;flex:none}
-.food-pfc{font-size:11px;color:var(--text-muted);display:block;margin-top:2px}
+.food-row .food-name{min-width:0;font-size:14px;line-height:1.3}
+.food-title{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.food-row .food-grams{color:var(--text-muted);font-size:13px;white-space:nowrap;min-width:44px;text-align:right}
+.food-row .food-kcal{font-size:13px;color:var(--accent);white-space:nowrap;min-width:56px;text-align:right}
+.food-row .icon-btn{min-width:32px;min-height:32px;width:32px;height:32px;font-size:14px;padding:0}
+.food-pfc{font-size:11px;color:var(--text-muted);display:block;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* Переключатель «продукт / БЖУ без продукта» */
 .mini-seg{display:flex;gap:6px;margin-bottom:12px}
@@ -403,6 +410,50 @@ table.nut-table td,table.nut-table th{white-space:nowrap}
 .bank-row select{width:96px;flex:none;min-height:40px;padding:8px 6px;font-size:13px}
 .bank-row .icon-btn{min-width:40px;min-height:40px;flex:none}
 
+/* ---------- Здоровье: БАДы ---------- */
+.supp-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px 8px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;margin-bottom:6px;background:rgba(255,255,255,0.02)}
+.supp-row .icon-btn{min-width:32px;min-height:32px;width:32px;height:32px;font-size:14px;padding:0}
+.supp-info{min-width:0}
+.supp-info b{display:block;font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.supp-subs{font-size:12px;color:var(--text-secondary);overflow-wrap:anywhere}
+.supp-qty{font-size:13px;font-weight:600;white-space:nowrap;text-align:right}
+.supp-item-btns{display:flex;gap:4px}
+.supp-bank-item{border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:10px}
+.supp-bank-item .sb-head{display:flex;gap:6px;align-items:center;margin-bottom:8px}
+.supp-bank-item .sb-head input{flex:1;min-width:0;min-height:40px}
+.supp-bank-item .sb-head select{width:76px;flex:none;min-height:40px;padding:8px 6px;font-size:13px}
+.supp-bank-item .sb-head .icon-btn{min-width:40px;min-height:40px;flex:none}
+.sb-subs-title{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;padding:2px 2px 6px}
+.sb-sub-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.sb-sub-row input{flex:1;min-width:0;min-height:38px;padding:6px 8px;font-size:13px}
+.sb-sub-row input.sb-dose{flex:0 0 64px}
+.sb-sub-row select{width:72px;flex:none;min-height:38px;padding:6px 4px;font-size:13px}
+.sb-sub-row .icon-btn{min-width:36px;min-height:36px;flex:none}
+.supp-empty,.labs-empty{font-size:13px;color:var(--text-muted);padding:8px 2px}
+
+/* ---------- Здоровье: анализы ---------- */
+.labs-item{border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:10px;background:rgba(255,255,255,0.02)}
+.labs-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.labs-head .labs-date{font-weight:600;font-size:14px;white-space:nowrap}
+.labs-head .labs-lab{font-size:13px;color:var(--text-secondary);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lab-test-row{display:flex;gap:6px;align-items:baseline;padding:3px 0;font-size:13px;flex-wrap:wrap}
+.lab-test-row .lt-name{color:var(--text-secondary)}
+.lab-test-row .lt-val{font-weight:500;white-space:nowrap}
+.lab-test-row .lt-val.lt-bad{color:#ff6b6b}
+.lab-test-row .lt-unit{color:var(--text-muted);font-size:12px}
+.lab-test-row .lt-ref{color:var(--text-muted);font-size:12px}
+.lab-note{font-size:12px;color:var(--text-secondary);padding-top:4px}
+.lab-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.lab-thumb{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.lab-thumb img{width:100%;height:84px;object-fit:cover;display:block}
+.lab-thumb button{position:absolute;top:4px;right:4px;width:24px;height:24px;min-width:24px;min-height:24px;border-radius:50%;background:rgba(0,0,0,0.65);color:#fff;font-size:12px;padding:0;border:1px solid rgba(255,255,255,0.3)}
+.test-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
+.test-row input{min-height:38px;padding:6px 8px;font-size:13px;flex:1;min-width:60px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--text-primary);outline:none}
+.test-row input:focus{border-color:var(--accent)}
+.test-row input.tr-name{flex:2 1 140px}
+.test-row input.tr-small{flex:0 0 58px}
+.test-row .icon-btn{min-width:32px;min-height:32px;width:32px;height:32px;font-size:14px;padding:0;flex:none}
+
 /* ---------- Дашборд ---------- */
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
 .stat-card{background:var(--gradient-card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
@@ -430,8 +481,14 @@ svg .chart-dot:hover{r:6}
 /* ---------- Разное ---------- */
 .row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:520px){
+  .row-3{grid-template-columns:1fr 1fr}
+  .row-3 .field label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
 .flex{display:flex;align-items:center;gap:10px}
 .flex-between{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.flex-between > :last-child{min-width:0}
+#screen-settings .flex-between > span:first-child{flex:none;white-space:nowrap}
 .mt{margin-top:14px}
 .hidden{display:none!important}
 summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:var(--text-muted);font-size:14px}
@@ -474,8 +531,10 @@ textarea{resize:vertical;min-height:70px}
         <div class="timer-label">Таймер отдыха</div>
         <div class="muted" id="timerState">готов</div>
       </div>
-      <button class="icon-btn" id="timerStartBtn" aria-label="Старт / пауза таймера">▶️</button>
-      <button class="icon-btn" id="timerResetBtn" aria-label="Сбросить таймер">⏹</button>
+      <div class="timer-btns">
+        <button class="icon-btn" id="timerStartBtn" aria-label="Старт / пауза таймера">▶️</button>
+        <button class="icon-btn" id="timerResetBtn" aria-label="Сбросить таймер">⏹</button>
+      </div>
     </div>
 
     <div class="card">
@@ -571,10 +630,8 @@ textarea{resize:vertical;min-height:70px}
     <h2 class="screen-title">🍎 Питание</h2>
 
     <div class="card">
-      <div class="flex-between" style="margin-bottom:12px">
-        <span class="chart-title" style="margin:0">Дневник за день</span>
-        <span class="muted" id="nutGoalsLine"></span>
-      </div>
+      <div class="chart-title" style="margin-bottom:4px">Дневник за день</div>
+      <div class="muted" id="nutGoalsLine" style="margin-bottom:12px"></div>
       <div class="day-nav">
         <button class="icon-btn" id="nutDayPrev" aria-label="Предыдущий день">‹</button>
         <input type="date" id="nutDate" aria-label="Дата дневника питания">
@@ -679,6 +736,82 @@ textarea{resize:vertical;min-height:70px}
     </div>
   </section>
 
+  <!-- ===== ЭКРАН: ЗДОРОВЬЕ ===== -->
+  <section id="screen-health" class="screen" aria-label="Здоровье">
+    <h2 class="screen-title">💊 Здоровье</h2>
+
+    <div class="card">
+      <div class="flex-between" style="margin-bottom:12px">
+        <span class="chart-title" style="margin:0">БАДы за день</span>
+        <span class="muted" id="suppDayCount"></span>
+      </div>
+      <div class="day-nav">
+        <button class="icon-btn" id="suppDayPrev" aria-label="Предыдущий день">‹</button>
+        <input type="date" id="suppDate" aria-label="Дата приёма БАДов">
+        <button class="icon-btn" id="suppDayNext" aria-label="Следующий день">›</button>
+      </div>
+      <div class="mt" id="suppDayList"></div>
+      <div class="calc-preview hidden" id="suppDaySummary"></div>
+    </div>
+
+    <div class="card" id="suppAddCard">
+      <div class="chart-title" id="suppAddTitle">Добавить приём БАДа</div>
+      <div class="row-2">
+        <div class="field ac-wrap">
+          <label for="suppName">БАД</label>
+          <input type="text" id="suppName" placeholder="Начните вводить: магн, креа…" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="suppQty">Количество</label>
+          <input type="number" id="suppQty" step="1" min="0" inputmode="decimal" placeholder="3">
+        </div>
+      </div>
+      <div class="field">
+        <label for="suppTime">Время приёма</label>
+        <input type="time" id="suppTime">
+      </div>
+      <div class="calc-preview hidden" id="suppPreview"></div>
+      <button class="btn btn-primary btn-block" id="suppAddBtn">➕ Добавить приём</button>
+      <button class="btn btn-ghost btn-block mt hidden" id="cancelSuppEditBtn">Отменить редактирование</button>
+    </div>
+
+    <div class="card">
+      <div class="flex-between" style="margin-bottom:10px">
+        <span class="chart-title" style="margin:0">Журнал анализов</span>
+        <span class="muted" id="labsCount"></span>
+      </div>
+      <div class="muted" style="margin-bottom:10px">Показатели, референсы и фото бланков. ⚠️ — значение вне референса.</div>
+      <div id="labsList"></div>
+      <button class="btn btn-secondary btn-block" id="labNewBtn">➕ Добавить анализ</button>
+    </div>
+
+    <div class="card hidden" id="labAddCard">
+      <div class="chart-title" id="labAddTitle">Добавить анализ</div>
+      <div class="row-2">
+        <div class="field" style="margin-bottom:8px"><label for="labDate">Дата</label><input type="date" id="labDate"></div>
+        <div class="field" style="margin-bottom:8px"><label for="labLab">Лаборатория</label><input type="text" id="labLab" placeholder="ИНВИТРО, Ситилаб…"></div>
+      </div>
+      <div class="field" style="margin-bottom:8px"><label for="labNote">Комментарий (необязательно)</label><input type="text" id="labNote" placeholder="например, «сдал натощак»"></div>
+      <div class="field" style="margin-bottom:8px">
+        <label>Фото бланка</label>
+        <label class="btn btn-ghost btn-block" for="labPhotosInput" style="text-align:center;margin:0">📷 Прикрепить фото</label>
+        <input type="file" id="labPhotosInput" accept="image/*" multiple class="hidden">
+        <div id="labPhotoPreviews" class="lab-photo-grid mt"></div>
+      </div>
+      <div class="chart-title" style="margin-top:4px">Показатели</div>
+      <div id="labTestsList" class="mt"></div>
+      <button class="btn btn-ghost btn-block" id="labAddTestBtn">➕ Добавить показатель</button>
+      <button class="btn btn-primary btn-block mt" id="labSaveBtn">💾 Сохранить анализ</button>
+      <button class="btn btn-ghost btn-block mt hidden" id="cancelLabEditBtn">Отменить</button>
+    </div>
+
+    <div class="card" id="dynCard">
+      <div class="chart-title">Динамика показателя</div>
+      <div class="field" style="margin-bottom:8px"><label for="dynSelect">Показатель</label><select id="dynSelect"></select></div>
+      <div class="table-wrap" id="dynTable"></div>
+    </div>
+  </section>
+
   <!-- ===== ЭКРАН: НАСТРОЙКИ ===== -->
   <section id="screen-settings" class="screen" aria-label="Настройки">
     <h2 class="screen-title">Настройки</h2>
@@ -704,6 +837,13 @@ textarea{resize:vertical;min-height:70px}
         <span class="mi-ico">🏋️</span>
         <span class="mi-text">Банк упражнений
           <span class="mi-sub">Упражнения и категории для тренировок</span>
+        </span>
+        <span class="mi-arrow">›</span>
+      </button>
+      <button class="menu-item" id="openSubSupplements">
+        <span class="mi-ico">💊</span>
+        <span class="mi-text">Справочник БАДов
+          <span class="mi-sub">Состав активных веществ на 1 шт · <span id="suppCountLabel"></span></span>
         </span>
         <span class="mi-arrow">›</span>
       </button>
@@ -833,6 +973,32 @@ service cloud.firestore {
           </div>
         </div>
         <button class="btn btn-secondary btn-block mt" id="bankAddBtn">➕ Добавить в банк</button>
+      </div>
+    </div>
+
+    <!-- Вложенный экран: справочник БАДов -->
+    <div class="sub-screen" id="subSupplements" role="dialog" aria-modal="true" aria-label="Справочник БАДов">
+      <div class="sub-inner">
+        <div class="sub-header">
+          <button class="sub-back" id="subSupplementsBack" aria-label="Назад в настройки">‹</button>
+          <span class="sub-title">💊 Справочник БАДов</span>
+        </div>
+        <div class="muted" style="margin-bottom:10px">Состав активных веществ в 1 таблетке/капсуле/грамме. При приёме 3 шт состав умножается на 3. Список отсортирован по алфавиту.</div>
+        <div id="suppBank"></div>
+        <div class="chart-title" style="margin-top:6px">Новый БАД</div>
+        <div class="row-2 mt">
+          <div class="field" style="margin:0"><label for="suppNewName">Название</label><input type="text" id="suppNewName" placeholder="например, Омега-3"></div>
+          <div class="field" style="margin:0"><label for="suppNewForm">Форма</label>
+            <select id="suppNewForm">
+              <option value="таб.">таб.</option>
+              <option value="капс.">капс.</option>
+              <option value="г">г</option>
+              <option value="мл">мл</option>
+              <option value="шт">шт</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-block mt" id="suppAddDictBtn">➕ Добавить БАД</button>
       </div>
     </div>
   </section>
@@ -1047,6 +1213,58 @@ const DEFAULT_PRODUCTS = [
   {name:'Гречневые хлопья', p:11, f:2, c:74, k:360},
   {name:'Корейка', p:17, f:2.5, c:4, k:110}
 ];
+// Справочник БАДов по умолчанию: состав активных веществ на 1 шт (таб./капс./г)
+const DEFAULT_SUPPLEMENTS = [
+  {name:'Магний бисглицинат', form:'таб.', subs:[
+    {name:'Магний', dose:200, unit:'мг'},
+    {name:'Витамин B6', dose:10, unit:'мг'}
+  ]},
+  {name:'Креатин моногидрат', form:'г', subs:[
+    {name:'Креатин', dose:3, unit:'г'}
+  ]}
+];
+// Стартовые анализы (без персональных данных): {name, value, unit, lo, hi} — hi/lo = референс (null = нет границы)
+const DEFAULT_LABS = [
+  {date:'2025-08-16', lab:'Ситилаб', tests:[
+    {name:'Тестостерон общий', value:'27.42', unit:'нмоль/л', lo:8.9, hi:42},
+    {name:'Эстрадиол', value:'147.2', unit:'пмоль/л', lo:null, hi:161},
+    {name:'Пролактин', value:'≈413', unit:'мМЕ/л', lo:73, hi:407}
+  ]},
+  {date:'2025-08-23', lab:'Ситилаб', tests:[
+    {name:'ГСПГ (SHBG)', value:'33.62', unit:'нмоль/л', lo:18.30, hi:54.10}
+  ]},
+  {date:'2026-05-16', lab:'ИНВИТРО', tests:[
+    {name:'Тестостерон общий', value:'25.29', unit:'нмоль/л', lo:8.9, hi:42},
+    {name:'Тестостерон свободный', value:'27.9', unit:'пг/мл', lo:12.3, hi:46.6},
+    {name:'ИСТ (индекс свободного тестостерона)', value:'61.7', unit:'%', lo:24.5, hi:113.3},
+    {name:'Эстрадиол', value:'<73', unit:'пмоль/л', lo:null, hi:161},
+    {name:'Пролактин', value:'310', unit:'мМЕ/л', lo:73, hi:407},
+    {name:'Холестерин общий', value:'4.82', unit:'ммоль/л', lo:null, hi:5.0},
+    {name:'Холестерин-ЛПНП', value:'3.06', unit:'ммоль/л', lo:null, hi:3.0},
+    {name:'Холестерин-ЛПВП', value:'1.20', unit:'ммоль/л', lo:1.0, hi:null},
+    {name:'Холестерин не-ЛПВП', value:'3.62', unit:'ммоль/л', lo:null, hi:3.8},
+    {name:'Триглицериды', value:'1.24', unit:'ммоль/л', lo:null, hi:1.7},
+    {name:'Гемоглобин', value:'16.1', unit:'г/дл', lo:13.2, hi:17.3},
+    {name:'Эритроциты', value:'5.58', unit:'10¹²/л', lo:4.3, hi:5.7},
+    {name:'Гематокрит', value:'48.6', unit:'%', lo:39, hi:49},
+    {name:'Лейкоциты', value:'6.86', unit:'10⁹/л', lo:4.5, hi:11},
+    {name:'Тромбоциты', value:'262', unit:'10⁹/л', lo:150, hi:400},
+    {name:'Ферритин', value:'106', unit:'мкг/л', lo:22, hi:275}
+  ]},
+  {date:'2026-09-23', lab:'ГКБ №7', tests:[
+    {name:'Холестерин общий', value:'4.79', unit:'ммоль/л', lo:null, hi:5.0},
+    {name:'Глюкоза', value:'4.31', unit:'ммоль/л', lo:4.1, hi:6.2},
+    {name:'Гликированный гемоглобин (HbA1c)', value:'5.40', unit:'%', lo:4.0, hi:6.1},
+    {name:'Гемоглобин', value:'15.8', unit:'г/дл', lo:13.2, hi:17.3},
+    {name:'Эритроциты', value:'5.23', unit:'10¹²/л', lo:4.3, hi:5.7},
+    {name:'Гематокрит', value:'43.4', unit:'%', lo:39, hi:49},
+    {name:'Лейкоциты', value:'6.74', unit:'10⁹/л', lo:4.5, hi:11},
+    {name:'Тромбоциты', value:'210', unit:'10⁹/л', lo:150, hi:400},
+    {name:'СОЭ', value:'5', unit:'мм/ч', lo:1, hi:20},
+    {name:'ПСА общий', value:'0.549', unit:'нг/мл', lo:null, hi:4.0},
+    {name:'СА 19-9', value:'2.06', unit:'Ед/мл', lo:null, hi:30}
+  ]}
+];
 
 // ===== STATE =====
 const DEFAULT_CONFIG = {
@@ -1094,7 +1312,12 @@ const state = {
   historyShown: HISTORY_PAGE,
   histFilter: {type:'', date:''},
   strengthEx: '',
-  seeded: false
+  seeded: false,
+  supplements: null,         // справочник БАДов (редактируемый)
+  supplementsUpdatedAt: 0,
+  suppDays: [],              // приёмы БАДов по дням: {id, date, items:[{id, suppName, qty, time}]}
+  labs: [],                  // анализы: {id, date, lab, note, photos:[dataURL], tests:[...]}
+  seededHealth: false
 };
 // Текущая форма тренировки
 let form = null; // {id, type, date, exercises:[], note, startTime, duration, weekCycle}
@@ -1128,7 +1351,11 @@ function saveLocal(){
     localStorage.setItem(storageKey('config'), JSON.stringify(state.config));
     if(state.library) localStorage.setItem(storageKey('library'), JSON.stringify(state.library));
     if(state.products) localStorage.setItem(storageKey('products'), JSON.stringify(state.products));
+    if(state.supplements) localStorage.setItem(storageKey('supplements'), JSON.stringify(state.supplements));
+    if(state.suppDays) localStorage.setItem(storageKey('suppDays'), JSON.stringify(state.suppDays));
+    if(state.labs) localStorage.setItem(storageKey('labs'), JSON.stringify(state.labs));
     localStorage.setItem(storageKey('seeded'), state.seeded ? '1' : '');
+    localStorage.setItem(storageKey('seededHealth'), state.seededHealth ? '1' : '');
   }catch(e){ console.warn('saveLocal', e); }
 }
 function loadLocal(){
@@ -1141,7 +1368,11 @@ function loadLocal(){
     state.config.nutrition = normalizeNutritionConfig(cfg.nutrition);
     state.library = JSON.parse(localStorage.getItem(storageKey('library')) || 'null');
     state.products = JSON.parse(localStorage.getItem(storageKey('products')) || 'null');
+    state.supplements = JSON.parse(localStorage.getItem(storageKey('supplements')) || 'null');
+    state.suppDays = JSON.parse(localStorage.getItem(storageKey('suppDays')) || '[]');
+    state.labs = JSON.parse(localStorage.getItem(storageKey('labs')) || '[]');
     state.seeded = localStorage.getItem(storageKey('seeded')) === '1';
+    state.seededHealth = localStorage.getItem(storageKey('seededHealth')) === '1';
   }catch(e){ console.warn('loadLocal', e); }
 }
 // Банк упражнений: редактируемая копия библиотеки
@@ -1170,6 +1401,54 @@ function pushProducts(){
 }
 function findProduct(name){
   return getProducts().find(function(p){ return p.name.toLowerCase() === String(name || '').toLowerCase(); }) || null;
+}
+// Справочник БАДов: редактируемая копия списка по умолчанию
+function getSupplements(){
+  if(!state.supplements){
+    state.supplements = DEFAULT_SUPPLEMENTS.map(function(s){ return {name: s.name, form: s.form, subs: s.subs.map(function(x){ return {name: x.name, dose: x.dose, unit: x.unit}; })}; });
+  }
+  return state.supplements;
+}
+function pushSupplements(){
+  state.supplementsUpdatedAt = Date.now();
+  saveLocal();
+  if(state.cloudReady) enqueue('update', 'config', 'supplements', {items: state.supplements, updatedAt: state.supplementsUpdatedAt});
+}
+function findSupplement(name){
+  return getSupplements().find(function(s){ return s.name.toLowerCase() === String(name || '').toLowerCase(); }) || null;
+}
+// Приёмы БАДов по дням (модель как у питания)
+function getSuppDay(dateStr){
+  let day = state.suppDays.find(function(d){ return d.date === dateStr; });
+  if(!day){
+    day = {id: dateStr, date: dateStr, items: [], updatedAt: Date.now()};
+    state.suppDays.push(day);
+  }
+  return day;
+}
+function saveSuppDay(day){
+  day.updatedAt = Date.now();
+  saveLocal();
+  if(state.cloudReady) enqueue('update', 'suppDays', day.id, day);
+}
+function removeSuppDayIfEmpty(day){
+  if(day.items.length) return;
+  state.suppDays = state.suppDays.filter(function(d){ return d.id !== day.id; });
+  saveLocal();
+  if(state.cloudReady) enqueue('delete', 'suppDays', day.id, null);
+}
+// Анализы
+function saveLabDoc(doc){
+  doc.updatedAt = Date.now();
+  const idx = state.labs.findIndex(function(l){ return l.id === doc.id; });
+  if(idx === -1) state.labs.push(doc); else state.labs[idx] = doc;
+  saveLocal();
+  if(state.cloudReady) enqueue('update', 'labs', doc.id, doc);
+}
+function deleteLabDoc(id){
+  state.labs = state.labs.filter(function(l){ return l.id !== id; });
+  saveLocal();
+  if(state.cloudReady) enqueue('delete', 'labs', id, null);
 }
 function getQueue(){
   try{ return JSON.parse(localStorage.getItem(storageKey('syncQueue')) || '[]'); }
@@ -1210,12 +1489,12 @@ function diaryRef(){ return state.db.collection('diaries').doc(state.diaryKey); 
 // Загрузка облака + merge (last write wins по updatedAt)
 function pullFromCloud(){
   if(!state.cloudReady || !navigator.onLine){ updateSyncBadge(); return; }
-  const cols = ['workouts', 'measurements', 'nutrition'];
+  const cols = ['workouts', 'measurements', 'nutrition', 'suppDays', 'labs'];
   Promise.all(cols.map(function(c){ return diaryRef().collection(c).get(); })).then(function(snaps){
     let changed = false;
     snaps.forEach(function(snap, i){
       const col = cols[i];
-      const localArr = col === 'workouts' ? state.workouts : (col === 'measurements' ? state.measurements : state.nutrition);
+      const localArr = state[col];
       snap.forEach(function(doc){
         const cloud = doc.data();
         const idx = localArr.findIndex(function(x){ return x.id === doc.id; });
@@ -1263,6 +1542,19 @@ function pullFromCloud(){
       if((cloud.updatedAt || 0) > localUpd && Array.isArray(cloud.items)){
         state.products = cloud.items;
         state.productsUpdatedAt = cloud.updatedAt;
+        saveLocal();
+        renderAll();
+      }
+    }
+    // Справочник БАДов из облака
+    return diaryRef().collection('config').doc('supplements').get();
+  }).then(function(suppDoc){
+    if(suppDoc && suppDoc.exists){
+      const cloud = suppDoc.data();
+      const localUpd = state.supplementsUpdatedAt || 0;
+      if((cloud.updatedAt || 0) > localUpd && Array.isArray(cloud.items)){
+        state.supplements = cloud.items;
+        state.supplementsUpdatedAt = cloud.updatedAt;
         saveLocal();
         renderAll();
       }
@@ -1330,7 +1622,7 @@ function updateSyncBadge(){
   else{ cls = state.diaryKey ? 'pending' : 'off'; txt = state.diaryKey ? ('ожидает: ' + qLen) : 'локально'; }
   badge.innerHTML = '<span class="sync-dot ' + cls + '"></span><span>' + esc(txt) + '</span>';
   const cs = document.getElementById('cloudStatus');
-  cs.textContent = !state.diaryKey ? 'Локальный режим (ключ не задан)' :
+  cs.textContent = !state.diaryKey ? 'Локальный режим' :
     (!navigator.onLine ? 'Offline' : (state.cloudReady ? 'Online, синхронизировано' : 'Подключение...'));
 }
 window.addEventListener('online', function(){ state.online = true; updateSyncBadge(); processQueue(); pullFromCloud(); });
@@ -1385,7 +1677,8 @@ function renderWeekBanner(){
   } else if(p.finished){
     base = '🏆 Программа завершена! ' + esc(programStatsText()) + '<br>';
   } else {
-    base = 'Неделя ' + p.weekNumber + ' из 21 · Цикл ' + p.cycleNumber + '. ';
+    // Два осмысленных переноса по дизайну, а не случайный обрыв строки
+    base = 'Неделя ' + p.weekNumber + ' из 21 · Цикл ' + p.cycleNumber + '<br>';
   }
   el.innerHTML = '<div class="week-banner' + (p.finished ? ' done' : '') + '">' + base +
     'Текущая: <b>' + esc(wi.label) + ' (' + esc(wi.reps) + ')</b>' + manual + '</div>';
@@ -2298,12 +2591,16 @@ function renderNutrition(){
   const progWrap = document.getElementById('nutProgress');
   progWrap.innerHTML = '';
   prog.forEach(function(row){
-    const pct = row.goal > 0 ? Math.min(100, row.val / row.goal * 100) : 0;
-    const over = row.goal > 0 && row.val > row.goal;
+    const ratio = row.goal > 0 ? row.val / row.goal : 0;
+    const pct = Math.max(0, Math.min(100, Math.round(ratio * 1000) / 10)) || 0;
+    // Как в таблице: жиры — плохо при превышении, остальные — при недоборе
+    const bad = row.goal > 0 && (row.label === 'Жиры' ? row.val > row.goal : row.val < row.goal);
+    const pctText = row.goal > 0 ? Math.round(ratio * 100) + '%' : '—';
     const div = document.createElement('div');
     div.className = 'np-row';
     div.innerHTML = '<span class="np-label">' + row.label + '</span>' +
-      '<span class="np-bar"><span class="np-fill' + (over ? ' over' : '') + '" style="width:' + pct + '%"></span></span>' +
+      '<span class="np-bar"><span class="np-fill' + (bad ? ' over' : '') + '" style="width:' + pct + '%"></span>' +
+      '<span class="np-pct">' + pctText + '</span></span>' +
       '<span class="np-val">' + Math.round(row.val) + ' / ' + row.goal + (row.unit ? ' ' + row.unit : '') + '</span>';
     progWrap.appendChild(div);
   });
@@ -2377,7 +2674,10 @@ function renderNutEntries(day, t){
     row.setAttribute('data-nut-item', it.id);
     const nameBox = document.createElement('div');
     nameBox.className = 'food-name';
-    nameBox.textContent = it.name || (it.kind === 'manual' ? 'БЖУ вручную' : 'Продукт');
+    const titleEl = document.createElement('span');
+    titleEl.className = 'food-title';
+    titleEl.textContent = it.name || (it.kind === 'manual' ? 'БЖУ вручную' : 'Продукт');
+    nameBox.appendChild(titleEl);
     const sub = document.createElement('span');
     sub.className = 'food-pfc';
     sub.textContent = it.kind === 'manual'
@@ -2879,6 +3179,7 @@ function renderSettings(){
   renderExerciseBank();
   renderProductBank();
   document.getElementById('prodCountLabel').textContent = getProducts().length + ' продуктов';
+  document.getElementById('suppCountLabel').textContent = getSupplements().length + ' поз.';
   // Программа и периодизация
   const ov = state.config.programOverride;
   const autoP = getPeriodization(todayStr());
@@ -2895,7 +3196,7 @@ function renderSettings(){
   const info = document.getElementById('settingsCycleInfo');
   if(p.notStarted) info.textContent = 'Старт 01.09.2026';
   else if(p.finished) info.textContent = 'Программа завершена 🏆';
-  else info.textContent = 'Неделя ' + p.weekNumber + '/21 · цикл ' + p.cycleNumber + ' · ' + p.label.split(' (')[0] + (p.override ? ' (вручную)' : '');
+  else info.textContent = p.weekNumber + '/21 · цикл ' + p.cycleNumber + ' · ' + p.label.split(' ')[0] + (p.override ? ' (вручную)' : '');
   updateSyncBadge();
 }
 // --- Программа и периодизация: ручной override ---
@@ -3161,6 +3462,7 @@ function setDiaryKey(k){
   if(k) localStorage.setItem('dn_diaryKey', k); else localStorage.removeItem('dn_diaryKey');
   loadLocal();
   seedMeasurements();
+  seedHealth();
   editingWorkoutId = null; editingMeasId = null;
   form = newForm();
   state.db = null; state.cloudReady = false;
@@ -3184,7 +3486,7 @@ document.getElementById('syncNowBtn').addEventListener('click', function(){
 });
 document.getElementById('resetDataBtn').addEventListener('click', function(){
   showConfirm('Сбросить все данные?', 'Все локальные данные этого дневника будут удалены с устройства. Это действие нельзя отменить.', 'Сбросить', function(){
-    ['workouts','measurements','nutrition','config','library','products','syncQueue','seeded'].forEach(function(n){
+    ['workouts','measurements','nutrition','config','library','products','supplements','suppDays','labs','syncQueue','seeded','seededHealth'].forEach(function(n){
       localStorage.removeItem(storageKey(n));
     });
     clearDraft();
@@ -3193,10 +3495,13 @@ document.getElementById('resetDataBtn').addEventListener('click', function(){
     state.config.nutrition = normalizeNutritionConfig(null);
     state.library = null; state.libraryUpdatedAt = 0;
     state.products = null; state.productsUpdatedAt = 0;
-    state.seeded = false;
+    state.supplements = null; state.supplementsUpdatedAt = 0;
+    state.suppDays = []; state.labs = [];
+    state.seeded = false; state.seededHealth = false;
     editingWorkoutId = null; editingMeasId = null;
     form = newForm();
     seedMeasurements();
+    seedHealth();
     saveLocal();
     renderAll();
     toast('Локальные данные сброшены');
@@ -3205,10 +3510,11 @@ document.getElementById('resetDataBtn').addEventListener('click', function(){
 // JSON-бэкап (скрытая секция)
 document.getElementById('exportJsonBtn').addEventListener('click', function(){
   const data = {
-    version: 3, exportedAt: new Date().toISOString(),
+    version: 4, exportedAt: new Date().toISOString(),
     workouts: state.workouts, measurements: state.measurements,
     nutrition: state.nutrition, config: state.config, library: getLibrary(),
-    products: getProducts()
+    products: getProducts(), supplements: getSupplements(),
+    suppDays: state.suppDays, labs: state.labs
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
@@ -3239,12 +3545,19 @@ document.getElementById('importJsonInput').addEventListener('change', function(e
         }
         if(Array.isArray(data.library)) state.library = data.library;
         if(Array.isArray(data.products)) state.products = data.products;
+        if(Array.isArray(data.supplements)) state.supplements = data.supplements;
+        if(Array.isArray(data.suppDays)) state.suppDays = data.suppDays;
+        if(Array.isArray(data.labs)) state.labs = data.labs;
         state.seeded = true;
+        state.seededHealth = true;
         saveLocal();
         state.workouts.forEach(function(w){ enqueue('update', 'workouts', w.id, w); });
         state.measurements.forEach(function(m){ enqueue('update', 'measurements', m.id, m); });
         state.nutrition.forEach(function(n){ enqueue('update', 'nutrition', n.id, n); });
+        state.suppDays.forEach(function(d){ enqueue('update', 'suppDays', d.id, d); });
+        state.labs.forEach(function(l){ enqueue('update', 'labs', l.id, l); });
         if(state.cloudReady) enqueue('update', 'config', 'products', {items: getProducts(), updatedAt: Date.now()});
+        if(state.cloudReady) enqueue('update', 'config', 'supplements', {items: getSupplements(), updatedAt: Date.now()});
         renderAll();
         toast('Бэкап импортирован ✅');
       });
@@ -3389,8 +3702,29 @@ function exportExcel(){
           it.grams != null ? it.grams : '', r1(v.p), r1(v.f), r1(v.c), Math.round(v.k)]);
       });
     });
-  const sheetNames = ['Тренировки', 'Подходы', 'Замеры', 'Питание', 'Питание детально'];
-  const sheets = [shWorkouts, shSets, shMeas, shNut, shNutDet];
+  // Лист 6: БАДы (приёмы, с раскрытием состава на количество)
+  const shSupp = [['Дата','Время','БАД','Количество','Состав на принятое количество']];
+  state.suppDays
+    .filter(function(d){ return Array.isArray(d.items) && d.items.length; })
+    .sort(function(a,b){ return a.date < b.date ? -1 : 1; })
+    .forEach(function(d){
+      d.items.forEach(function(it){
+        shSupp.push([d.date, it.time || '', it.suppName || '', it.qty != null ? it.qty : '', suppSubsLine(it.suppName, it.qty)]);
+      });
+    });
+  // Лист 7: Анализы (каждый показатель строкой; фото в Excel не переносятся)
+  const shLabs = [['Дата','Лаборатория','Показатель','Значение','Единица','Референс','Вне нормы']];
+  state.labs
+    .slice()
+    .sort(function(a,b){ return a.date < b.date ? -1 : 1; })
+    .forEach(function(l){
+      (l.tests || []).forEach(function(t){
+        shLabs.push([l.date, l.lab || '', t.name || '', t.value != null ? String(t.value) : '', t.unit || '',
+          testRefStr(t), testOutOfRange(t) ? 'да' : '']);
+      });
+    });
+  const sheetNames = ['Тренировки', 'Подходы', 'Замеры', 'Питание', 'Питание детально', 'БАДы', 'Анализы'];
+  const sheets = [shWorkouts, shSets, shMeas, shNut, shNutDet, shSupp, shLabs];
   const escN = function(s){ return xlsxEscape(s); };
   const workbook = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
     '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
@@ -3433,12 +3767,641 @@ function exportExcel(){
 }
 document.getElementById('exportExcelBtn').addEventListener('click', exportExcel);
 
+// ===== ЗДОРОВЬЕ: БАДы + анализы =====
+let suppViewDate = todayStr();
+let editingSuppItemId = null;   // id редактируемого приёма
+let editingSuppDayId = null;    // день, в котором лежит редактируемый приём
+let suppAcSelected = null;      // выбранный из справочника БАД
+let editingLabId = null;
+let labPhotosDraft = [];        // dataURL фото текущей редактируемой записи
+let dynCurrent = '';            // текущий показатель в динамике
+
+// --- Состав приёма: "магний 600 мг · B6 30 мг" ---
+function suppSubsLine(suppName, qty){
+  const s = findSupplement(suppName);
+  if(!s || !s.subs || !s.subs.length) return '';
+  const q = qty || 1;
+  return s.subs.map(function(x){
+    return x.name.toLowerCase() + ' ' + r1(x.dose * q) + ' ' + x.unit;
+  }).join(' · ');
+}
+function testNum(v){
+  if(v == null || v === '') return null;
+  const n = parseFloat(String(v).replace(/[<≈>]/g, '').trim());
+  return isNaN(n) ? null : n;
+}
+function testRefStr(t){
+  if(t.lo != null && t.hi != null) return String(t.lo) + '–' + String(t.hi);
+  if(t.hi != null) return '<' + t.hi;
+  if(t.lo != null) return '>' + t.lo;
+  return '';
+}
+function testOutOfRange(t){
+  const n = testNum(t.value);
+  if(n == null) return false;
+  if(t.lo != null && n < t.lo) return true;
+  if(t.hi != null && n > t.hi) return true;
+  return false;
+}
+
+// --- Приёмы БАДов за день ---
+function updateSuppPreview(){
+  const preview = document.getElementById('suppPreview');
+  const qty = num(document.getElementById('suppQty').value);
+  if(suppAcSelected && qty != null && qty > 0){
+    const subs = suppSubsLine(suppAcSelected.name, qty);
+    preview.textContent = qty + ' ' + (suppAcSelected.form || 'шт') + ' «' + suppAcSelected.name + '»' + (subs ? ' = ' + subs : '');
+    preview.classList.remove('hidden');
+  } else preview.classList.add('hidden');
+}
+function resetSuppForm(){
+  document.getElementById('suppName').value = '';
+  document.getElementById('suppQty').value = '';
+  suppAcSelected = null;
+  editingSuppItemId = null;
+  editingSuppDayId = null;
+  document.getElementById('suppAddTitle').textContent = 'Добавить приём БАДа';
+  document.getElementById('cancelSuppEditBtn').classList.add('hidden');
+  updateSuppPreview();
+}
+function renderSuppDay(){
+  document.getElementById('suppDate').value = suppViewDate;
+  const wrap = document.getElementById('suppDayList');
+  wrap.innerHTML = '';
+  const day = state.suppDays.find(function(d){ return d.date === suppViewDate; });
+  const items = (day && day.items) ? day.items.slice() : [];
+  document.getElementById('suppDayCount').textContent = items.length ? items.length + ' приёмов' : '';
+  if(!items.length){
+    const e = document.createElement('div');
+    e.className = 'supp-empty';
+    e.textContent = 'За этот день приёмов БАДов нет. Добавьте ниже.';
+    wrap.appendChild(e);
+  }
+  items.sort(function(a, b){ return String(a.time || '').localeCompare(String(b.time || '')); });
+  const subsSum = {}; // name+unit -> доза
+  items.forEach(function(it){
+    const s = findSupplement(it.suppName);
+    if(s && s.subs) s.subs.forEach(function(x){
+      const key = x.name + '|' + x.unit;
+      subsSum[key] = (subsSum[key] || 0) + x.dose * (it.qty || 1);
+    });
+    const row = document.createElement('div');
+    row.className = 'supp-row';
+    row.setAttribute('data-supp-item', it.id);
+    const subs = suppSubsLine(it.suppName, it.qty);
+    row.innerHTML =
+      '<div class="supp-info"><b>' + esc(it.suppName) + '</b>' +
+      (subs ? '<span class="supp-subs">' + esc(subs) + '</span>' : '') + '</div>' +
+      '<span class="supp-qty">' + esc(String(it.qty)) + ' ' + esc(s ? (s.form || 'шт') : 'шт') + '</span>';
+    const btns = document.createElement('div');
+    btns.className = 'supp-item-btns';
+    const editB = document.createElement('button');
+    editB.className = 'icon-btn'; editB.setAttribute('aria-label', 'Редактировать приём'); editB.textContent = '✏️';
+    editB.addEventListener('click', function(){ editSuppItem(it.id); });
+    const delB = document.createElement('button');
+    delB.className = 'icon-btn'; delB.setAttribute('aria-label', 'Удалить приём'); delB.textContent = '🗑️';
+    delB.addEventListener('click', function(){ deleteSuppItem(it.id); });
+    btns.appendChild(editB); btns.appendChild(delB);
+    row.appendChild(btns);
+    wrap.appendChild(row);
+  });
+  const sumEl = document.getElementById('suppDaySummary');
+  const sumKeys = Object.keys(subsSum);
+  if(sumKeys.length){
+    sumEl.textContent = 'Сумма за день: ' + sumKeys.map(function(k){
+      const parts = k.split('|');
+      return parts[0].toLowerCase() + ' ' + r1(subsSum[k]) + ' ' + parts[1];
+    }).join(' · ');
+    sumEl.classList.remove('hidden');
+  } else sumEl.classList.add('hidden');
+}
+function editSuppItem(id){
+  for(const d of state.suppDays){
+    const it = d.items.find(function(x){ return x.id === id; });
+    if(it){
+      suppViewDate = d.date;
+      editingSuppItemId = id;
+      editingSuppDayId = d.id;
+      document.getElementById('suppName').value = it.suppName;
+      document.getElementById('suppQty').value = it.qty;
+      document.getElementById('suppTime').value = it.time || '';
+      suppAcSelected = findSupplement(it.suppName);
+      document.getElementById('suppAddTitle').textContent = 'Редактировать приём';
+      document.getElementById('cancelSuppEditBtn').classList.remove('hidden');
+      renderSuppDay();
+      updateSuppPreview();
+      document.getElementById('suppAddCard').scrollIntoView({behavior: 'smooth', block: 'start'});
+      return;
+    }
+  }
+}
+function deleteSuppItem(id){
+  for(const d of state.suppDays){
+    const idx = d.items.findIndex(function(x){ return x.id === id; });
+    if(idx !== -1){
+      const it = d.items[idx];
+      showConfirm('Удалить приём?', '«' + it.suppName + '» ' + it.qty + ' шт' + (it.time ? ' в ' + it.time : '') + ' — удалить из дневника?', 'Удалить', function(){
+        d.items.splice(idx, 1);
+        saveSuppDay(d);
+        removeSuppDayIfEmpty(d);
+        if(editingSuppItemId === id) resetSuppForm();
+        renderSuppDay();
+        toast('Приём удалён');
+      });
+      return;
+    }
+  }
+}
+// Автодополнение названия БАДа
+(function(){
+  const input = document.getElementById('suppName');
+  function closeAc(){
+    const p = input.closest('.ac-wrap').querySelector('.ac-panel');
+    if(p) p.remove();
+  }
+  input.addEventListener('input', function(){
+    suppAcSelected = null;
+    closeAc();
+    const q = input.value.trim().toLowerCase();
+    const exact = findSupplement(input.value);
+    if(exact && q){ suppAcSelected = exact; updateSuppPreview(); return; }
+    if(!q){ updateSuppPreview(); return; }
+    const matches = getSupplements().filter(function(s){ return s.name.toLowerCase().indexOf(q) !== -1; }).slice(0, 8);
+    if(!matches.length){ updateSuppPreview(); return; }
+    const panel = document.createElement('div');
+    panel.className = 'ac-panel';
+    matches.forEach(function(s){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ac-item';
+      const subsStr = (s.subs || []).map(function(x){ return x.name + ' ' + r1(x.dose) + ' ' + x.unit; }).join(' · ');
+      b.innerHTML = '<span>' + esc(s.name) + '</span><span class="ac-kcal">' + esc(subsStr || s.form || '') + '</span>';
+      b.addEventListener('click', function(){
+        input.value = s.name;
+        suppAcSelected = s;
+        closeAc();
+        updateSuppPreview();
+        document.getElementById('suppQty').focus();
+      });
+      panel.appendChild(b);
+    });
+    input.closest('.ac-wrap').appendChild(panel);
+    updateSuppPreview();
+  });
+  input.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter') return;
+    const panel = input.closest('.ac-wrap').querySelector('.ac-panel');
+    const first = panel && panel.querySelector('.ac-item');
+    if(first){ e.preventDefault(); first.click(); }
+  });
+})();
+document.getElementById('suppQty').addEventListener('input', updateSuppPreview);
+document.getElementById('suppAddBtn').addEventListener('click', function(){
+  const name = document.getElementById('suppName').value.trim();
+  if(!name){ toast('Укажите БАД', 'warning'); return; }
+  const qty = num(document.getElementById('suppQty').value);
+  if(qty == null || qty <= 0){ toast('Укажите количество (например, 3)', 'warning'); return; }
+  const time = document.getElementById('suppTime').value || nowTimeStr();
+  const targetDayId = editingSuppItemId ? editingSuppDayId : suppViewDate;
+  let day = state.suppDays.find(function(d){ return d.id === targetDayId; });
+  if(!day){ day = getSuppDay(suppViewDate); }
+  if(editingSuppItemId){
+    const it = day.items.find(function(x){ return x.id === editingSuppItemId; });
+    if(it){ it.suppName = name; it.qty = qty; it.time = time; }
+    toast('Приём обновлён ✅');
+  } else {
+    day.items.push({id: uid(), suppName: name, qty: qty, time: time});
+    toast('Приём добавлен ✅');
+  }
+  saveSuppDay(day);
+  resetSuppForm();
+  renderSuppDay();
+});
+document.getElementById('cancelSuppEditBtn').addEventListener('click', function(){
+  resetSuppForm();
+});
+document.getElementById('suppDayPrev').addEventListener('click', function(){
+  suppViewDate = new Date(new Date(suppViewDate + 'T12:00:00') - DAY_MS).toISOString().slice(0, 10);
+  resetSuppForm(); renderSuppDay();
+});
+document.getElementById('suppDayNext').addEventListener('click', function(){
+  suppViewDate = new Date(new Date(suppViewDate + 'T12:00:00').getTime() + DAY_MS).toISOString().slice(0, 10);
+  resetSuppForm(); renderSuppDay();
+});
+document.getElementById('suppDate').addEventListener('change', function(){
+  suppViewDate = this.value || todayStr();
+  resetSuppForm(); renderSuppDay();
+});
+(function(){
+  const t = new Date();
+  document.getElementById('suppTime').value = String(t.getHours()).padStart(2, '0') + ':' + String(t.getMinutes()).padStart(2, '0');
+})();
+
+// --- Журнал анализов ---
+function renderLabPhotoPreviews(){
+  const grid = document.getElementById('labPhotoPreviews');
+  grid.innerHTML = '';
+  labPhotosDraft.forEach(function(src, i){
+    const th = document.createElement('div');
+    th.className = 'lab-thumb';
+    const img = document.createElement('img');
+    img.src = src; img.alt = 'Фото бланка ' + (i + 1);
+    img.addEventListener('click', function(){ viewPhoto(src); });
+    const del = document.createElement('button');
+    del.type = 'button'; del.setAttribute('aria-label', 'Удалить фото'); del.textContent = '✕';
+    del.addEventListener('click', function(){ labPhotosDraft.splice(i, 1); renderLabPhotoPreviews(); });
+    th.appendChild(img); th.appendChild(del);
+    grid.appendChild(th);
+  });
+}
+function viewPhoto(src){
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:16px;cursor:zoom-out';
+  const img = document.createElement('img');
+  img.src = src;
+  img.style.cssText = 'max-width:100%;max-height:100%;border-radius:10px';
+  ov.appendChild(img);
+  ov.addEventListener('click', function(){ ov.remove(); });
+  document.body.appendChild(ov);
+}
+function addLabTestRow(t){
+  t = t || {};
+  const wrap = document.getElementById('labTestsList');
+  const row = document.createElement('div');
+  row.className = 'test-row';
+  const mk = function(cls, val, ph){
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.className = cls; inp.value = val != null ? String(val) : ''; inp.placeholder = ph;
+    return inp;
+  };
+  const nameInp = mk('tr-name', t.name, 'Показатель');
+  const valInp = mk('', t.value, 'Значение');
+  const unitInp = mk('tr-small', t.unit, 'Ед.');
+  const loInp = mk('tr-small', t.lo != null ? t.lo : '', 'от');
+  const hiInp = mk('tr-small', t.hi != null ? t.hi : '', 'до');
+  const del = document.createElement('button');
+  del.type = 'button'; del.className = 'icon-btn'; del.setAttribute('aria-label', 'Убрать показатель'); del.textContent = '✕';
+  del.addEventListener('click', function(){ row.remove(); });
+  row.appendChild(nameInp); row.appendChild(valInp); row.appendChild(unitInp);
+  row.appendChild(loInp); row.appendChild(hiInp); row.appendChild(del);
+  wrap.appendChild(row);
+}
+document.getElementById('labAddTestBtn').addEventListener('click', function(){ addLabTestRow(); });
+document.getElementById('labPhotosInput').addEventListener('change', function(e){
+  const files = Array.prototype.slice.call(e.target.files || []);
+  e.target.value = '';
+  if(!files.length) return;
+  if(labPhotosDraft.length + files.length > 4){
+    toast('Не больше 4 фото на один анализ', 'warning');
+    return;
+  }
+  files.forEach(function(f){
+    const reader = new FileReader();
+    reader.onload = function(){
+      const img = new Image();
+      img.onload = function(){
+        const maxDim = 900;
+        let w = img.width, h = img.height;
+        if(Math.max(w, h) > maxDim){
+          const k = maxDim / Math.max(w, h);
+          w = Math.round(w * k); h = Math.round(h * k);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        labPhotosDraft.push(canvas.toDataURL('image/jpeg', 0.75));
+        renderLabPhotoPreviews();
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(f);
+  });
+});
+function openLabCard(lab){
+  editingLabId = lab ? lab.id : null;
+  document.getElementById('labDate').value = lab ? lab.date : todayStr();
+  document.getElementById('labLab').value = lab ? (lab.lab || '') : '';
+  document.getElementById('labNote').value = lab ? (lab.note || '') : '';
+  labPhotosDraft = lab && lab.photos ? lab.photos.slice() : [];
+  renderLabPhotoPreviews();
+  const testsWrap = document.getElementById('labTestsList');
+  testsWrap.innerHTML = '';
+  const tests = lab && lab.tests ? lab.tests : [];
+  if(tests.length) tests.forEach(addLabTestRow); else addLabTestRow();
+  document.getElementById('labAddTitle').textContent = lab ? 'Редактировать анализ' : 'Добавить анализ';
+  document.getElementById('cancelLabEditBtn').classList.toggle('hidden', !lab);
+  document.getElementById('labAddCard').classList.remove('hidden');
+  document.getElementById('labAddCard').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+document.getElementById('labNewBtn').addEventListener('click', function(){ openLabCard(null); });
+document.getElementById('cancelLabEditBtn').addEventListener('click', function(){
+  document.getElementById('labAddCard').classList.add('hidden');
+  editingLabId = null;
+});
+document.getElementById('labSaveBtn').addEventListener('click', function(){
+  const date = document.getElementById('labDate').value;
+  if(!date){ toast('Укажите дату анализа', 'warning'); return; }
+  const tests = [];
+  Array.prototype.forEach.call(document.querySelectorAll('#labTestsList .test-row'), function(row){
+    const nameInp = row.querySelector('input.tr-name');
+    const valInp = row.querySelector('input:not(.tr-name):not(.tr-small)');
+    const smalls = row.querySelectorAll('input.tr-small');
+    const name = nameInp ? nameInp.value.trim() : '';
+    const value = valInp ? valInp.value.trim() : '';
+    if(!name && !value) return; // пустая строка
+    tests.push({
+      name: name, value: value,
+      unit: smalls[0] ? smalls[0].value.trim() : '',
+      lo: smalls[1] ? num(smalls[1].value) : null,
+      hi: smalls[2] ? num(smalls[2].value) : null
+    });
+  });
+  if(!tests.length){ toast('Добавьте хотя бы один показатель', 'warning'); return; }
+  const existing = editingLabId ? state.labs.find(function(l){ return l.id === editingLabId; }) : null;
+  const doc = {
+    id: editingLabId || uid(),
+    date: date,
+    lab: document.getElementById('labLab').value.trim(),
+    note: document.getElementById('labNote').value.trim(),
+    photos: labPhotosDraft.slice(),
+    tests: tests,
+    createdAt: existing ? (existing.createdAt || Date.now()) : Date.now()
+  };
+  saveLabDoc(doc);
+  document.getElementById('labAddCard').classList.add('hidden');
+  editingLabId = null;
+  renderLabs();
+  toast('Анализ сохранён ✅');
+});
+function deleteLab(id){
+  const lab = state.labs.find(function(l){ return l.id === id; });
+  if(!lab) return;
+  showConfirm('Удалить анализ?', fmtDate(lab.date) + (lab.lab ? ' · ' + lab.lab : '') + ' — запись и её фото будут удалены.', 'Удалить', function(){
+    deleteLabDoc(id);
+    if(editingLabId === id){ document.getElementById('labAddCard').classList.add('hidden'); editingLabId = null; }
+    renderLabs();
+    toast('Анализ удалён');
+  });
+}
+function renderLabs(){
+  document.getElementById('labsCount').textContent = state.labs.length ? state.labs.length + ' записей' : '';
+  const wrap = document.getElementById('labsList');
+  wrap.innerHTML = '';
+  const labs = state.labs.slice().sort(function(a, b){ return a.date < b.date ? 1 : -1; });
+  if(!labs.length){
+    const e = document.createElement('div');
+    e.className = 'labs-empty';
+    e.textContent = 'Анализов пока нет. Добавьте результаты вручную или с фото.';
+    wrap.appendChild(e);
+  }
+  labs.forEach(function(l){
+    const item = document.createElement('div');
+    item.className = 'labs-item';
+    const head = document.createElement('div');
+    head.className = 'labs-head';
+    head.innerHTML = '<span class="labs-date">' + esc(fmtDate(l.date)) + '</span>' +
+      '<span class="labs-lab">' + esc(l.lab || '') + '</span>';
+    const btns = document.createElement('div');
+    btns.className = 'supp-item-btns';
+    const editB = document.createElement('button');
+    editB.className = 'icon-btn'; editB.setAttribute('aria-label', 'Редактировать анализ'); editB.textContent = '✏️';
+    editB.addEventListener('click', function(){ openLabCard(l); });
+    const delB = document.createElement('button');
+    delB.className = 'icon-btn'; delB.setAttribute('aria-label', 'Удалить анализ'); delB.textContent = '🗑️';
+    delB.addEventListener('click', function(){ deleteLab(l.id); });
+    btns.appendChild(editB); btns.appendChild(delB);
+    head.appendChild(btns);
+    item.appendChild(head);
+    (l.tests || []).forEach(function(t){
+      const row = document.createElement('div');
+      row.className = 'lab-test-row';
+      const bad = testOutOfRange(t);
+      row.innerHTML = '<span class="lt-name">' + esc(t.name || '') + '</span>' +
+        '<span class="lt-val' + (bad ? ' lt-bad' : '') + '">' + esc(String(t.value != null ? t.value : '')) + (bad ? ' ⚠️' : '') + '</span>' +
+        (t.unit ? '<span class="lt-unit">' + esc(t.unit) + '</span>' : '') +
+        (testRefStr(t) ? '<span class="lt-ref">реф. ' + esc(testRefStr(t)) + '</span>' : '');
+      item.appendChild(row);
+    });
+    if(l.note){
+      const note = document.createElement('div');
+      note.className = 'lab-note';
+      note.textContent = l.note;
+      item.appendChild(note);
+    }
+    if(l.photos && l.photos.length){
+      const grid = document.createElement('div');
+      grid.className = 'lab-photo-grid';
+      grid.style.marginTop = '8px';
+      l.photos.forEach(function(src){
+        const th = document.createElement('div');
+        th.className = 'lab-thumb';
+        const img = document.createElement('img');
+        img.src = src; img.alt = 'Фото бланка';
+        img.addEventListener('click', function(){ viewPhoto(src); });
+        th.appendChild(img);
+        grid.appendChild(th);
+      });
+      item.appendChild(grid);
+    }
+    wrap.appendChild(item);
+  });
+  renderDynamics();
+}
+function renderDynamics(){
+  // Все уникальные показатели (имя + единица) в хронологическом порядке
+  const map = {}; // key -> {name, unit, rows: [{date, value, lo, hi}]}
+  state.labs.slice().sort(function(a, b){ return a.date < b.date ? -1 : 1; }).forEach(function(l){
+    (l.tests || []).forEach(function(t){
+      if(!t.name) return;
+      const key = t.name + '|' + (t.unit || '');
+      if(!map[key]) map[key] = {name: t.name, unit: t.unit || '', rows: []};
+      map[key].rows.push({date: l.date, value: t.value, lo: t.lo, hi: t.hi});
+    });
+  });
+  const keys = Object.keys(map);
+  const card = document.getElementById('dynCard');
+  if(!keys.length){ card.classList.add('hidden'); return; }
+  card.classList.remove('hidden');
+  const sel = document.getElementById('dynSelect');
+  const prev = dynCurrent;
+  sel.innerHTML = '';
+  keys.forEach(function(k){
+    const o = document.createElement('option');
+    o.value = k;
+    o.textContent = map[k].name + (map[k].unit ? ', ' + map[k].unit : '') + ' (' + map[k].rows.length + ')';
+    sel.appendChild(o);
+  });
+  if(map[prev]) sel.value = prev; else sel.value = keys[0];
+  dynCurrent = sel.value;
+  const cur = map[dynCurrent];
+  const tbl = document.getElementById('dynTable');
+  tbl.innerHTML = '';
+  const table = document.createElement('table');
+  table.innerHTML = '<thead><tr><th>Дата</th><th>Значение</th><th>Референс</th></tr></thead>';
+  const tbody = document.createElement('tbody');
+  cur.rows.forEach(function(r){
+    const tr = document.createElement('tr');
+    const bad = testOutOfRange(r);
+    tr.innerHTML = '<td>' + esc(fmtDate(r.date)) + '</td>' +
+      '<td class="' + (bad ? 'lt-bad' : '') + '" style="font-weight:600">' + esc(String(r.value != null ? r.value : '')) + (bad ? ' ⚠️' : '') + '</td>' +
+      '<td class="muted">' + esc(testRefStr(r)) + '</td>';
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  tbl.appendChild(table);
+}
+document.getElementById('dynSelect').addEventListener('change', function(){
+  dynCurrent = this.value;
+  renderDynamics();
+});
+
+// --- Мастер-рендер вкладки Здоровье ---
+function renderHealth(){
+  renderSuppDay();
+  renderLabs();
+}
+
+// --- Справочник БАДов (вложенный экран Настроек) ---
+function renderSuppBank(){
+  const wrap = document.getElementById('suppBank');
+  wrap.innerHTML = '';
+  const list = getSupplements().slice().sort(function(a, b){ return a.name.localeCompare(b.name, 'ru'); });
+  document.getElementById('suppCountLabel').textContent = list.length + ' поз.';
+  const UNITS = ['мг', 'мкг', 'г', 'МЕ', 'мл', '%'];
+  list.forEach(function(s){
+    const item = document.createElement('div');
+    item.className = 'supp-bank-item';
+    const head = document.createElement('div');
+    head.className = 'sb-head';
+    const nameInp = document.createElement('input');
+    nameInp.type = 'text'; nameInp.value = s.name; nameInp.setAttribute('aria-label', 'Название БАДа');
+    nameInp.addEventListener('change', function(){
+      const v = nameInp.value.trim();
+      if(!v){ nameInp.value = s.name; toast('Название не может быть пустым', 'warning'); return; }
+      s.name = v;
+      getSupplements().sort(function(a, b){ return a.name.localeCompare(b.name, 'ru'); });
+      pushSupplements(); renderSuppBank();
+      toast('БАД переименован ✅');
+    });
+    const formSel = document.createElement('select');
+    formSel.setAttribute('aria-label', 'Форма выпуска');
+    ['таб.', 'капс.', 'г', 'мл', 'шт'].forEach(function(f){
+      const o = document.createElement('option');
+      o.value = f; o.textContent = f;
+      if(s.form === f) o.selected = true;
+      formSel.appendChild(o);
+    });
+    formSel.addEventListener('change', function(){ s.form = formSel.value; pushSupplements(); });
+    const del = document.createElement('button');
+    del.className = 'icon-btn'; del.setAttribute('aria-label', 'Удалить БАД'); del.textContent = '🗑️';
+    del.addEventListener('click', function(){
+      showConfirm('Удалить БАД?', '«' + s.name + '» уберётся из справочника. Старые записи приёмов останутся, но без состава.', 'Удалить', function(){
+        state.supplements = getSupplements().filter(function(x){ return x !== s; });
+        pushSupplements(); renderSuppBank();
+        toast('БАД удалён');
+      });
+    });
+    head.appendChild(nameInp); head.appendChild(formSel); head.appendChild(del);
+    item.appendChild(head);
+    const subsTitle = document.createElement('div');
+    subsTitle.className = 'sb-subs-title';
+    subsTitle.textContent = 'Состав на 1 ' + (s.form || 'шт');
+    item.appendChild(subsTitle);
+    const subsWrap = document.createElement('div');
+    (s.subs || []).forEach(function(sub){
+      const row = document.createElement('div');
+      row.className = 'sb-sub-row';
+      const nInp = document.createElement('input');
+      nInp.type = 'text'; nInp.value = sub.name; nInp.placeholder = 'Вещество';
+      nInp.setAttribute('aria-label', 'Название вещества');
+      nInp.addEventListener('change', function(){
+        const v = nInp.value.trim();
+        if(!v){ nInp.value = sub.name; return; }
+        sub.name = v; pushSupplements();
+      });
+      const dInp = document.createElement('input');
+      dInp.type = 'number'; dInp.className = 'sb-dose'; dInp.step = 'any'; dInp.min = '0';
+      dInp.value = sub.dose; dInp.placeholder = 'Доза';
+      dInp.setAttribute('aria-label', 'Доза на 1 шт');
+      dInp.addEventListener('change', function(){
+        const v = num(dInp.value);
+        if(v == null || v <= 0){ dInp.value = sub.dose; return; }
+        sub.dose = v; pushSupplements();
+      });
+      const uSel = document.createElement('select');
+      uSel.setAttribute('aria-label', 'Единица дозы');
+      UNITS.forEach(function(u){
+        const o = document.createElement('option');
+        o.value = u; o.textContent = u;
+        if(sub.unit === u) o.selected = true;
+        uSel.appendChild(o);
+      });
+      uSel.addEventListener('change', function(){ sub.unit = uSel.value; pushSupplements(); });
+      const sDel = document.createElement('button');
+      sDel.className = 'icon-btn'; sDel.setAttribute('aria-label', 'Убрать вещество'); sDel.textContent = '✕';
+      sDel.addEventListener('click', function(){
+        s.subs = s.subs.filter(function(x){ return x !== sub; });
+        pushSupplements(); renderSuppBank();
+      });
+      row.appendChild(nInp); row.appendChild(dInp); row.appendChild(uSel); row.appendChild(sDel);
+      subsWrap.appendChild(row);
+    });
+    item.appendChild(subsWrap);
+    const addSub = document.createElement('button');
+    addSub.className = 'btn btn-ghost btn-block';
+    addSub.style.fontSize = '13px';
+    addSub.textContent = '➕ Вещество';
+    addSub.addEventListener('click', function(){
+      if(!s.subs) s.subs = [];
+      s.subs.push({name: '', dose: 1, unit: 'мг'});
+      pushSupplements(); renderSuppBank();
+    });
+    item.appendChild(addSub);
+    wrap.appendChild(item);
+  });
+}
+document.getElementById('suppAddDictBtn').addEventListener('click', function(){
+  const name = document.getElementById('suppNewName').value.trim();
+  if(!name){ toast('Укажите название БАДа', 'warning'); return; }
+  if(findSupplement(name)){ toast('Такой БАД уже есть в справочнике', 'warning'); return; }
+  getSupplements().push({name: name, form: document.getElementById('suppNewForm').value, subs: []});
+  getSupplements().sort(function(a, b){ return a.name.localeCompare(b.name, 'ru'); });
+  pushSupplements();
+  document.getElementById('suppNewName').value = '';
+  renderSuppBank();
+  toast('БАД добавлен ✅');
+});
+document.getElementById('openSubSupplements').addEventListener('click', function(){ renderSuppBank(); openSub('subSupplements'); });
+document.getElementById('subSupplementsBack').addEventListener('click', function(){
+  document.getElementById('subSupplements').classList.remove('open');
+  renderSettings();
+});
+
+// Одноразовый посев стартовых анализов (детерминированные id — без дублей при синхронизации)
+function seedHealth(){
+  if(state.seededHealth) return;
+  if(state.labs.length){ state.seededHealth = true; saveLocal(); return; }
+  DEFAULT_LABS.forEach(function(l){
+    const doc = {
+      id: 'seed_lab_' + l.date, date: l.date, lab: l.lab, note: '',
+      photos: [],
+      tests: l.tests.map(function(t){ return {name: t.name, value: t.value, unit: t.unit, lo: t.lo, hi: t.hi}; }),
+      updatedAt: Date.now(), createdAt: Date.now()
+    };
+    state.labs.push(doc);
+    enqueue('create', 'labs', doc.id, doc);
+  });
+  state.seededHealth = true;
+  saveLocal();
+}
+
 // ===== НАВИГАЦИЯ =====
 const SCREENS = [
   {id: 'workout',    label: 'Тренировка', ico: '🏋️'},
   {id: 'history',    label: 'История',    ico: '📋'},
   {id: 'measure',    label: 'Замеры',     ico: '📏'},
   {id: 'nutrition',  label: 'Питание',    ico: '🍎'},
+  {id: 'health',     label: 'Здоровье',   ico: '💊'},
   {id: 'settings',   label: 'Настройки',  ico: '⚙️'}
 ];
 function renderNav(){
@@ -3463,6 +4426,7 @@ function switchScreen(id){
   if(id === 'history') renderHistory();
   if(id === 'measure'){ renderMeasurements(); }
   if(id === 'nutrition'){ nutViewDate = todayStr(); resetNutForm(); renderNutrition(); }
+  if(id === 'health'){ suppViewDate = todayStr(); resetSuppForm(); renderHealth(); }
   if(id === 'settings') renderSettings();
   if(id === 'workout') renderWorkoutScreen();
   window.scrollTo(0, 0);
@@ -3505,6 +4469,7 @@ function renderAll(){
   if(state.screen === 'history') renderHistory();
   if(state.screen === 'measure') renderMeasurements();
   if(state.screen === 'nutrition') renderNutrition();
+  if(state.screen === 'health') renderHealth();
   if(state.screen === 'settings') renderSettings();
   updateSyncBadge();
 }
@@ -3529,6 +4494,7 @@ function init(){
   dedupeMeasurements(); // чистим старые дубли замеров, если они успели накопиться
   migrateNutrition();   // переносим старую ручную запись питания в новый дневник
   seedMeasurements();
+  seedHealth();
   form = newForm();
   renderNav();
   renderMeasForm();
