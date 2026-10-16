@@ -366,7 +366,9 @@ table.nut-table td,table.nut-table th{white-space:nowrap}
 .meal-name{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .meal-time{font-size:13px;color:var(--text-muted)}
 .meal-total{font-size:12px;color:var(--text-muted);text-align:left}
-.meal-head .icon-btn{min-width:32px;min-height:32px;width:32px;height:32px;font-size:14px;padding:0;grid-row:1;grid-column:4}
+.meal-head > .icon-btn{min-width:32px;min-height:32px;width:32px;height:32px;font-size:14px;padding:0;grid-row:1;grid-column:4}
+.meal-time-wrap{display:flex;align-items:center;gap:4px;min-width:0}
+.meal-time-wrap .icon-btn{min-width:28px;min-height:28px;width:28px;height:28px;font-size:13px;padding:0;flex:none}
 .food-row{
   display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto;align-items:center;
   gap:6px 8px;padding:8px 10px;margin-bottom:6px;
@@ -731,6 +733,22 @@ textarea{resize:vertical;min-height:70px}
           <button class="btn btn-secondary btn-block" id="copyYesterdayBtn">📋 Взять вчерашний день</button>
           <button class="btn btn-primary btn-block mt" id="copyConfirmBtn">Скопировать</button>
           <button class="btn btn-ghost btn-block mt" id="copyCancelBtn">Отмена</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Панель смены времени приёма пищи -->
+    <div class="modal-overlay" id="mealTimeOverlay" role="dialog" aria-modal="true">
+      <div class="modal-card" style="max-width:320px">
+        <div class="modal-title">Время приёма пищи</div>
+        <div class="modal-text" id="mealTimeText"></div>
+        <div class="field">
+          <label for="mealTimeInput">Новое время</label>
+          <input type="time" id="mealTimeInput">
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" id="mealTimeCancel">Отмена</button>
+          <button class="btn btn-primary" id="mealTimeOk">Сохранить</button>
         </div>
       </div>
     </div>
@@ -2645,12 +2663,23 @@ function renderNutEntries(day, t){
       name.className = 'meal-name';
       name.textContent = it.meal || 'Другое';
       head.appendChild(name);
+      const tw = document.createElement('span');
+      tw.className = 'meal-time-wrap';
       if(it.time){
         const timeEl = document.createElement('span');
         timeEl.className = 'meal-time';
         timeEl.textContent = it.time;
-        head.appendChild(timeEl);
+        tw.appendChild(timeEl);
       }
+      const timeBtn = document.createElement('button');
+      timeBtn.className = 'icon-btn';
+      timeBtn.textContent = '🕒';
+      timeBtn.setAttribute('aria-label', 'Изменить время приёма пищи');
+      (function(mName, mTime){
+        timeBtn.addEventListener('click', function(){ editMealGroupTime(mName, mTime); });
+      })(it.meal || 'Другое', it.time || '');
+      tw.appendChild(timeBtn);
+      head.appendChild(tw);
       const total = document.createElement('span');
       total.className = 'meal-total';
       head.appendChild(total);
@@ -3039,8 +3068,50 @@ function editNutItem(itemId){
   document.getElementById('cancelNutEditBtn').classList.remove('hidden');
   document.getElementById('nutAddCard').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
-function deleteMealGroup(meal, time){
+// ===== СМЕНА ВРЕМЕНИ ПРИЁМА ПИЩИ (вся группа) =====
+let mealTimeCb = null;
+function editMealGroupTime(meal, time){
   const day = getNutDay(nutViewDate, false);
+  if(!day) return;
+  const targets = day.items.filter(function(x){
+    return (x.meal || 'Другое') === meal && (x.time || '') === time;
+  });
+  if(!targets.length) return;
+  document.getElementById('mealTimeText').textContent =
+    '«' + meal + (time ? ' · ' + time : '') + '» — новое время получат ' +
+    targets.length + ' ' + pluralRecords(targets.length) + ' этого приёма пищи.';
+  const inp = document.getElementById('mealTimeInput');
+  inp.value = time || '';
+  document.getElementById('mealTimeOverlay').classList.add('open');
+  mealTimeCb = function(){
+    const newTime = inp.value || '';
+    if(newTime === time) return;
+    targets.forEach(function(x){ x.time = newTime; });
+    day.updatedAt = Date.now();
+    enqueue('update', 'nutrition', day.id, day);
+    saveLocal();
+    renderNutrition();
+    toast('Время приёма обновлено ✅');
+  };
+}
+function pluralRecords(n){
+  const m = n % 10, h = n % 100;
+  if(m === 1 && h !== 11) return 'запись';
+  if(m >= 2 && m <= 4 && (h < 10 || h >= 20)) return 'записи';
+  return 'записей';
+}
+document.getElementById('mealTimeOk').addEventListener('click', function(){
+  document.getElementById('mealTimeOverlay').classList.remove('open');
+  if(mealTimeCb){ const cb = mealTimeCb; mealTimeCb = null; cb(); }
+});
+document.getElementById('mealTimeCancel').addEventListener('click', function(){
+  document.getElementById('mealTimeOverlay').classList.remove('open'); mealTimeCb = null;
+});
+document.getElementById('mealTimeOverlay').addEventListener('click', function(e){
+  if(e.target === this){ this.classList.remove('open'); mealTimeCb = null; }
+});
+
+function deleteMealGroup(meal, time){  const day = getNutDay(nutViewDate, false);
   if(!day) return;
   const targets = day.items.filter(function(x){
     return (x.meal || 'Другое') === meal && (x.time || '') === time;
